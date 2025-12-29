@@ -1,0 +1,403 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 30, 2025, 12:49:38 AM
+    Author     : admin
+*/
+
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #FFFEF9;
+            color: #000;
+        }
+
+        /* Page container */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Login/Register container */
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Pink gradient overlay - left side (desktop only) */
+        .pink-overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50.8%;
+            height: 100%;
+            background: rgba(255, 132, 185, 0.80);
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .pink-overlay {
+                display: block;
+            }
+        }
+
+        /* Logo - top left */
+        .logo {
+            position: absolute;
+            left: 1.0%;
+            top: 0.4%;
+            width: 8%;
+            height: auto;
+            z-index: 20;
+            min-width: 80px;
+        }
+
+        /* Illustrations - desktop only */
+        .illustration-left {
+            position: absolute;
+            left: 13.75%;
+            top: 21.83%;
+            width: 15.16%;
+            height: auto;
+            display: none;
+        }
+
+        .illustration-right {
+            position: absolute;
+            left: 74.7%;
+            right: 0;
+            top: 22.7%;
+            width: 19.47%;
+            height: auto;
+            display: none;
+        }
+
+        @media (min-width: 1024px) {
+            .illustration-left,
+            .illustration-right {
+                display: block;
+            }
+        }
+
+        /* Card container */
+        .card-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 539px;
+            margin: 0 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 4px 35px 0 rgba(0, 0, 0, 0.08);
+            padding: 2.5rem 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .card {
+                padding: 3.5rem 2.75rem;
+            }
+        }
+
+        /* Header section */
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        @media (min-width: 640px) {
+            .header {
+                margin-bottom: 2.5rem;
+            }
+        }
+
+        .header-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .welcome-text {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #000;
+        }
+
+        .auth-link-section {
+            text-align: right;
+        }
+
+        .auth-question {
+            font-size: 1rem;
+            color: #8D8D8D;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .auth-link {
+            font-size: 1rem;
+            color: #B87514;
+            text-decoration: none;
+            font-weight: 400;
+            display: inline-block;
+            transition: text-decoration 0.2s;
+            cursor: pointer;
+        }
+
+        .auth-link:hover {
+            text-decoration: underline;
+        }
+
+        .header h1 {
+            font-size: 3.4375rem;
+            font-weight: 500;
+            color: #000;
+            line-height: 1;
+            margin: 0;
+        }
+
+        /* Form styles */
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1rem;
+            font-weight: 400;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 50px;
+            padding: 0 1.5rem;
+            border-radius: 9px;
+            border: 1px solid rgba(0, 0, 0, 0.40);
+            background: white;
+            font-size: 0.875rem;
+            font-weight: 300;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.2s;
+        }
+
+        .form-input::placeholder {
+            color: #808080;
+            font-weight: 300;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(0, 0, 0, 0.60);
+        }
+
+        .password-input {
+            border-color: #ADADAD;
+        }
+
+        .toggle-password {
+            font-size: 24px;
+            position: absolute;
+            right: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8E8E8E;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #000;
+        }
+
+        /* Submit button */
+        .submit-button {
+            width: 100%;
+            height: 47px;
+            border-radius: 10px;
+            background: #E24084;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 19px 0 rgba(119, 147, 65, 0.30);
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .submit-button:hover {
+            background: #d13575;
+            box-shadow: 0 6px 25px 0 rgba(119, 147, 65, 0.40);
+        }
+
+        .submit-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Register page specific styles */
+        .register-card .card {
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .register-card .card {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+        }
+
+        .register-form {
+            gap: 1.5rem;
+        }
+
+        .register-form .form-input {
+            height: 57px;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+    
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 556px;
+            box-shadow: 0 4px 4px 0 #2C001B;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-icon-img {
+            width: 76px;
+            height: 77px;
+            border-radius: 80%;
+            margin-bottom: 22px;
+        }
+        
+        .modal-body {
+            text-align: center;
+            width: 100%;
+        }
+
+        .modal-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 600;
+            line-height: 1.22;
+            letter-spacing: -0.72px;
+            color: #101828;
+            margin-bottom: 8px;
+        }
+
+        .modal-message {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #344054;
+            margin-bottom: 32px;
+        }
+
+        .modal-button {
+            width: 100%;
+            height: 36px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #E24084;
+            background: #E24084;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.43;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+            transition: all 0.2s;
+        }
+
+        .modal-button:hover {
+            background: #d13575;
+            border-color: #d13575;
+        }
+
+        .modal-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive image sizes */
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }

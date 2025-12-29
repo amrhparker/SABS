@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SALONIX - Register</title>
+<link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<script>
+function togglePassword(id){
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+}
+</script>
+
+</head>
+<body>
+
+<div class="auth-container">
+
+    <div class="pink-overlay"></div>
+
+    <img src="images/logo.png" class="logo">
+
+    <img src="images/leftSide.png" class="illustration-left">
+
+    <img src="images/rightSide.png" class="illustration-right">
+
+    <div class="card-wrapper">
+        <div class="card">
+
+            <div class="header">
+                <div class="header-top">
+                    <div class="welcome-text">Welcome to SALONIX</div>
+                    <div class="auth-link-section">
+                        <p class="auth-question">Have an account ?</p>
+                        <a class="auth-link" href="customerLogin.html">Log In</a>
+                    </div>
+                </div>
+                <h1>Register</h1>
+            </div>
+
+            <!-- Register Form -->
+                    <form class="auth-form register-form" id="registerForm" onsubmit="handleRegister(event)">
+                        <!-- Name Field -->
+                        <div class="form-group">
+                            <label for="registerName" class="form-label">Name</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="text"
+                                    id="registerName"
+                                    class="form-input"
+                                    placeholder="Name"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Email and Phone Row -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="registerEmail" class="form-label">Email Address</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="email"
+                                        id="registerEmail"
+                                        class="form-input"
+                                        placeholder="Email Address"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerPhone" class="form-label">Phone Number</label>
+                                <div class="input-wrapper">
+                                    <input
+                                        type="tel"
+                                        id="registerPhone"
+                                        class="form-input"
+                                        placeholder="Phone Number"
+                                        required
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-group">
+                            <label for="registerPassword" class="form-label">Password</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="password"
+                                    id="registerPassword"
+                                    class="form-input password-input"
+                                    placeholder="Password"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password Field -->
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    class="form-input password-input"
+                                    placeholder="Confirm Password"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <!-- Register Button -->
+                        <button type="submit" class="submit-button">Register</button>
+                    </form>
+        </div>
+    </div>
+</div>
+
+<div id="registerSuccessModal" class="modal-overlay">
+        <div class="modal-content">
+            <img src="images/successLogo.png" class="modal-icon-img">
+            <div class="modal-body">
+                <h2 class="modal-title">Congratulations!</h2>
+                <p class="modal-message">You have been registered, Log In now!</p>
+                <button class="modal-button" onclick="closeModalAndShowLogin()">Okay</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Handle register form submission
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            console.log('Register attempt:', { name, email, phone, password });
+            
+            // Show success modal
+            showModal('registerSuccessModal');
+            
+            // Clear form
+            document.getElementById('registerForm').reset();
+        }
+        
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        function closeModalAndShowLogin(){
+            closeModal('registerSuccessModal');
+            window.location.href = "customerLogin.html"; // open login page
+        }
+
+        </script>
+</body>
+</html>
