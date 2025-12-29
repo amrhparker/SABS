@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff List | Admin | Salonix</title>
+
+    <!-- Staff-only CSS -->
+    <link rel="stylesheet" href="staff.css">
+</head>
+<body>
+
+    <!-- ================= ADMIN STAFF LIST ================= -->
+    <div class="staff-page-container">
+
+        <div class="staff-page-header">
+            <h2>Manage Staff</h2>
+            <a href="staff-create.html" class="btn-primary">+ Add Staff</a>
+        </div>
+
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Staff ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="staffTableBody">
+                <!-- displayList() injects rows here -->
+            </tbody>
+        </table>
+
+        <p id="staffListMessage" class="info-message"></p>
+    </div>
+
+    <!-- ================= STAFF VIEW JS ================= -->
+    <script src="staffView.js"></script>
+    <script src="staff.js"></script>
+</body>
+</html>
