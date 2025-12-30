@@ -1,31 +1,46 @@
 package controller;
 
-import dao.CustomerDao;
-import model.Customer;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.sql.*;
 
-@WebServlet("/login")
+@WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        CustomerDao dao = new CustomerDao();
-        Customer customer = dao.login(email, password);
+        try {
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            Connection con = DriverManager.getConnection(
+                    "jdbc:derby://localhost:1527/SABSdb", "app", "app"
+            );
 
-        if (customer != null) {
-            HttpSession session = request.getSession();
-            session.setAttribute("customer", customer);
-            response.sendRedirect("customerDashboard.jsp");
-        } else {
-            response.sendRedirect("login.html?error=invalid");
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT * FROM customer WHERE email=? AND password=?"
+            );
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                response.getWriter().write("success"); // return to JS
+            } else {
+                response.getWriter().write("failed");  // invalid login
+            }
+
+            con.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.getWriter().write("failed");
         }
     }
 }

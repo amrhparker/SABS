@@ -39,6 +39,7 @@ public class CustomerDao {
     }
 
     // Register method 
+    
     public boolean register(Customer customer) {
         String checkSql = "SELECT * FROM customer WHERE email = ?";
         String insertSql = "INSERT INTO customer (name, email, phone, password) VALUES (?, ?, ?, ?)";

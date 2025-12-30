@@ -11,13 +11,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-<script>
-function togglePassword(id){
-    const input = document.getElementById(id);
-    input.type = input.type === "password" ? "text" : "password";
-}
-</script>
-
 </head>
 <body>
 
@@ -45,10 +38,10 @@ function togglePassword(id){
                 <h1>Log In</h1>
             </div>
 
-            <form class="auth-form">
+            <form id="loginForm" class="auth-form" action="LoginServlet">
                 <div class="form-group">
                     <label class="form-label">Enter your email address</label>
-                    <input type="email" class="form-input" placeholder="Email Address" required>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="Email Address" required>
                 </div>
 
                 <div class="form-group">
@@ -59,21 +52,78 @@ function togglePassword(id){
                     </div>
                 </div>
 
-                <button class="submit-button">Log In</button>
+                <button type="submit" class="submit-button">Log In</button>
             </form>
         </div>
     </div>
 </div>
     
-     <!-- Success Modal - Login -->
-    <div id="loginSuccessModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-body">
-                <h2 class="modal-title">Welcome!</h2>
-                <p class="modal-message">You have been Log In!</p>
-                <button class="modal-button" onclick="closeModal('loginSuccessModal')">Okay</button>
-            </div>
+<!-- Success Modal -->
+<div id="loginSuccessModal" class="modal-overlay">
+    <div class="modal-content">
+        <img src="images/successLogo.png" class="modal-icon-img">
+        <div class="modal-body">
+            <h2 class="modal-title">Welcome!</h2>
+            <p class="modal-message">You have successfully logged in!</p>
+            <button class="modal-button" onclick="closeModal('loginSuccessModal')">Okay</button>
         </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div id="loginErrorModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-body">
+            <h2 class="modal-title">Login Failed</h2>
+            <p class="modal-message">Invalid email or password!</p>
+            <button class="modal-button" onclick="closeModal('loginErrorModal')">Okay</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(id){
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+}
+
+// Open/Close modals
+function openModal(id) {
+    document.getElementById(id).style.display = 'flex';
+}
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+    if(id === 'loginSuccessModal'){
+        window.location.href = "customerDashboard.html";
+    }
+}
+
+// Handle login
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // prevent form reload
+
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // Send login data to server using fetch/AJAX
+    fetch('LoginServlet', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data === 'success') {
+            openModal('loginSuccessModal'); // show success modal
+        } else {
+            openModal('loginErrorModal');   // show error modal
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
 
 </body>
 </html>
