@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import model.Customer;          
-import db.DBConnection;       
+import model.Customer;
+import db.DBConnect;  
 
 public class CustomerDao {
 
@@ -14,7 +14,7 @@ public class CustomerDao {
     public Customer login(String email, String password) {
         String sql = "SELECT * FROM customer WHERE email = ? AND password = ?";
 
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, email);
@@ -43,7 +43,7 @@ public class CustomerDao {
         String checkSql = "SELECT * FROM customer WHERE email = ?";
         String insertSql = "INSERT INTO customer (name, email, phone, password) VALUES (?, ?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection();
+        try (Connection conn = DBConnect.getConnection();
              PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
 
             // Check if email already exists

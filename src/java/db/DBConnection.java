@@ -2,23 +2,23 @@ package db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DBConnection {
 
-    public static Connection getConnection() {
-        Connection con = null;
+    private static final String URL = "jdbc:derby:db/SABSDB;create=true"; // db folder under project root
+    private static final String USER = ""; // embedded Derby doesn't need username/password
+    private static final String PASS = "";
 
+    static {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/salondb",
-                "root",
-                ""
-            );
-        } catch (Exception e) {
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver"); // load embedded driver
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
 
-        return con;
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASS);
     }
 }
