@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
         if (customer != null) {
             HttpSession session = request.getSession();
             session.setAttribute("customer", customer);
-            response.sendRedirect("customerDashboard.html");
+            response.sendRedirect("customerDashboard.jsp");
         } else {
             response.sendRedirect("login.html?error=invalid");
         }

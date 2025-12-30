@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALONIX - Manage Service</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFF;
+            color: #333843;
+            overflow-x: hidden;
+        }
+
+        /* ==================== LAYOUT ==================== */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .admin-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .admin-bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4.5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            width: 264px;
+            background: #FFF;
+            border-right: 1px solid #F0F1F3;
+            box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 20px;
+            height: 80px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            height: 79px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 18px 32px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+
+        .menu-item:hover {
+            background: #F9F9FC;
+        }
+
+        .menu-item.active {
+            background: #5C59E8;
+            color: #FFF;
+        }
+
+        .menu-item svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .menu-item.active svg path {
+            fill: #FFF;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            margin-left: 264px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==================== TOP BAR ==================== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: #FFF;
+            border-bottom: 1px solid #F0F1F3;
+            box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
+            height: 72px;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-left: auto;
+        }
+
+        .divider {
+            width: 1px;
+            height: 40px;
+            background: #F0F1F3;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            position: relative;
+        }
+
+        .user-avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E0E2E7;
+        }
+
+        .user-status {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 10px;
+            height: 10px;
+            background: #3DA172;
+            border: 2px solid #FFF;
+            border-radius: 50%;
+        }
+
+        .user-details h4 {
+            color: #1A1C21;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+        }
+
+        .user-details p {
+            color: #667085;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 18px;
+        }
+
+        /* ==================== PAGE CONTAINER ==================== */
+        .page-container {
+            display: none;
+        }
+
+        .page-container.active {
+            display: block;
+        }
+
+        /* ==================== SERVICES/STAFFS PAGE ==================== */
+        .services-page, .staffs-page {
+            padding: 40px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .services-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            background: #FFF;
+            border: 1px solid #F0F1F3;
+            border-bottom: none;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .services-title {
+            color: #333843;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+
+        .services-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #5C59E8;
+            background: #F9F9FC;
+            min-width: 200px;
+        }
+
+        .search-box svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            color: #333843;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-add-service {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            gap: 8px;
+            border-radius: 8px;
+            background: #624DE3;
+            color: #FFF;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-add-service:hover {
+            background: #5243c7;
+        }
+
+        /* ==================== TABLE ==================== */
+        .services-table {
+            background: #FFF;
+            border: 1px solid #F0F1F3;
+            border-top: none;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #F9F9FC;
+        }
+
+        th {
+            padding: 18px 22px;
+            text-align: left;
+            color: #333843;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        th:last-child {
+            text-align: center;
+        }
+
+        td {
+            padding: 18px 22px;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        td:first-child {
+            color: #333843;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            padding: 8px 12px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: #FFF;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: #624DE3;
+        }
+
+        .btn-view:hover {
+            background: #5243c7;
+        }
+
+        .btn-edit {
+            background: #624DE3;
+        }
+
+        .btn-edit:hover {
+            background: #5243c7;
+        }
+
+        .btn-delete {
+            background: #E34D57;
+        }
+
+        .btn-delete:hover {
+            background: #d43f49;
+        }
+
+        /* ==================== PAGINATION ==================== */
+        .services-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 14px 24px;
+            background: #FFF;
+            border: 1px solid #F0F1F3;
+            border-top: none;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            display: flex;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            background: #DEDEFA;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #d0cdf7;
+        }
+
+        .pagination-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .pagination-number {
+            display: flex;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            color: #5C59E8;
+            font-size: 14px;
+            font-weight: 600;
+            background: #DEDEFA;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-number.active {
+            background: #5C59E8;
+            color: #FFF;
+        }
+
+        .pagination-number:hover:not(.active) {
+            background: #d0cdf7;
+        }
+
+        /* ==================== MODALS ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #FFF;
+            border-radius: 8px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        .modal-title {
+            color: #333843;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .service-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #979797;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            flex: 1;
+            color: #818181;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 150%;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #343434;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 150%;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            display: flex;
+            padding: 14px 24px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 189px;
+        }
+
+        .btn-modal-primary {
+            background: #624DE3;
+            color: #FFF;
+        }
+
+        .btn-modal-primary:hover {
+            background: #5243c7;
+        }
+
+        .btn-modal-secondary {
+            background: #000;
+            color: #FFF;
+        }
+
+        .btn-modal-secondary:hover {
+            background: #333;
+        }
+
+        .btn-modal-danger {
+            background: #E34D50;
+            color: #FFF;
+        }
+
+        .btn-modal-danger:hover {
+            background: #d43f49;
+        }
+
+        .btn-modal-success {
+            background: #2DA831;
+            color: #FFF;
+        }
+
+        .btn-modal-success:hover {
+            background: #259328;
+        }
+
+        /* ==================== FORM STYLES ==================== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 16px;
+            border-radius: 9px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            background: #FFF;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: #5C59E8;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 300;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.7359 0.305918C11.5667 0.110038 11.3373 0 11.098 0C10.8588 0 10.6294 0.110038 10.4602 0.305918L5.99455 5.47795L1.52889 0.305919C1.35874 0.11559 1.13086 0.0102748 0.894315 0.0126552C0.657772 0.0150361 0.431501 0.124922 0.264235 0.318646C0.0969682 0.512371 0.00209099 0.774434 3.49167e-05 1.04839C-0.0020202 1.32235 0.0889117 1.58628 0.253246 1.78334L5.35673 7.69408C5.52591 7.88996 5.75534 8 5.99455 8C6.23377 8 6.4632 7.88996 6.63238 7.69408L11.7359 1.78334C11.905 1.5874 12 1.32169 12 1.04463C12 0.767572 11.905 0.501857 11.7359 0.305918Z' fill='black'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .form-textarea {
+            min-height: 151px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 24px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* ==================== SUCCESS/CONFIRMATION MODALS ==================== */
+        .modal-small {
+            max-width: 556px;
+        }
+
+        .modal-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #E8DEF8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-circle svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .modal-message {
+            color: #344054;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            margin-bottom: 32px;
+        }
+
+        .confirmation-message {
+            color: #101828;
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 32px;
+            margin-bottom: 32px;
+        }
+
+        .confirmation-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #DCFAE6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .confirmation-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+            }
+
+            .services-page, .staffs-page {
+                padding: 24px 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .services-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .services-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .btn-add-service {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .btn-modal {
+                width: 100%;
+            }
+
+            .services-table {
+                overflow-x: scroll;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 12px 16px;
+            }
+
+            .services-page, .staffs-page {
+                padding: 16px 12px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 16px;
+            }
+
+            th, td {
+                padding: 12px 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background -->
+    <div class="admin-bg">
+        <img src="https://tinyurl.com/bdfwt4ec" alt="" class="admin-bg-image">
+        <div class="admin-bg-overlay"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <img src="https://tinyurl.com/2k72rnvp" alt="SALONIX Logo">
+        </div>
+        
+        <nav class="sidebar-menu">
+            <div class="menu-item" onclick="showPage('dashboard')" data-page="dashboard">
+                Dashboard
+            </div>
+            
+            <div class="menu-item" onclick="showPage('appointments')" data-page="appointments">
+                Appointments
+            </div>
+            
+            <div class="menu-item" onclick="showPage('customers')" data-page="customers">
+                Customers
+            </div>
+            
+            <div class="menu-item active" onclick="showPage('services')" data-page="services">
+                Services
+            </div>
+            
+            <div class="menu-item" onclick="showPage('staffs')" data-page="staffs">
+                Staffs
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            
+            <div class="top-bar-right">
+                <div class="divider"></div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <div class="user-avatar-img"></div>
+                        <div class="user-status"></div>
+                    </div>
+                    <div class="user-details">
+                        <h4>Megat Ameer</h4>
+                        <p>Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Page -->
+        <div class="page-container" id="servicesPage">
+            <div class="services-page">
+                <div class="services-header">
+                    <h2 class="services-title">List of Services</h2>
+                    <div class="services-actions">
+                        <div class="search-box">
+                            <input type="text" placeholder="Search">
+                        </div>
+                        <button class="btn-add-service" onclick="openAddModal()">Add New Service</button>
+                    </div>
+                </div>
+
+                <div class="services-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Category</th>
+                                <th>Service</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="servicesTableBody">
+                            <tr>
+                                <td>1</td>
+                                <td>Wash-Cut</td>
+                                <td>Basic Wash + Cut</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(0)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(0)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(0)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Wash-Cut</td>
+                                <td>Wash + Style Cut</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(1)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(1)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(1)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>Wash-Cut</td>
+                                <td>Kids Wash-Cut</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(2)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(2)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(2)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Dry-Cut</td>
+                                <td>Basic & Style Dry-Cut</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(3)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(3)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(3)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Dry-Cut</td>
+                                <td>Trim & Shape</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(4)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(4)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(4)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>Dry-Cut</td>
+                                <td>Fringe Cut</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(5)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(5)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(5)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>Hair-Color</td>
+                                <td>Full Hair-Color</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(6)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(6)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(6)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>Hair-Color</td>
+                                <td>Root Touch-Up</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action btn-view" onclick="openViewModal(7)">View</button>
+                                        <button class="btn-action btn-edit" onclick="openEditModal(7)">Edit</button>
+                                        <button class="btn-action btn-delete" onclick="openDeleteModal(7)">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="services-footer">
+                    <div class="pagination">
+                        <button class="pagination-btn">
+                        </button>
+                        <div class="pagination-number active">1</div>
+                        <div class="pagination-number">2</div>
+                        <button class="pagination-btn">
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Staffs Page -->
+        <div class="page-container" id="staffsPage">
+        <div class="staffs-page">
+        </div>
+        </div>
+
+    
+    <!-- View Service Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Service Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="service-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Category</div>
+                        <div class="detail-value" id="viewCategory">Wash-Cut</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Service</div>
+                        <div class="detail-value" id="viewService">Basic wash + Cut</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value" id="viewPrice">RM 35</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value" id="viewDescription">A refreshing hair wash followed by a clean, simple haircut. Perfect for anyone who wants a neat look without styling extras.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-secondary" onclick="closeModal('viewModal')">Back</button>
+                <button class="btn-modal btn-modal-primary" onclick="openEditModalFromView()">Edit</button>
+                <button class="btn-modal btn-modal-danger" onclick="openDeleteModalFromView()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Service Details - Edit</h3>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="editCategory">
+                            <option value="Wash-Cut">Wash-Cut</option>
+                            <option value="Dry-Cut">Dry-Cut</option>
+                            <option value="Hair-Color">Hair-Color</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Service</label>
+                            <input type="text" class="form-input" id="editService" placeholder="Service">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-input" id="editPrice" placeholder="Price">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="editDescription" placeholder="Description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-danger" onclick="closeModal('editModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Service Details - Add New</h3>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="addCategory">
+                            <option value="">Select Category</option>
+                            <option value="Wash-Cut">Wash-Cut</option>
+                            <option value="Dry-Cut">Dry-Cut</option>
+                            <option value="Hair-Color">Hair-Color</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Service</label>
+                            <input type="text" class="form-input" id="addService" placeholder="Service">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-input" id="addPrice" placeholder="Price">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="addDescription" placeholder="Description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-danger" onclick="closeModal('addModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveAdd()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Service Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="confirmation-icon"></div>
+                <div class="confirmation-message">
+                    Are you sure you want to permanently delete this service information? This action is irreversible.
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-modal btn-modal-danger" onclick="closeModal('deleteModal')">Cancel</button>
+                    <button class="btn-modal btn-modal-success" onclick="confirmDelete()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Edit) -->
+    <div class="modal-overlay" id="successEditModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle"></div>
+                </div>
+                <div class="modal-message">
+                    Service details updated successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successEditModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Add) -->
+    <div class="modal-overlay" id="successAddModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle"></div>
+                </div>
+                <div class="modal-message">
+                    New service record added successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successAddModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Delete) -->
+    <div class="modal-overlay" id="successDeleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle"></div>
+                </div>
+                <div class="modal-message">
+                    Service record deleted successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successDeleteModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const services = [
+            { category: 'Wash-Cut', service: 'Basic Wash + Cut', price: 'RM 35', description: 'A refreshing hair wash followed by a clean, simple haircut. Perfect for anyone who wants a neat look without styling extras.' },
+            { category: 'Wash-Cut', service: 'Wash + Style Cut', price: 'RM 45', description: 'Professional hair wash with a styled cut tailored to your preference.' },
+            { category: 'Wash-Cut', service: 'Kids Wash-Cut', price: 'RM 25', description: 'Gentle wash and cut specially designed for children.' },
+            { category: 'Dry-Cut', service: 'Basic & Style Dry-Cut', price: 'RM 30', description: 'Quick and precise dry cut with basic styling.' },
+            { category: 'Dry-Cut', service: 'Trim & Shape', price: 'RM 20', description: 'Professional trimming and shaping to maintain your current style.' },
+            { category: 'Dry-Cut', service: 'Fringe Cut', price: 'RM 15', description: 'Quick fringe trim to keep your bangs looking fresh.' },
+            { category: 'Hair-Color', service: 'Full Hair-Color', price: 'RM 150', description: 'Complete hair coloring service with premium products.' },
+            { category: 'Hair-Color', service: 'Root Touch-Up', price: 'RM 80', description: 'Root coloring to maintain your current hair color.' }
+        ];
+
+        let currentServiceIndex = 0;
+
+        // Page navigation
+        function showPage(page) {
+        // Hide all pages
+        document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+    
+        // Remove active class from all sidebar items
+        document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+
+        // Show selected page
+        const pageId = page + 'Page';
+        const selectedPage = document.getElementById(pageId);
+        if (selectedPage) selectedPage.classList.add('active');
+
+        // Set active class on sidebar menu
+        const menuItem = document.querySelector(`.menu-item[data-page="${page}"]`);
+        if (menuItem) menuItem.classList.add('active');
+        }
+
+        // Show Services page by default on page load
+        window.addEventListener('DOMContentLoaded', () => {
+        showPage('services');
+        });
+
+
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function openModal(modalId) {
+            // Close all modals first
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+        
+        // View modal
+        function openViewModal(index) {
+            currentServiceIndex = index;
+            const service = services[index];
+            
+            document.getElementById('viewCategory').textContent = service.category;
+            document.getElementById('viewService').textContent = service.service;
+            document.getElementById('viewPrice').textContent = service.price;
+            document.getElementById('viewDescription').textContent = service.description;
+            
+            openModal('viewModal');
+        }
+
+        // Edit modal
+        function openEditModal(index) {
+            currentServiceIndex = index;
+            const service = services[index];
+            
+            document.getElementById('editCategory').value = service.category;
+            document.getElementById('editService').value = service.service;
+            document.getElementById('editPrice').value = service.price;
+            document.getElementById('editDescription').value = service.description;
+            
+            openModal('editModal');
+        }
+
+        function openEditModalFromView() {
+            closeModal('viewModal');
+            openEditModal(currentServiceIndex);
+        }
+
+        function saveEdit() {
+            const service = services[currentServiceIndex];
+            
+            service.category = document.getElementById('editCategory').value;
+            service.service = document.getElementById('editService').value;
+            service.price = document.getElementById('editPrice').value;
+            service.description = document.getElementById('editDescription').value;
+            
+            closeModal('editModal');
+            openModal('successEditModal');
+        }
+
+        // Add modal
+        function openAddModal() {
+            document.getElementById('addForm').reset();
+            openModal('addModal');
+        }
+
+        function saveAdd() {
+            const newService = {
+                category: document.getElementById('addCategory').value,
+                service: document.getElementById('addService').value,
+                price: document.getElementById('addPrice').value,
+                description: document.getElementById('addDescription').value
+            };
+            
+            services.push(newService);
+            
+            closeModal('addModal');
+            openModal('successAddModal');
+        }
+
+        // Delete modal
+        function openDeleteModal(index) {
+            currentServiceIndex = index;
+            openModal('deleteModal');
+        }
+
+        function openDeleteModalFromView() {
+            closeModal('viewModal');
+            openDeleteModal(currentServiceIndex);
+        }
+
+        function confirmDelete() {
+            services.splice(currentServiceIndex, 1);
+            
+            closeModal('deleteModal');
+            openModal('successDeleteModal');
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.querySelector('.menu-icon');
+            
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !menuIcon.contains(e.target)) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            }
+        });
+        
+        // Show Services page by default on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            showPage('services');
+        });
+
+    </script>
+</body>
+</html>
