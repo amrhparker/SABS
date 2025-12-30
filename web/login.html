@@ -36,6 +36,12 @@
                     </div>
                 </div>
                 <h1>Log In</h1>
+                <br>
+                <div class="role-options">
+                    <label><input type="radio" name="role" value="customer" required> Customer</label>
+                    <label><input type="radio" name="role" value="staff" required> Staff</label>
+                    <label><input type="radio" name="role" value="admin" required> Admin</label>
+                </div>
             </div>
 
             <form id="loginForm" class="auth-form" action="LoginServlet">
@@ -94,7 +100,12 @@ function openModal(id) {
 function closeModal(id) {
     document.getElementById(id).style.display = 'none';
     if(id === 'loginSuccessModal'){
-        window.location.href = "customerDashboard.html";
+        const role = document.querySelector('input[name="role"]:checked').value;
+
+        if(role === "customer") window.location.href = "customerDashboard.html";
+        if(role === "staff") window.location.href = "staffDashboard.html";
+        if(role === "admin") window.location.href = "adminDashboard.html";
+
     }
 }
 
@@ -104,6 +115,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
 
     const email = document.getElementById('loginEmail').value;
     const password = document.getElementById('loginPassword').value;
+    const role = document.querySelector('input[name="role"]:checked').value;
 
     // Send login data to server using fetch/AJAX
     fetch('LoginServlet', {
@@ -111,14 +123,14 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&role=${encodeURIComponent(role)}`
     })
-    .then(response => response.text())
-    .then(data => {
-        if (data === 'success') {
-            openModal('loginSuccessModal'); // show success modal
+    .then(res => res.text())
+    .then(data =>{
+        if(data === "success"){
+            openModal('loginSuccessModal');  // show success popup
         } else {
-            openModal('loginErrorModal');   // show error modal
+            alert("❌ Incorrect email/password or role not found in database.");
         }
     })
     .catch(error => console.error('Error:', error));

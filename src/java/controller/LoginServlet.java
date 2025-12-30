@@ -15,6 +15,13 @@ public class LoginServlet extends HttpServlet {
 
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+        String role = request.getParameter("role");
+
+        String table = "";  // choose DB table based on role
+        
+        if(role.equals("customer")) table = "customer";
+        else if(role.equals("staff")) table = "staff";
+        else if(role.equals("admin")) table = "admin";
 
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -23,17 +30,18 @@ public class LoginServlet extends HttpServlet {
             );
 
             PreparedStatement ps = con.prepareStatement(
-                    "SELECT * FROM customer WHERE email=? AND password=?"
+                "SELECT * FROM " + table + " WHERE email=? AND password=?"
             );
+
             ps.setString(1, email);
             ps.setString(2, password);
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                response.getWriter().write("success"); // return to JS
+                response.getWriter().write("success"); // login ok
             } else {
-                response.getWriter().write("failed");  // invalid login
+                response.getWriter().write("failed");  // wrong login
             }
 
             con.close();
