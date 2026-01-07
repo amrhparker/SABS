@@ -1,16 +1,1774 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>Staff Dashboard</div>
-    </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALONIX - Admin Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFF;
+            color: #333843;
+            overflow-x: hidden;
+        }
+
+        /* ==================== LAYOUT ==================== */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .admin-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .admin-bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4.5px);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar {
+            width: 264px;
+            background: #FFF;
+            border-right: 1px solid #F0F1F3;
+            box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 20px;
+            height: 80px;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            height: 79px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 18px 32px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(0, 0, 0, 0.6);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 20px;
+        }
+
+        .menu-item:hover {
+            background: #F9F9FC;
+        }
+
+        .menu-item.active {
+            background: #5C59E8;
+            color: #FFF;
+        }
+
+        .menu-item svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .menu-item.active svg path {
+            fill: #FFF;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            margin-left: 264px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ==================== TOP BAR ==================== */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            background: #FFF;
+            border-bottom: 1px solid #F0F1F3;
+            box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
+            height: 72px;
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .divider {
+            width: 1px;
+            height: 40px;
+            background: #F0F1F3;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            position: relative;
+        }
+
+        .user-avatar-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E0E2E7;
+        }
+
+        .user-status {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 10px;
+            height: 10px;
+            background: #3DA172;
+            border: 2px solid #FFF;
+            border-radius: 50%;
+        }
+
+        .user-details h4 {
+            color: #1A1C21;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+        }
+
+        .user-details p {
+            color: #667085;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 18px;
+        }
+
+        /* ==================== PAGE CONTAINER ==================== */
+        .page-container {
+            display: none;
+        }
+
+        .page-container.active {
+            display: block;
+        }
+
+        /* ==================== SERVICES/STAFFS PAGE ==================== */
+        .services-page, .staffs-page {
+            padding: 40px 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .services-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px;
+            background: #FFF;
+            border: 1px solid #F0F1F3;
+            border-bottom: none;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .services-title {
+            color: #333843;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+
+        .services-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #5C59E8;
+            background: #F9F9FC;
+            min-width: 200px;
+        }
+
+        .search-box svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            color: #333843;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-add-service {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            gap: 8px;
+            border-radius: 8px;
+            background: #624DE3;
+            color: #FFF;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .btn-add-service:hover {
+            background: #5243c7;
+        }
+
+        /* ==================== TABLE ==================== */
+        .services-table {
+            background: #FFF;
+            border: 1px solid #F0F1F3;
+            border-top: none;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #F9F9FC;
+        }
+
+        th {
+            padding: 18px 22px;
+            text-align: left;
+            color: #333843;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        th:last-child {
+            text-align: center;
+        }
+
+        td {
+            padding: 18px 22px;
+            color: #667085;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 20px;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        td:first-child {
+            color: #333843;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            padding: 8px 12px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            color: #FFF;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: #624DE3;
+        }
+
+        .btn-view:hover {
+            background: #5243c7;
+        }
+
+        .btn-edit {
+            background: #624DE3;
+        }
+
+        .btn-edit:hover {
+            background: #5243c7;
+        }
+
+        .btn-delete {
+            background: #E34D57;
+        }
+
+        .btn-delete:hover {
+            background: #d43f49;
+        }
+
+        /* ==================== PAGINATION ==================== */
+        .services-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 14px 24px;
+            background: #FFF;
+            border: 1px solid #F0F1F3;
+            border-top: none;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            display: flex;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            background: #DEDEFA;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-btn:hover {
+            background: #d0cdf7;
+        }
+
+        .pagination-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .pagination-number {
+            display: flex;
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            color: #5C59E8;
+            font-size: 14px;
+            font-weight: 600;
+            background: #DEDEFA;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-number.active {
+            background: #5C59E8;
+            color: #FFF;
+        }
+
+        .pagination-number:hover:not(.active) {
+            background: #d0cdf7;
+        }
+
+        /* ==================== MODALS ==================== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            pointer-events: auto;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #FFF;
+            border-radius: 8px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        .modal-title {
+            color: #333843;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 28px;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .service-details {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #979797;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            flex: 1;
+            color: #818181;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 150%;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #343434;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 150%;
+        }
+
+        .modal-footer {
+            padding: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            display: flex;
+            padding: 14px 24px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 189px;
+        }
+
+        .btn-modal-primary {
+            background: #624DE3;
+            color: #FFF;
+        }
+
+        .btn-modal-primary:hover {
+            background: #5243c7;
+        }
+
+        .btn-modal-secondary {
+            background: #000;
+            color: #FFF;
+        }
+
+        .btn-modal-secondary:hover {
+            background: #333;
+        }
+
+        .btn-modal-danger {
+            background: #E34D50;
+            color: #FFF;
+        }
+
+        .btn-modal-danger:hover {
+            background: #d43f49;
+        }
+
+        .btn-modal-success {
+            background: #2DA831;
+            color: #FFF;
+        }
+
+        .btn-modal-success:hover {
+            background: #259328;
+        }
+
+        /* ==================== FORM STYLES ==================== */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            padding: 16px;
+            border-radius: 9px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            background: #FFF;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            border-color: #5C59E8;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: rgba(0, 0, 0, 0.4);
+            font-weight: 300;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.7359 0.305918C11.5667 0.110038 11.3373 0 11.098 0C10.8588 0 10.6294 0.110038 10.4602 0.305918L5.99455 5.47795L1.52889 0.305919C1.35874 0.11559 1.13086 0.0102748 0.894315 0.0126552C0.657772 0.0150361 0.431501 0.124922 0.264235 0.318646C0.0969682 0.512371 0.00209099 0.774434 3.49167e-05 1.04839C-0.0020202 1.32235 0.0889117 1.58628 0.253246 1.78334L5.35673 7.69408C5.52591 7.88996 5.75534 8 5.99455 8C6.23377 8 6.4632 7.88996 6.63238 7.69408L11.7359 1.78334C11.905 1.5874 12 1.32169 12 1.04463C12 0.767572 11.905 0.501857 11.7359 0.305918Z' fill='black'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .form-textarea {
+            min-height: 151px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 24px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* ==================== SUCCESS/CONFIRMATION MODALS ==================== */
+        .modal-small {
+            max-width: 556px;
+        }
+
+        .modal-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #E8DEF8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon-circle svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .modal-message {
+            color: #344054;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24px;
+            margin-bottom: 32px;
+        }
+
+        .confirmation-message {
+            color: #101828;
+            font-size: 24px;
+            font-weight: 500;
+            line-height: 32px;
+            margin-bottom: 32px;
+        }
+
+        .confirmation-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #DCFAE6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .confirmation-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .main-content {
+                margin-left: 220px;
+            }
+
+            .services-page, .staffs-page {
+                padding: 24px 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .services-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .services-actions {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .btn-add-service {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .modal-footer {
+                flex-direction: column;
+            }
+
+            .btn-modal {
+                width: 100%;
+            }
+
+            .services-table {
+                overflow-x: scroll;
+            }
+
+            table {
+                min-width: 600px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .top-bar {
+                padding: 12px 16px;
+            }
+
+            .services-page, .staffs-page {
+                padding: 16px 12px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .modal-header,
+            .modal-body,
+            .modal-footer {
+                padding: 16px;
+            }
+
+            th, td {
+                padding: 12px 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-action {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background -->
+    <div class="admin-bg">
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/1952c35b9d9f3235ef7d57200dcbbf59971acb5d?width=2880" alt="" class="admin-bg-image">
+        <div class="admin-bg-overlay"></div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/db3e61846a007f94950a5874b027025362939df5?width=200" alt="SALONIX Logo">
+        </div>
+        
+        <nav class="sidebar-menu">
+            <div class="menu-item" onclick="showPage('dashboard')" data-page="dashboard">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5.5C3 4.11929 4.11929 3 5.5 3H8.5C9.88071 3 11 4.11929 11 5.5V8.5C11 9.88071 9.88071 11 8.5 11H5.5C4.11929 11 3 9.88071 3 8.5V5.5ZM5.5 5H8.5C8.77614 5 9 5.22386 9 5.5V8.5C9 8.77614 8.77614 9 8.5 9H5.5C5.22386 9 5 8.77614 5 8.5V5.5C5 5.22386 5.22386 5 5.5 5Z" fill="black" fill-opacity="0.6"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M13 5.5C13 4.11929 14.1193 3 15.5 3H18.5C19.8807 3 21 4.11929 21 5.5V8.5C21 9.88071 19.8807 11 18.5 11H15.5C14.1193 11 13 9.88071 13 8.5V5.5ZM15.5 5H18.5C18.7761 5 19 5.22386 19 5.5V8.5C19 8.77614 18.7761 9 18.5 9H15.5C15.2239 9 15 8.77614 15 8.5V5.5C15 5.22386 15.2239 5 15.5 5Z" fill="black" fill-opacity="0.6"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5 13C14.1193 13 13 14.1193 13 15.5V18.5C13 19.8807 14.1193 21 15.5 21H18.5C19.8807 21 21 19.8807 21 18.5V15.5C21 14.1193 19.8807 13 18.5 13H15.5ZM18.5 15H15.5C15.2239 15 15 15.2239 15 15.5V18.5C15 18.7761 15.2239 19 15.5 19H18.5C18.7761 19 19 18.7761 19 18.5V15.5C19 15.2239 18.7761 15 18.5 15Z" fill="black" fill-opacity="0.6"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3 15.5C3 14.1193 4.11929 13 5.5 13H8.5C9.88071 13 11 14.1193 11 15.5V18.5C11 19.8807 9.88071 21 8.5 21H5.5C4.11929 21 3 19.8807 3 18.5V15.5ZM5.5 15H8.5C8.77614 15 9 15.2239 9 15.5V18.5C9 18.7761 8.77614 19 8.5 19H5.5C5.22386 19 5 18.7761 5 18.5V15.5C5 15.2239 5.22386 15 5.5 15Z" fill="black" fill-opacity="0.6"/>
+                </svg>
+                Dashboard
+            </div>
+            
+            <div class="menu-item" onclick="showPage('appointments')" data-page="appointments">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.9666 12.6975C16.3519 12.3017 16.3433 11.6686 15.9475 11.2834C15.5517 10.8982 14.9186 10.9068 14.5334 11.3025L11.2737 14.6517L9.8755 13.5309C9.44459 13.1854 8.81522 13.2547 8.46979 13.6856C8.12435 14.1166 8.19365 14.7459 8.62457 15.0914L11.0857 17.0643C11.2867 17.2254 11.5771 17.2075 11.7567 17.0229L15.9666 12.6975Z" fill="black" fill-opacity="0.6"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C8.55228 2 9 2.44772 9 3H15C15 2.44772 15.4477 2 16 2C16.5523 2 17 2.44772 17 3H18C19.6569 3 21 4.34315 21 6V19C21 20.6569 19.6569 22 18 22H6C4.34315 22 3 20.6569 3 19V6C3 4.34315 4.34315 3 6 3H7C7 2.44772 7.44772 2 8 2ZM19 6V7H5V6C5 5.44772 5.44772 5 6 5H7C7 5.55228 7.44772 6 8 6C8.55228 6 9 5.55228 9 5H15C15 5.55228 15.4477 6 16 6C16.5523 6 17 5.55228 17 5H18C18.5523 5 19 5.44772 19 6ZM5 19V9H19V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19Z" fill="black" fill-opacity="0.6"/>
+                </svg>
+                Appointments
+            </div>
+            
+            <div class="menu-item" onclick="showPage('customers')" data-page="customers">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 6.5C14.5 8.98528 12.4853 11 10 11C7.51472 11 5.5 8.98528 5.5 6.5C5.5 4.01472 7.51472 2 10 2C12.4853 2 14.5 4.01472 14.5 6.5ZM12.5 6.5C12.5 7.88071 11.3807 9 10 9C8.61929 9 7.5 7.88071 7.5 6.5C7.5 5.11929 8.61929 4 10 4C11.3807 4 12.5 5.11929 12.5 6.5Z" fill="black" fill-opacity="0.6"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2 18.9231C2 15.0996 5.09957 12 8.92308 12H11.0769C14.9004 12 18 15.0996 18 18.9231C18 20.0701 17.0701 21 15.9231 21H4.07692C2.92987 21 2 20.0701 2 18.9231ZM4 18.9231C4 16.2041 6.20414 14 8.92308 14H11.0769C13.7959 14 16 16.2041 16 18.9231C16 18.9656 15.9656 19 15.9231 19H4.07692C4.03444 19 4 18.9656 4 18.9231Z" fill="black" fill-opacity="0.6"/>
+                    <path d="M18.9198 20.0973C18.8164 20.4981 19.0774 21 19.4913 21H19.9231C21.0701 21 22 20.0701 22 18.9231C22 15.0996 18.9004 12 15.0769 12C14.9347 12 14.8829 12.1975 15.0036 12.2727C15.9494 12.8614 16.7705 13.6314 17.4182 14.5343C17.4621 14.5955 17.5187 14.6466 17.5835 14.685C19.0301 15.5424 20 17.1195 20 18.9231C20 18.9656 19.9656 19 19.9231 19H19.4494C19.1985 19 19 19.2106 19 19.4615C19 19.6811 18.9721 19.8941 18.9198 20.0973Z" fill="black" fill-opacity="0.6"/>
+                    <path d="M14.919 8.96308C14.974 8.85341 15.0645 8.76601 15.1729 8.70836C15.9624 8.28814 16.5 7.45685 16.5 6.5C16.5 5.54315 15.9624 4.71186 15.1729 4.29164C15.0645 4.23399 14.974 4.14659 14.919 4.03692C14.6396 3.48001 14.2684 2.97712 13.8252 2.5481C13.623 2.35231 13.7185 2 14 2C16.4853 2 18.5 4.01472 18.5 6.5C18.5 8.98528 16.4853 11 14 11C13.7185 11 13.623 10.6477 13.8252 10.4519C14.2684 10.0229 14.6396 9.51999 14.919 8.96308Z" fill="black" fill-opacity="0.6"/>
+                </svg>
+                Customers
+            </div>
+            
+            <div class="menu-item" onclick="showPage('services')" data-page="services">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6608 2C17.6951 2 18.6566 2.53286 19.2048 3.41L21.4103 6.93883C21.5695 7.19353 21.6539 7.48785 21.6539 7.78821C21.6539 8.84672 21.2108 9.80174 20.5 10.4779V18C20.5 20.2091 18.7091 22 16.5 22H7.5C5.29086 22 3.5 20.2091 3.5 18V10.4779C2.78924 9.80167 2.34619 8.84668 2.34619 7.78821C2.34619 7.48785 2.4306 7.19353 2.58979 6.93883L4.79531 3.41C5.34352 2.53286 6.30493 2 7.3393 2H16.6608ZM7.3393 4C6.99451 4 6.67404 4.17762 6.4913 4.47L4.34958 7.89676C4.40557 8.79158 5.14904 9.5 6.05798 9.5H6.23081C7.27165 9.5 8.11542 8.65623 8.11542 7.61538H10.1154C10.1154 8.65623 10.9592 9.5 12 9.5C13.0409 9.5 13.8847 8.65623 13.8847 7.61538H15.8847C15.8847 8.65623 16.7284 9.5 17.7693 9.5H17.9421C18.851 9.5 19.5945 8.79158 19.6505 7.89676L17.5088 4.47C17.326 4.17762 17.0056 4 16.6608 4H7.3393ZM17.9421 11.5C18.1317 11.5 18.318 11.4858 18.5 11.4583V18C18.5 19.1046 17.6046 20 16.5 20H16V16C16 14.3431 14.6569 13 13 13H11C9.34315 13 8 14.3431 8 16V20H7.5C6.39543 20 5.5 19.1046 5.5 18V11.4583C5.682 11.4858 5.86833 11.5 6.05798 11.5H6.23081C7.37546 11.5 8.40448 11.0049 9.11542 10.2172C9.82636 11.0049 10.8554 11.5 12 11.5C13.1447 11.5 14.1737 11.0049 14.8847 10.2172C15.5956 11.0049 16.6246 11.5 17.7693 11.5H17.9421ZM10 20H14V16C14 15.4477 13.5523 15 13 15H11C10.4477 15 10 15.4477 10 16V20Z" fill="#667085"/>
+                </svg>
+                Services
+            </div>
+            
+            <div class="menu-item active" onclick="showPage('staffs')" data-page="staffs">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 6.5C14.5 8.98528 12.4853 11 10 11C7.51472 11 5.5 8.98528 5.5 6.5C5.5 4.01472 7.51472 2 10 2C12.4853 2 14.5 4.01472 14.5 6.5ZM12.5 6.5C12.5 7.88071 11.3807 9 10 9C8.61929 9 7.5 7.88071 7.5 6.5C7.5 5.11929 8.61929 4 10 4C11.3807 4 12.5 5.11929 12.5 6.5Z" fill="white"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M2 18.9231C2 15.0996 5.09957 12 8.92308 12H11.0769C14.9004 12 18 15.0996 18 18.9231C18 20.0701 17.0701 21 15.9231 21H4.07692C2.92987 21 2 20.0701 2 18.9231ZM4 18.9231C4 16.2041 6.20414 14 8.92308 14H11.0769C13.7959 14 16 16.2041 16 18.9231C16 18.9656 15.9656 19 15.9231 19H4.07692C4.03444 19 4 18.9656 4 18.9231Z" fill="white"/>
+                    <path d="M18.9198 20.0973C18.8164 20.4981 19.0774 21 19.4913 21H19.9231C21.0701 21 22 20.0701 22 18.9231C22 15.0996 18.9004 12 15.0769 12C14.9347 12 14.8829 12.1975 15.0036 12.2727C15.9494 12.8614 16.7705 13.6314 17.4182 14.5343C17.4621 14.5955 17.5187 14.6466 17.5835 14.685C19.0301 15.5424 20 17.1195 20 18.9231C20 18.9656 19.9656 19 19.9231 19H19.4494C19.1985 19 19 19.2106 19 19.4615C19 19.6811 18.9721 19.8941 18.9198 20.0973Z" fill="white"/>
+                    <path d="M14.919 8.96308C14.974 8.85341 15.0645 8.76601 15.1729 8.70836C15.9624 8.28814 16.5 7.45685 16.5 6.5C16.5 5.54315 15.9624 4.71186 15.1729 4.29164C15.0645 4.23399 14.974 4.14659 14.919 4.03692C14.6396 3.48001 14.2684 2.97712 13.8252 2.5481C13.623 2.35231 13.7185 2 14 2C16.4853 2 18.5 4.01472 18.5 6.5C18.5 8.98528 16.4853 11 14 11C13.7185 11 13.623 10.6477 13.8252 10.4519C14.2684 10.0229 14.6396 9.51999 14.919 8.96308Z" fill="white"/>
+                </svg>
+                Staffs
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <svg class="menu-icon" onclick="toggleSidebar()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 7C3 6.44772 3.44772 6 4 6H20C20.5523 6 21 6.44772 21 7C21 7.55228 20.5523 8 20 8H4C3.44772 8 3 7.55228 3 7Z" fill="#667085"/>
+                <path d="M3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12Z" fill="#667085"/>
+                <path d="M4 16C3.44772 16 3 16.4477 3 17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17C21 16.4477 20.5523 16 20 16H4Z" fill="#667085"/>
+            </svg>
+            
+            <div class="top-bar-right">
+                <div class="divider"></div>
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <div class="user-avatar-img"></div>
+                        <div class="user-status"></div>
+                    </div>
+                    <div class="user-details">
+                        <h4>Megat Ameer</h4>
+                        <p>Admin</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Staffs Page -->
+        <div class="page-container active" id="staffsPage">
+            <div class="staffs-page">
+                <div class="services-header">
+                    <h2 class="services-title">List of Staffs</h2>
+                    <div class="services-actions">
+                        <div class="search-box">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7844 16.1991C11.646 18.6416 7.10629 18.4205 4.22156 15.5358C1.09737 12.4116 1.09737 7.34625 4.22156 4.22205C7.34576 1.09786 12.4111 1.09786 15.5353 4.22205C18.42 7.10677 18.6411 11.6464 16.1986 14.7849L20.4851 19.0713C20.8756 19.4618 20.8756 20.095 20.4851 20.4855C20.0945 20.876 19.4614 20.876 19.0708 20.4855L14.7844 16.1991ZM5.63578 14.1215C7.97892 16.4647 11.7779 16.4647 14.1211 14.1215C16.4642 11.7784 16.4642 7.97941 14.1211 5.63627C11.7779 3.29312 7.97892 3.29312 5.63578 5.63627C3.29263 7.97941 3.29263 11.7784 5.63578 14.1215Z" fill="#667085"/>
+                            </svg>
+                            <input type="text" id="staffSearch" placeholder="Search staff..." onkeyup="searchStaff()">
+                        </div>
+                        <button class="btn-add-service" onclick="openStaffAddModal()">
+                            <i class="fas fa-plus"></i> Add New Staff
+                        </button>
+                    </div>
+                </div>
+
+                <div class="services-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Staff ID</th>
+                                <th>Name</th>
+                                <th>Email Address</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="staffTableBody">
+                            <!-- Staff rows will be inserted here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="services-footer">
+                    <div class="pagination">
+                        <button class="pagination-btn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6728 4.41058C12.9983 4.73602 12.9983 5.26366 12.6728 5.58909L8.26207 9.99984L12.6728 14.4106C12.9983 14.736 12.9983 15.2637 12.6728 15.5891C12.3474 15.9145 11.8197 15.9145 11.4943 15.5891L6.19968 10.2945C6.03696 10.1317 6.03696 9.86793 6.19968 9.70521L11.4943 4.41058C11.8197 4.08514 12.3474 4.08514 12.6728 4.41058Z" fill="#5C59E8"/>
+                            </svg>
+                        </button>
+                        <div class="pagination-number active">1</div>
+                        <div class="pagination-number">2</div>
+                        <button class="pagination-btn">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M7.32757 4.41058C7.00214 4.73602 7.00214 5.26366 7.32757 5.58909L11.7383 9.99984L7.32757 14.4106C7.00214 14.736 7.00214 15.2637 7.32757 15.5891C7.65301 15.9145 8.18065 15.9145 8.50608 15.5891L13.8007 10.2945C13.9634 10.1317 13.9634 9.86793 13.8007 9.70521L8.50608 4.41058C8.18065 4.08514 7.65301 4.08514 7.32757 4.41058Z" fill="#5C59E8"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==================== SERVICES MODALS ==================== -->
+    
+    <!-- View Service Modal -->
+    <div class="modal-overlay" id="viewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Service Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="service-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Category</div>
+                        <div class="detail-value" id="viewCategory">Wash-Cut</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Service</div>
+                        <div class="detail-value" id="viewService">Basic wash + Cut</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Price</div>
+                        <div class="detail-value" id="viewPrice">RM 35</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Description</div>
+                        <div class="detail-value" id="viewDescription">A refreshing hair wash followed by a clean, simple haircut. Perfect for anyone who wants a neat look without styling extras.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-secondary" onclick="closeModal('viewModal')">Back</button>
+                <button class="btn-modal btn-modal-primary" onclick="openEditModalFromView()">Edit</button>
+                <button class="btn-modal btn-modal-danger" onclick="openDeleteModalFromView()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Service Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Service Details - Edit</h3>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="editCategory">
+                            <option value="Wash-Cut">Wash-Cut</option>
+                            <option value="Dry-Cut">Dry-Cut</option>
+                            <option value="Hair-Color">Hair-Color</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Service</label>
+                            <input type="text" class="form-input" id="editService" placeholder="Service">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-input" id="editPrice" placeholder="Price">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="editDescription" placeholder="Description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-danger" onclick="closeModal('editModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Service Modal -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Service Details - Add New</h3>
+            </div>
+            <div class="modal-body">
+                <form id="addForm">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="addCategory">
+                            <option value="">Select Category</option>
+                            <option value="Wash-Cut">Wash-Cut</option>
+                            <option value="Dry-Cut">Dry-Cut</option>
+                            <option value="Hair-Color">Hair-Color</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Service</label>
+                            <input type="text" class="form-input" id="addService" placeholder="Service">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price</label>
+                            <input type="text" class="form-input" id="addPrice" placeholder="Price">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="addDescription" placeholder="Description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-danger" onclick="closeModal('addModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveAdd()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Service Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="confirmation-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 12L10.5 15L16.5 9M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#079455" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="confirmation-message">
+                    Are you sure you want to permanently delete this service information? This action is irreversible.
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-modal btn-modal-danger" onclick="closeModal('deleteModal')">Cancel</button>
+                    <button class="btn-modal btn-modal-success" onclick="confirmDelete()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Edit) -->
+    <div class="modal-overlay" id="successEditModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    Service details updated successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successEditModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Add) -->
+    <div class="modal-overlay" id="successAddModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    New service record added successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successAddModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Delete) -->
+    <div class="modal-overlay" id="successDeleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    Service record deleted successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successDeleteModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STAFFS MODALS ==================== -->
+    
+    <!-- View Staff Modal -->
+    <div class="modal-overlay" id="staffViewModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Staff Details</h3>
+            </div>
+            <div class="modal-body">
+                <div class="service-details">
+                    <div class="detail-row">
+                        <div class="detail-label">Staff ID</div>
+                        <div class="detail-value" id="staffViewId">STA003</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Name</div>
+                        <div class="detail-value" id="staffViewName">Aina Sufia</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">NRIC Number</div>
+                        <div class="detail-value" id="staffViewNric">040101-01-1010</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Email</div>
+                        <div class="detail-value" id="staffViewEmail">ainasufia@gmail.com</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value" id="staffViewPhone">+60 14-3677 414</div>
+                    </div>
+                    <div class="detail-row">
+                        <div class="detail-label">Password</div>
+                        <div class="detail-value" id="staffViewPassword">Staff@2024</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-secondary" onclick="closeModal('staffViewModal')">Back</button>
+                <button class="btn-modal btn-modal-primary" onclick="openStaffEditModalFromView()">Edit</button>
+                <button class="btn-modal btn-modal-danger" onclick="openStaffDeleteModalFromView()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Staff Modal -->
+    <div class="modal-overlay" id="staffEditModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Staff Details - Edit</h3>
+            </div>
+            <div class="modal-body">
+                <form id="staffEditForm">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" id="staffEditName" placeholder="Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">NRIC Number</label>
+                        <input type="text" class="form-input" id="staffEditNric" placeholder="040101 - 01 - 1010">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" id="staffEditEmail" placeholder="ainasufia@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-input" id="staffEditPhone" placeholder="+60 14-3677 414">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="staffEditPassword" placeholder="Staff@2025">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="staffEditConfirmPassword" placeholder="Staff@2025">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-danger" onclick="closeModal('staffEditModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveStaffEdit()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Staff Modal -->
+    <div class="modal-overlay" id="staffAddModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Staff Details - Add New</h3>
+            </div>
+            <div class="modal-body">
+                <form id="staffAddForm">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" id="staffAddName" placeholder="Name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">NRIC No</label>
+                        <input type="text" class="form-input" id="staffAddNric" placeholder="NRIC No">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" id="staffAddEmail" placeholder="Email Address">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-input" id="staffAddPhone" placeholder="Phone Number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="staffAddPassword" placeholder="Password">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="staffAddConfirmPassword" placeholder="Confirm Password">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-danger" onclick="closeModal('staffAddModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveStaffAdd()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Staff Confirmation Modal -->
+    <div class="modal-overlay" id="staffDeleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="confirmation-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 12L10.5 15L16.5 9M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#079455" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="confirmation-message">
+                    Are you sure you want to permanently delete this staff account? This action is irreversible.
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-modal btn-modal-danger" onclick="closeModal('staffDeleteModal')">Cancel</button>
+                    <button class="btn-modal btn-modal-success" onclick="confirmStaffDelete()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Success Modal (Edit) -->
+    <div class="modal-overlay" id="staffSuccessEditModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    Staff details updated successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('staffSuccessEditModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Success Modal (Add) -->
+    <div class="modal-overlay" id="staffSuccessAddModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    New staff account added successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('staffSuccessAddModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Staff Success Modal (Delete) -->
+    <div class="modal-overlay" id="staffSuccessDeleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    Staff account deleted successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('staffSuccessDeleteModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const services = [
+            { category: 'Wash-Cut', service: 'Basic Wash + Cut', price: 'RM 35', description: 'A refreshing hair wash followed by a clean, simple haircut. Perfect for anyone who wants a neat look without styling extras.' },
+            { category: 'Wash-Cut', service: 'Wash + Style Cut', price: 'RM 45', description: 'Professional hair wash with a styled cut tailored to your preference.' },
+            { category: 'Wash-Cut', service: 'Kids Wash-Cut', price: 'RM 25', description: 'Gentle wash and cut specially designed for children.' },
+            { category: 'Dry-Cut', service: 'Basic & Style Dry-Cut', price: 'RM 30', description: 'Quick and precise dry cut with basic styling.' },
+            { category: 'Dry-Cut', service: 'Trim & Shape', price: 'RM 20', description: 'Professional trimming and shaping to maintain your current style.' },
+            { category: 'Dry-Cut', service: 'Fringe Cut', price: 'RM 15', description: 'Quick fringe trim to keep your bangs looking fresh.' },
+            { category: 'Hair-Color', service: 'Full Hair-Color', price: 'RM 150', description: 'Complete hair coloring service with premium products.' },
+            { category: 'Hair-Color', service: 'Root Touch-Up', price: 'RM 80', description: 'Root coloring to maintain your current hair color.' }
+        ];
+
+        const staffs = [
+            { id: 'STA001', name: 'Ameer Megat', nric: '010101-01-1010', email: 'ameermegat@gmail.com', phone: '+60 14-1234 567', password: 'Staff@2024' },
+            { id: 'STA002', name: 'Amirah Izzati', nric: '020202-02-2020', email: 'amirahizzati@gmail.com', phone: '+60 14-2345 678', password: 'Staff@2024' },
+            { id: 'STA003', name: 'Aina Sufia', nric: '040101-01-1010', email: 'ainasufia@gmail.com', phone: '+60 14-3677 414', password: 'Staff@2024' },
+            { id: 'STA004', name: 'Izyan Sarihah', nric: '040404-04-4040', email: 'izyansarihah@gmail.com', phone: '+60 14-4567 890', password: 'Staff@2024' },
+            { id: 'STA005', name: 'Siti Zulaikha', nric: '050505-05-5050', email: 'sitizulaikha@gmail.com', phone: '+60 14-5678 901', password: 'Staff@2024' },
+            { id: 'STA006', name: 'Masdiana Mahasim', nric: '060606-06-6060', email: 'masdiana@gmail.com', phone: '+60 14-6789 012', password: 'Staff@2024' },
+            { id: 'STA007', name: 'Ismail Punan', nric: '070707-07-7070', email: 'ismailpunan@gmail.com', phone: '+60 14-7890 123', password: 'Staff@2024' },
+            { id: 'STA008', name: 'Zul Black', nric: '080808-08-8080', email: 'zulblack@gmail.com', phone: '+60 14-8901 234', password: 'Staff@2024' }
+        ];
+
+        let currentServiceIndex = 0;
+        let currentStaffIndex = 0;
+
+        // Page navigation
+        function showPage(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+            
+            // Show selected page
+            const pageMap = {
+                'services': 'servicesPage',
+                'staffs': 'staffsPage'
+            };
+            
+            const pageId = pageMap[page];
+            if (pageId) {
+                document.getElementById(pageId).classList.add('active');
+            }
+            
+            // Update sidebar active state
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-page') === page) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // Modal functions
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function openModal(modalId) {
+            // Close all modals first
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+            
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+            }
+        }
+
+        // ==================== SERVICE FUNCTIONS ====================
+        
+        // View modal
+        function openViewModal(index) {
+            currentServiceIndex = index;
+            const service = services[index];
+            
+            document.getElementById('viewCategory').textContent = service.category;
+            document.getElementById('viewService').textContent = service.service;
+            document.getElementById('viewPrice').textContent = service.price;
+            document.getElementById('viewDescription').textContent = service.description;
+            
+            openModal('viewModal');
+        }
+
+        // Edit modal
+        function openEditModal(index) {
+            currentServiceIndex = index;
+            const service = services[index];
+            
+            document.getElementById('editCategory').value = service.category;
+            document.getElementById('editService').value = service.service;
+            document.getElementById('editPrice').value = service.price;
+            document.getElementById('editDescription').value = service.description;
+            
+            openModal('editModal');
+        }
+
+        function openEditModalFromView() {
+            closeModal('viewModal');
+            openEditModal(currentServiceIndex);
+        }
+
+        function saveEdit() {
+            const service = services[currentServiceIndex];
+            
+            service.category = document.getElementById('editCategory').value;
+            service.service = document.getElementById('editService').value;
+            service.price = document.getElementById('editPrice').value;
+            service.description = document.getElementById('editDescription').value;
+            
+            closeModal('editModal');
+            openModal('successEditModal');
+        }
+
+        // Add modal
+        function openAddModal() {
+            document.getElementById('addForm').reset();
+            openModal('addModal');
+        }
+
+        function saveAdd() {
+            const newService = {
+                category: document.getElementById('addCategory').value,
+                service: document.getElementById('addService').value,
+                price: document.getElementById('addPrice').value,
+                description: document.getElementById('addDescription').value
+            };
+            
+            services.push(newService);
+            
+            closeModal('addModal');
+            openModal('successAddModal');
+        }
+
+        // Delete modal
+        function openDeleteModal(index) {
+            currentServiceIndex = index;
+            openModal('deleteModal');
+        }
+
+        function openDeleteModalFromView() {
+            closeModal('viewModal');
+            openDeleteModal(currentServiceIndex);
+        }
+
+        function confirmDelete() {
+            services.splice(currentServiceIndex, 1);
+            
+            closeModal('deleteModal');
+            openModal('successDeleteModal');
+        }
+
+        // ==================== STAFF FUNCTIONS ====================
+        
+        // View Staff modal
+        function openStaffViewModal(index) {
+            currentStaffIndex = index;
+            const staff = staffs[index];
+            
+            document.getElementById('staffViewId').textContent = staff.id;
+            document.getElementById('staffViewName').textContent = staff.name;
+            document.getElementById('staffViewNric').textContent = staff.nric;
+            document.getElementById('staffViewEmail').textContent = staff.email;
+            document.getElementById('staffViewPhone').textContent = staff.phone;
+            document.getElementById('staffViewPassword').textContent = staff.password;
+            
+            openModal('staffViewModal');
+        }
+
+        // Edit Staff modal
+        function openStaffEditModal(index) {
+            currentStaffIndex = index;
+            const staff = staffs[index];
+            
+            document.getElementById('staffEditName').value = staff.name;
+            document.getElementById('staffEditNric').value = staff.nric;
+            document.getElementById('staffEditEmail').value = staff.email;
+            document.getElementById('staffEditPhone').value = staff.phone;
+            document.getElementById('staffEditPassword').value = staff.password;
+            document.getElementById('staffEditConfirmPassword').value = staff.password;
+            
+            openModal('staffEditModal');
+        }
+
+        // Render staff table with 4 columns
+        function renderStaffTable() {
+            const tbody = document.getElementById('staffTableBody');
+            
+            if (!tbody) return;
+            
+            if (staffs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 48px; color: #ddd; margin-bottom: 16px;">
+                                <i class="fas fa-users-slash"></i>
+                            </div>
+                            <h3>No Staff Members Found</h3>
+                            <p>Click "Add Staff" to add your first staff member.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            staffs.forEach((staff, index) => {
+                html += `
+                    <tr>
+                        <td><strong>${staff.id}</strong></td>
+                        <td>${staff.name}</td>
+                        <td>${staff.email}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-view" onclick="openStaffViewModal(${index})">
+                                    View
+                                </button>
+                                <button class="btn-action btn-edit" onclick="openStaffEditModal(${index})">
+                                    Edit
+                                </button>
+                                <button class="btn-action btn-delete" onclick="openStaffDeleteModal(${index})">
+                                    Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function openStaffEditModalFromView() {
+            closeModal('staffViewModal');
+            openStaffEditModal(currentStaffIndex);
+        }
+
+        function saveStaffEdit() {
+            const staff = staffs[currentStaffIndex];
+            
+            staff.name = document.getElementById('staffEditName').value;
+            staff.nric = document.getElementById('staffEditNric').value;
+            staff.email = document.getElementById('staffEditEmail').value;
+            staff.phone = document.getElementById('staffEditPhone').value;
+            staff.password = document.getElementById('staffEditPassword').value;
+            
+            closeModal('staffEditModal');
+            renderStaffTable();
+            openModal('staffSuccessEditModal');
+        }
+
+        // Add Staff modal
+        function openStaffAddModal() {
+            document.getElementById('staffAddForm').reset();
+            openModal('staffAddModal');
+        }
+
+        function saveStaffAdd() {
+            const newStaff = {
+                id: 'STA' + String(staffs.length + 1).padStart(3, '0'),
+                name: document.getElementById('staffAddName').value,
+                nric: document.getElementById('staffAddNric').value,
+                email: document.getElementById('staffAddEmail').value,
+                phone: document.getElementById('staffAddPhone').value,
+                password: document.getElementById('staffAddPassword').value
+            };
+            
+            staffs.push(newStaff);
+            
+            closeModal('staffAddModal');
+            renderStaffTable();
+            openModal('staffSuccessAddModal');
+        }
+
+        // Delete Staff modal
+        function openStaffDeleteModal(index) {
+            currentStaffIndex = index;
+            openModal('staffDeleteModal');
+        }
+
+        function openStaffDeleteModalFromView() {
+            closeModal('staffViewModal');
+            openStaffDeleteModal(currentStaffIndex);
+        }
+
+        function confirmStaffDelete() {
+            staffs.splice(currentStaffIndex, 1);
+            
+            closeModal('staffDeleteModal');
+            renderStaffTable();
+            openModal('staffSuccessDeleteModal');
+        }
+
+        // Search functionality
+        function searchStaff() {
+            const searchTerm = document.getElementById('staffSearch').value.toLowerCase();
+            const filteredStaffs = staffs.filter(staff => 
+                staff.name.toLowerCase().includes(searchTerm) ||
+                staff.email.toLowerCase().includes(searchTerm) ||
+                staff.id.toLowerCase().includes(searchTerm)
+            );
+            
+            const tbody = document.getElementById('staffTableBody');
+            
+            if (filteredStaffs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                            <div style="font-size: 48px; color: #ddd; margin-bottom: 16px;">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3>No Results Found</h3>
+                            <p>No staff members match your search.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            filteredStaffs.forEach((staff, index) => {
+                const originalIndex = staffs.indexOf(staff);
+                html += `
+                    <tr>
+                        <td><strong>${staff.id}</strong></td>
+                        <td>${staff.name}</td>
+                        <td>${staff.email}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-view" onclick="openStaffViewModal(${originalIndex})">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="btn-action btn-edit" onclick="openStaffEditModal(${originalIndex})">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="btn-action btn-delete" onclick="openStaffDeleteModal(${originalIndex})">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const menuIcon = document.querySelector('.menu-icon');
+            
+            if (window.innerWidth <= 768) {
+                if (!sidebar.contains(e.target) && !menuIcon.contains(e.target)) {
+                    sidebar.classList.remove('mobile-open');
+                }
+            }
+        });
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial render
+            renderStaffTable();
+            
+            // Show staffs page by default
+            showPage('staffs');
+            
+            // Re-render when switching to staff page
+            const staffMenuItem = document.querySelector('.menu-item[data-page="staffs"]');
+            if (staffMenuItem) {
+                staffMenuItem.addEventListener('click', function() {
+                    setTimeout(renderStaffTable, 100);
+                });
+            }
+        });
+    </script>
+</body>
 </html>
