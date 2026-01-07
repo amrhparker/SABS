@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALONIX - Customer Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700&family=Jost:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #FFF;
+            color: #333843;
+        }
+
+        /* ==================== ADMIN LAYOUT ==================== */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .admin-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .admin-bg-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+        }
+
+        .admin-bg-blur {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4.5px);
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .admin-sidebar {
+            width: 264px;
+            background: #FFF;
+            border-right: 1px solid #F0F1F3;
+            box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .sidebar-logo {
+            padding: 32px 20px 12px 20px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        .sidebar-logo img {
+            width: 100px;
+            height: auto;
+            display: block;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 24px 18px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            font-weight: 600;
+            color: #667085;
+        }
+
+        .menu-item:hover {
+            background: #F9F9FC;
+        }
+
+        .menu-item.active {
+            background: #5C59E8;
+            color: #FFF;
+        }
+
+        .menu-item svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .menu-item.active svg path {
+            fill: #FFF;
+        }
+
+        /* ==================== TOP BAR ==================== */
+        .admin-topbar {
+            height: 72px;
+            background: #FFF;
+            border-bottom: 1px solid #F0F1F3;
+            box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            position: relative;
+            z-index: 50;
+        }
+
+        .admin-topbar .menu-icon {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E0E2E7;
+            position: relative;
+        }
+
+        .user-avatar::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            bottom: -2px;
+            width: 10px;
+            height: 10px;
+            background: #3DA172;
+            border: 2px solid #FFF;
+            border-radius: 50%;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1A1C21;
+        }
+
+        .user-role {
+            font-size: 12px;
+            font-weight: 500;
+            color: #667085;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .admin-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 10;
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* ==================== TABLE STYLES ==================== */
+        .table-container {
+            background: #FFF;
+            border: 1px solid #E0E2E7;
+            border-radius: 8px;
+            box-shadow: 0 1.5px 2px 0 rgba(16, 24, 40, 0.10);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid #F0F1F3;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .table-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333843;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border: 1px solid #5C59E8;
+            border-radius: 8px;
+            background: #F9F9FC;
+            min-width: 200px;
+        }
+
+        .search-box svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            color: #333843;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: #667085;
+        }
+
+        .data-table {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #F9F9FC;
+        }
+
+        th {
+            padding: 18px 22px;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333843;
+            border-bottom: 1px solid #F0F1F3;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 18px 22px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #667085;
+            border-bottom: 1px solid #F0F1F3;
+        }
+
+        tbody tr {
+            background: #FFF;
+        }
+
+        tbody tr:hover {
+            background: #F9F9FC;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: #624DE3;
+            color: #FFF;
+        }
+
+        .btn-primary:hover {
+            background: #5242d4;
+        }
+
+        .btn-delete {
+            background: #E34D57;
+            color: #FFF;
+        }
+
+        .btn-delete:hover {
+            background: #d13f42;
+        }
+
+        .table-footer {
+            padding: 14px 24px;
+            border-top: 1px solid #F0F1F3;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pagination-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #DEDEFA;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover {
+            background: #CFCCFF;
+        }
+
+        .pagination-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagination-number.active {
+            background: #5C59E8;
+            color: #FFF;
+        }
+
+        .pagination-number:not(.active) {
+            background: #DEDEFA;
+            color: #5C59E8;
+        }
+
+        .pagination-number:not(.active):hover {
+            background: #CFCCFF;
+        }
+
+        /* ==================== MODALS ==================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #FFF;
+            border-radius: 16px;
+            box-shadow: 0 4px 4px 0 rgba(44, 0, 27, 0.25);
+            padding: 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal.modal-sm {
+            max-width: 556px;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-success {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 24px;
+        }
+
+        .modal-icon-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #E8DEF8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-icon-circle svg {
+            width: 36px;
+            height: 36px;
+        }
+
+        .modal-message {
+            font-size: 16px;
+            font-weight: 400;
+            color: #344054;
+            line-height: 1.5;
+        }
+
+        .modal-btn {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #624DE3;
+            background: #624DE3;
+            color: #FFF;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+            transition: all 0.2s;
+        }
+
+        .modal-btn:hover {
+            background: #5242d4;
+            border-color: #5242d4;
+        }
+
+        .modal-confirm {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .modal-confirm-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .modal-icon-green {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #DCFAE6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .modal-icon-green svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .modal-confirm-title {
+            font-size: 24px;
+            font-weight: 500;
+            color: #101828;
+            line-height: 1.33;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .modal-btn-cancel {
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: #E34D50;
+            color: #FFF;
+            border: none;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-btn-cancel:hover {
+            background: #d13f42;
+        }
+
+        .modal-btn-confirm {
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: #2DA831;
+            color: #FFF;
+            border: 1px solid #2DA831;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+            transition: all 0.2s;
+        }
+
+        .modal-btn-confirm:hover {
+            background: #259628;
+            border-color: #259628;
+        }
+
+        /* ==================== CUSTOMER DETAILS MODAL ==================== */
+        .customer-details {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .customer-details-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333843;
+        }
+
+        .customer-details-body {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .customer-detail-row {
+            display: flex;
+            align-items: flex-start;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #979797;
+        }
+
+        .customer-detail-label {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #818181;
+        }
+
+        .customer-detail-value {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #343434;
+        }
+
+        .customer-details-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .customer-action-btn {
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Jost', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-width: 189px;
+        }
+
+        .customer-action-btn.btn-back {
+            background: #000;
+            color: #FFF;
+        }
+
+        .customer-action-btn.btn-edit {
+            background: #624DE3;
+            color: #FFF;
+        }
+
+        .customer-action-btn.btn-delete-main {
+            background: #E34D50;
+            color: #FFF;
+        }
+
+        /* ==================== CUSTOMER EDIT MODAL ==================== */
+        .customer-edit {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .customer-edit-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #333843;
+        }
+
+        .customer-edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 24px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .form-label {
+            font-size: 16px;
+            font-weight: 400;
+            color: #000;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-input {
+            padding: 16px;
+            border: 1px solid rgba(0, 0, 0, 0.4);
+            border-radius: 9px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            color: #000;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            border-color: #624DE3;
+        }
+
+        .customer-edit-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .customer-action-btn.btn-cancel {
+            background: #E34D50;
+            color: #FFF;
+        }
+
+        .customer-action-btn.btn-save {
+            background: #624DE3;
+            color: #FFF;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                position: fixed;
+                left: -264px;
+                top: 0;
+                bottom: 0;
+                transition: left 0.3s;
+                z-index: 200;
+            }
+
+            .admin-sidebar.mobile-open {
+                left: 0;
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 12px 8px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .customer-details-actions,
+            .customer-edit-actions {
+                flex-direction: column;
+            }
+
+            .customer-action-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Background -->
+        <div class="admin-bg">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/1952c35b9d9f3235ef7d57200dcbbf59971acb5d?width=2880" alt="" class="admin-bg-image">
+            <div class="admin-bg-blur"></div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="sidebar-logo">
+                <img src="https://api.builder.io/api/v1/image/assets/TEMP/db3e61846a007f94950a5874b027025362939df5?width=200" alt="SALONIX">
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item" onclick="window.location.href='admin-dashboard.html'">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5.5C3 4.11929 4.11929 3 5.5 3H8.5C9.88071 3 11 4.11929 11 5.5V8.5C11 9.88071 9.88071 11 8.5 11H5.5C4.11929 11 3 9.88071 3 8.5V5.5ZM5.5 5H8.5C8.77614 5 9 5.22386 9 5.5V8.5C9 8.77614 8.77614 9 8.5 9H5.5C5.22386 9 5 8.77614 5 8.5V5.5C5 5.22386 5.22386 5 5.5 5Z" fill="black" fill-opacity="0.6"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13 5.5C13 4.11929 14.1193 3 15.5 3H18.5C19.8807 3 21 4.11929 21 5.5V8.5C21 9.88071 19.8807 11 18.5 11H15.5C14.1193 11 13 9.88071 13 8.5V5.5ZM15.5 5H18.5C18.7761 5 19 5.22386 19 5.5V8.5C19 8.77614 18.7761 9 18.5 9H15.5C15.2239 9 15 8.77614 15 8.5V5.5C15 5.22386 15.2239 5 15.5 5Z" fill="black" fill-opacity="0.6"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.5 13C14.1193 13 13 14.1193 13 15.5V18.5C13 19.8807 14.1193 21 15.5 21H18.5C19.8807 21 21 19.8807 21 18.5V15.5C21 14.1193 19.8807 13 18.5 13H15.5ZM18.5 15H15.5C15.2239 15 15 15.2239 15 15.5V18.5C15 18.7761 15.2239 19 15.5 19H18.5C18.7761 19 19 18.7761 19 18.5V15.5C19 15.2239 18.7761 15 18.5 15Z" fill="black" fill-opacity="0.6"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3 15.5C3 14.1193 4.11929 13 5.5 13H8.5C9.88071 13 11 14.1193 11 15.5V18.5C11 19.8807 9.88071 21 8.5 21H5.5C4.11929 21 3 19.8807 3 18.5V15.5ZM5.5 15H8.5C8.77614 15 9 15.2239 9 15.5V18.5C9 18.7761 8.77614 19 8.5 19H5.5C5.22386 19 5 18.7761 5 18.5V15.5C5 15.2239 5.22386 15 5.5 15Z" fill="black" fill-opacity="0.6"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </div>
+                <div class="menu-item" onclick="window.location.href='admin-appointments.html'">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M15.9666 12.6975C16.3519 12.3017 16.3433 11.6686 15.9475 11.2834C15.5517 10.8982 14.9186 10.9068 14.5334 11.3025L11.2737 14.6517L9.8755 13.5309C9.44459 13.1854 8.81522 13.2547 8.46979 13.6856C8.12435 14.1166 8.19365 14.7459 8.62457 15.0914L11.0857 17.0643C11.2867 17.2254 11.5771 17.2075 11.7567 17.0229L15.9666 12.6975Z" fill="#667085"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C8.55228 2 9 2.44772 9 3H15C15 2.44772 15.4477 2 16 2C16.5523 2 17 2.44772 17 3H18C19.6569 3 21 4.34315 21 6V19C21 20.6569 19.6569 22 18 22H6C4.34315 22 3 20.6569 3 19V6C3 4.34315 4.34315 3 6 3H7C7 2.44772 7.44772 2 8 2ZM19 6V7H5V6C5 5.44772 5.44772 5 6 5H7C7 5.55228 7.44772 6 8 6C8.55228 6 9 5.55228 9 5H15C15 5.55228 15.4477 6 16 6C16.5523 6 17 5.55228 17 5H18C18.5523 5 19 5.44772 19 6ZM5 19V9H19V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19Z" fill="#667085"/>
+                    </svg>
+                    <span>Appointments</span>
+                </div>
+                <div class="menu-item active">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 6.5C14.5 8.98528 12.4853 11 10 11C7.51472 11 5.5 8.98528 5.5 6.5C5.5 4.01472 7.51472 2 10 2C12.4853 2 14.5 4.01472 14.5 6.5ZM12.5 6.5C12.5 7.88071 11.3807 9 10 9C8.61929 9 7.5 7.88071 7.5 6.5C7.5 5.11929 8.61929 4 10 4C11.3807 4 12.5 5.11929 12.5 6.5Z" fill="white"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2 18.9231C2 15.0996 5.09957 12 8.92308 12H11.0769C14.9004 12 18 15.0996 18 18.9231C18 20.0701 17.0701 21 15.9231 21H4.07692C2.92987 21 2 20.0701 2 18.9231ZM4 18.9231C4 16.2041 6.20414 14 8.92308 14H11.0769C13.7959 14 16 16.2041 16 18.9231C16 18.9656 15.9656 19 15.9231 19H4.07692C4.03444 19 4 18.9656 4 18.9231Z" fill="white"/>
+                        <path d="M18.9198 20.0973C18.8164 20.4981 19.0774 21 19.4913 21H19.9231C21.0701 21 22 20.0701 22 18.9231C22 15.0996 18.9004 12 15.0769 12C14.9347 12 14.8829 12.1975 15.0036 12.2727C15.9494 12.8614 16.7705 13.6314 17.4182 14.5343C17.4621 14.5955 17.5187 14.6466 17.5835 14.685C19.0301 15.5424 20 17.1195 20 18.9231C20 18.9656 19.9656 19 19.9231 19H19.4494C19.1985 19 19 19.2106 19 19.4615C19 19.6811 18.9721 18.8941 18.9198 20.0973Z" fill="white"/>
+                        <path d="M14.919 8.96308C14.974 8.85341 15.0645 8.76601 15.1729 8.70836C15.9624 8.28814 16.5 7.45685 16.5 6.5C16.5 5.54315 15.9624 4.71186 15.1729 4.29164C15.0645 4.23399 14.974 4.14659 14.919 4.03692C14.6396 3.48001 14.2684 2.97712 13.8252 2.5481C13.623 2.35231 13.7185 2 14 2C16.4853 2 18.5 4.01472 18.5 6.5C18.5 8.98528 16.4853 11 14 11C13.7185 11 13.623 10.6477 13.8252 10.4519C14.2684 10.0229 14.6396 9.51999 14.919 8.96308Z" fill="white"/>
+                    </svg>
+                    <span>Customers</span>
+                </div>
+                <div class="menu-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6608 2C17.6951 2 18.6566 2.53286 19.2048 3.41L21.4103 6.93883C21.5695 7.19353 21.6539 7.48785 21.6539 7.78821C21.6539 8.84672 21.2108 9.80174 20.5 10.4779V18C20.5 20.2091 18.7091 22 16.5 22H7.5C5.29086 22 3.5 20.2091 3.5 18V10.4779C2.78924 9.80167 2.34619 8.84668 2.34619 7.78821C2.34619 7.48785 2.4306 7.19353 2.58979 6.93883L4.79531 3.41C5.34352 2.53286 6.30493 2 7.3393 2H16.6608ZM7.3393 4C6.99451 4 6.67404 4.17762 6.4913 4.47L4.34958 7.89676C4.40557 8.79158 5.14904 9.5 6.05798 9.5H6.23081C7.27165 9.5 8.11542 8.65623 8.11542 7.61538H10.1154C10.1154 8.65623 10.9592 9.5 12 9.5C13.0409 9.5 13.8847 8.65623 13.8847 7.61538H15.8847C15.8847 8.65623 16.7284 9.5 17.7693 9.5H17.9421C18.851 9.5 19.5945 8.79158 19.6505 7.89676L17.5088 4.47C17.326 4.17762 17.0056 4 16.6608 4H7.3393ZM17.9421 11.5C18.1317 11.5 18.318 11.4858 18.5 11.4583V18C18.5 19.1046 17.6046 20 16.5 20H16V16C16 14.3431 14.6569 13 13 13H11C9.34315 13 8 14.3431 8 16V20H7.5C6.39543 20 5.5 19.1046 5.5 18V11.4583C5.682 11.4858 5.86833 11.5 6.05798 11.5H6.23081C7.37546 11.5 8.40448 11.0049 9.11542 10.2172C9.82636 11.0049 10.8554 11.5 12 11.5C13.1447 11.5 14.1737 11.0049 14.8847 10.2172C15.5956 11.0049 16.6246 11.5 17.7693 11.5H17.9421ZM10 20H14V16C14 15.4477 13.5523 15 13 15H11C10.4477 15 10 15.4477 10 16V20Z" fill="#667085"/>
+                    </svg>
+                    <span>Services</span>
+                </div>
+                <div class="menu-item">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 6.5C14.5 8.98528 12.4853 11 10 11C7.51472 11 5.5 8.98528 5.5 6.5C5.5 4.01472 7.51472 2 10 2C12.4853 2 14.5 4.01472 14.5 6.5ZM12.5 6.5C12.5 7.88071 11.3807 9 10 9C8.61929 9 7.5 7.88071 7.5 6.5C7.5 5.11929 8.61929 4 10 4C11.3807 4 12.5 5.11929 12.5 6.5Z" fill="#667085"/>
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2 18.9231C2 15.0996 5.09957 12 8.92308 12H11.0769C14.9004 12 18 15.0996 18 18.9231C18 20.0701 17.0701 21 15.9231 21H4.07692C2.92987 21 2 20.0701 2 18.9231ZM4 18.9231C4 16.2041 6.20414 14 8.92308 14H11.0769C13.7959 14 16 16.2041 16 18.9231C16 18.9656 15.9656 19 15.9231 19H4.07692C4.03444 19 4 18.9656 4 18.9231Z" fill="#667085"/>
+                        <path d="M18.9198 20.0973C18.8164 20.4981 19.0774 21 19.4913 21H19.9231C21.0701 21 22 20.0701 22 18.9231C22 15.0996 18.9004 12 15.0769 12C14.9347 12 14.8829 12.1975 15.0036 12.2727C15.9494 12.8614 16.7705 13.6314 17.4182 14.5343C17.4621 14.5955 17.5187 14.6466 17.5835 14.685C19.0301 15.5424 20 17.1195 20 18.9231C20 18.9656 19.9656 19 19.9231 19H19.4494C19.1985 19 19 19.2106 19 19.4615C19 19.6811 18.9721 18.8941 18.9198 20.0973Z" fill="#667085"/>
+                        <path d="M14.919 8.96308C14.974 8.85341 15.0645 8.76601 15.1729 8.70836C15.9624 8.28814 16.5 7.45685 16.5 6.5C16.5 5.54315 15.9624 4.71186 15.1729 4.29164C15.0645 4.23399 14.974 4.14659 14.919 4.03692C14.6396 3.48001 14.2684 2.97712 13.8252 2.5481C13.623 2.35231 13.7185 2 14 2C16.4853 2 18.5 4.01472 18.5 6.5C18.5 8.98528 16.4853 11 14 11C13.7185 11 13.623 10.6477 13.8252 10.4519C14.2684 10.0229 14.6396 9.51999 14.919 8.96308Z" fill="#667085"/>
+                    </svg>
+                    <span>Staffs</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Top Bar -->
+            <div class="admin-topbar">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" onclick="toggleSidebar()">
+                    <path d="M3 7C3 6.44772 3.44772 6 4 6H20C20.5523 6 21 6.44772 21 7C21 7.55228 20.5523 8 20 8H4C3.44772 8 3 7.55228 3 7Z" fill="#667085"/>
+                    <path d="M3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12Z" fill="#667085"/>
+                    <path d="M4 16C3.44772 16 3 16.4477 3 17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17C21 16.4477 20.5523 16 20 16H4Z" fill="#667085"/>
+                </svg>
+                <div class="admin-user">
+                    <div class="user-avatar"></div>
+                    <div class="user-info">
+                        <div class="user-name">Megat Ameer</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="admin-content">
+                <!-- Customers Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">List of Customers</div>
+                        <div class="search-box">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7847 16.1991C11.6462 18.6416 7.10654 18.4205 4.22181 15.5358C1.09761 12.4116 1.09761 7.34625 4.22181 4.22205C7.346 1.09786 12.4113 1.09786 15.5355 4.22205C18.4202 7.10677 18.6414 11.6464 16.1989 14.7849L20.4853 19.0713C20.8758 19.4618 20.8758 20.095 20.4853 20.4855C20.0948 20.876 19.4616 20.876 19.0711 20.4855L14.7847 16.1991ZM5.63602 14.1215C7.97917 16.4647 11.7782 16.4647 14.1213 14.1215C16.4644 11.7784 16.4644 7.97941 14.1213 5.63627C11.7782 3.29312 7.97917 3.29312 5.63602 5.63627C3.29288 7.97941 3.29288 11.7784 5.63602 14.1215Z" fill="#667085"/>
+                            </svg>
+                            <input type="text" placeholder="Search customers...">
+                        </div>
+                    </div>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>Name</th>
+                                    <th>Email Address</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="color: #333843; font-weight: 500;">CUS001</td>
+                                    <td>Ameer Megat</td>
+                                    <td>ameermegat@gmail.com</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary" onclick="openCustomerViewModal('CUS001', 'Ameer Megat', 'ameermegat@gmail.com', '+60 18-1234 567', 'Customer@2025')">View</button>
+                                            <button class="btn btn-primary" onclick="openCustomerEditModal('CUS001', 'Ameer Megat', 'ameermegat@gmail.com', '+60 18-1234 567', 'Customer@2025')">Edit</button>
+                                            <button class="btn btn-delete" onclick="openCustomerDeleteModal('CUS001')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #333843; font-weight: 500;">CUS002</td>
+                                    <td>Amirah Izzati</td>
+                                    <td>amirahizzati@gmail.com</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary" onclick="openCustomerViewModal('CUS002', 'Amirah Izzati', 'amirahizzati@gmail.com', '+60 18-2345 678', 'Customer@2025')">View</button>
+                                            <button class="btn btn-primary" onclick="openCustomerEditModal('CUS002', 'Amirah Izzati', 'amirahizzati@gmail.com', '+60 18-2345 678', 'Customer@2025')">Edit</button>
+                                            <button class="btn btn-delete" onclick="openCustomerDeleteModal('CUS002')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #333843; font-weight: 500;">CUS003</td>
+                                    <td>Aina Sufia</td>
+                                    <td>ainasufia@gmail.com</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary" onclick="openCustomerViewModal('CUS003', 'Aina Sufia', 'ainasufia@gmail.com', '+60 18-3456 789', 'Customer@2025')">View</button>
+                                            <button class="btn btn-primary" onclick="openCustomerEditModal('CUS003', 'Aina Sufia', 'ainasufia@gmail.com', '+60 18-3456 789', 'Customer@2025')">Edit</button>
+                                            <button class="btn btn-delete" onclick="openCustomerDeleteModal('CUS003')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #333843; font-weight: 500;">CUS004</td>
+                                    <td>Izyan Sarihah</td>
+                                    <td>izyansarihah@gmail.com</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary" onclick="openCustomerViewModal('CUS004', 'Izyan Sarihah', 'izyansarihah@gmail.com', '+60 18-4567 890', 'Customer@2025')">View</button>
+                                            <button class="btn btn-primary" onclick="openCustomerEditModal('CUS004', 'Izyan Sarihah', 'izyansarihah@gmail.com', '+60 18-4567 890', 'Customer@2025')">Edit</button>
+                                            <button class="btn btn-delete" onclick="openCustomerDeleteModal('CUS004')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #333843; font-weight: 500;">CUS005</td>
+                                    <td>Siti Zulaikha</td>
+                                    <td>sitizulaikha@gmail.com</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary" onclick="openCustomerViewModal('CUS005', 'Siti Zulaikha', 'sitizulaikha@gmail.com', '+60 18-5678 901', 'Customer@2025')">View</button>
+                                            <button class="btn btn-primary" onclick="openCustomerEditModal('CUS005', 'Siti Zulaikha', 'sitizulaikha@gmail.com', '+60 18-5678 901', 'Customer@2025')">Edit</button>
+                                            <button class="btn btn-delete" onclick="openCustomerDeleteModal('CUS005')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="color: #333843; font-weight: 500;">CUS006</td>
+                                    <td>Masdiana Mahasim</td>
+                                    <td>masdiana@gmail.com</td>
+                                    <td>
+                                        <div class="action-buttons">
+                                            <button class="btn btn-primary" onclick="openCustomerViewModal('CUS006', 'Masdiana Mahasim', 'masdiana@gmail.com', '+60 18-6761 514', 'Customer@2025')">View</button>
+                                            <button class="btn btn-primary" onclick="openCustomerEditModal('CUS006', 'Masdiana Mahasim', 'masdiana@gmail.com', '+60 18-6761 514', 'Customer@2025')">Edit</button>
+                                            <button class="btn btn-delete" onclick="openCustomerDeleteModal('CUS006')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="pagination-btn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6726 4.41058C12.998 4.73602 12.998 5.26366 12.6726 5.58909L8.26183 9.99984L12.6726 14.4106C12.998 14.736 12.998 15.2637 12.6726 15.5891C12.3471 15.9145 11.8195 15.9145 11.4941 15.5891L6.19943 10.2945C6.03671 10.1317 6.03671 9.86793 6.19943 9.70521L11.4941 4.41058C11.8195 4.08514 12.3471 4.08514 12.6726 4.41058Z" fill="#5C59E8"/>
+                                </svg>
+                            </button>
+                            <div class="pagination-number active">1</div>
+                            <div class="pagination-number">2</div>
+                            <div class="pagination-number">3</div>
+                            <button class="pagination-btn">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.32733 4.41058C7.00189 4.73602 7.00189 5.26366 7.32733 5.58909L11.7381 9.99984L7.32733 14.4106C7.00189 14.736 7.00189 15.2637 7.32733 15.5891C7.65277 15.9145 8.1804 15.9145 8.50584 15.5891L13.8005 10.2945C13.9632 10.1317 13.9632 9.86793 13.8005 9.70521L8.50584 4.41058C8.1804 4.08514 7.65277 4.08514 7.32733 4.41058Z" fill="#5C59E8"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer View Modal -->
+    <div id="customerViewModal" class="modal-overlay" onclick="closeModal('customerViewModal')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="customer-details">
+                <div class="customer-details-title">Customer Details</div>
+                <div class="customer-details-body">
+                    <div class="customer-detail-row">
+                        <div class="customer-detail-label">Customer ID</div>
+                        <div class="customer-detail-value" id="viewCustomerId">CUS006</div>
+                    </div>
+                    <div class="customer-detail-row">
+                        <div class="customer-detail-label">Name</div>
+                        <div class="customer-detail-value" id="viewCustomerName">Masdiana Mahasim</div>
+                    </div>
+                    <div class="customer-detail-row">
+                        <div class="customer-detail-label">Email</div>
+                        <div class="customer-detail-value" id="viewCustomerEmail">masdiana@gmail.com</div>
+                    </div>
+                    <div class="customer-detail-row">
+                        <div class="customer-detail-label">Phone Number</div>
+                        <div class="customer-detail-value" id="viewCustomerPhone">+60 18-6761 514</div>
+                    </div>
+                    <div class="customer-detail-row">
+                        <div class="customer-detail-label">Password</div>
+                        <div class="customer-detail-value" id="viewCustomerPassword">Customer@2025</div>
+                    </div>
+                </div>
+                <div class="customer-details-actions">
+                    <button class="customer-action-btn btn-back" onclick="closeModal('customerViewModal')">Back</button>
+                    <button class="customer-action-btn btn-edit" onclick="switchToEditFromView()">Edit</button>
+                    <button class="customer-action-btn btn-delete-main" onclick="switchToDeleteFromView()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Edit Modal -->
+    <div id="customerEditModal" class="modal-overlay" onclick="closeModal('customerEditModal')">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="customer-edit">
+                <div class="customer-edit-title">Customer Details - Edit</div>
+                <div class="customer-edit-form">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-input" id="editCustomerName" value="Masdiana Mahasim">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-input" id="editCustomerEmail" value="masdiana@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" class="form-input" id="editCustomerPhone" value="+60 18-6761 514">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" id="editCustomerPassword" value="Customer@2025">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" class="form-input" id="editCustomerPasswordConfirm" value="Customer@2025">
+                    </div>
+                </div>
+                <div class="customer-edit-actions">
+                    <button class="customer-action-btn btn-cancel" onclick="closeModal('customerEditModal')">Cancel</button>
+                    <button class="customer-action-btn btn-save" onclick="saveCustomerEdit()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Delete Confirmation Modal -->
+    <div id="customerDeleteModal" class="modal-overlay" onclick="closeModal('customerDeleteModal')">
+        <div class="modal modal-sm" onclick="event.stopPropagation()">
+            <div class="modal-confirm">
+                <div class="modal-confirm-header">
+                    <div class="modal-icon-green">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M7.5 12L10.5 15L16.5 9M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#079455" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="modal-confirm-title">Are you sure you want to permanently delete this customer account? This action is irreversible.</div>
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-btn-cancel" onclick="closeModal('customerDeleteModal')">Cancel</button>
+                    <button class="modal-btn-confirm" onclick="confirmCustomerDelete()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Update Success Modal -->
+    <div id="customerUpdateSuccessModal" class="modal-overlay" onclick="closeModal('customerUpdateSuccessModal')">
+        <div class="modal modal-sm" onclick="event.stopPropagation()">
+            <div class="modal-success">
+                <div class="modal-icon-circle">
+                    <svg viewBox="0 0 36 36" fill="none">
+                        <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="modal-message">Customer details updated successfully!</div>
+                <button class="modal-btn" onclick="closeModal('customerUpdateSuccessModal')">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Customer Delete Success Modal -->
+    <div id="customerDeleteSuccessModal" class="modal-overlay" onclick="closeModal('customerDeleteSuccessModal')">
+        <div class="modal modal-sm" onclick="event.stopPropagation()">
+            <div class="modal-success">
+                <div class="modal-icon-circle">
+                    <svg viewBox="0 0 36 36" fill="none">
+                        <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="modal-message">Customer account deleted successfully!</div>
+                <button class="modal-btn" onclick="closeModal('customerDeleteSuccessModal')">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCustomerId = null;
+        let currentCustomerData = {};
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.admin-sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Customer Modal Functions
+        function openCustomerViewModal(id, name, email, phone, password) {
+            currentCustomerId = id;
+            currentCustomerData = { id, name, email, phone, password };
+            
+            document.getElementById('viewCustomerId').textContent = id;
+            document.getElementById('viewCustomerName').textContent = name;
+            document.getElementById('viewCustomerEmail').textContent = email;
+            document.getElementById('viewCustomerPhone').textContent = phone;
+            document.getElementById('viewCustomerPassword').textContent = password;
+            
+            document.getElementById('customerViewModal').classList.add('active');
+        }
+
+        function openCustomerEditModal(id, name, email, phone, password) {
+            currentCustomerId = id;
+            currentCustomerData = { id, name, email, phone, password };
+            
+            document.getElementById('editCustomerName').value = name;
+            document.getElementById('editCustomerEmail').value = email;
+            document.getElementById('editCustomerPhone').value = phone;
+            document.getElementById('editCustomerPassword').value = password;
+            document.getElementById('editCustomerPasswordConfirm').value = password;
+            
+            document.getElementById('customerEditModal').classList.add('active');
+        }
+
+        function openCustomerDeleteModal(id) {
+            currentCustomerId = id;
+            document.getElementById('customerDeleteModal').classList.add('active');
+        }
+
+        function switchToEditFromView() {
+            closeModal('customerViewModal');
+            setTimeout(() => {
+                openCustomerEditModal(
+                    currentCustomerData.id,
+                    currentCustomerData.name,
+                    currentCustomerData.email,
+                    currentCustomerData.phone,
+                    currentCustomerData.password
+                );
+            }, 300);
+        }
+
+        function switchToDeleteFromView() {
+            closeModal('customerViewModal');
+            setTimeout(() => {
+                openCustomerDeleteModal(currentCustomerId);
+            }, 300);
+        }
+
+        function saveCustomerEdit() {
+            closeModal('customerEditModal');
+            setTimeout(() => {
+                document.getElementById('customerUpdateSuccessModal').classList.add('active');
+            }, 300);
+        }
+
+        function confirmCustomerDelete() {
+            closeModal('customerDeleteModal');
+            setTimeout(() => {
+                document.getElementById('customerDeleteSuccessModal').classList.add('active');
+            }, 300);
+        }
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+    </script>
+  </body>
+</html>
