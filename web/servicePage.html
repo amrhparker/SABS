@@ -49,7 +49,6 @@
             height: 100%;
             backdrop-filter: blur(4.5px);
             background: rgba(0, 0, 0, 0.3);
-            pointer-events: none;
         }
 
         /* ==================== SIDEBAR ==================== */
@@ -205,9 +204,12 @@
         }
 
         /* ==================== PAGE CONTAINER ==================== */
-        .page-container {
-            display: none;
+        .pagination-numbers-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
+
 
         .page-container.active {
             display: block;
@@ -846,7 +848,7 @@
         </div>
         
         <nav class="sidebar-menu">
-            <div class="menu-item" data-page="dashboard" onclick="window.location.href='adminDashboard.html'"
+            <div class="menu-item" onclick="showPage('dashboard')" data-page="dashboard">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M3 5.5C3 4.11929 4.11929 3 5.5 3H8.5C9.88071 3 11 4.11929 11 5.5V8.5C11 9.88071 9.88071 11 8.5 11H5.5C4.11929 11 3 9.88071 3 8.5V5.5ZM5.5 5H8.5C8.77614 5 9 5.22386 9 5.5V8.5C9 8.77614 8.77614 9 8.5 9H5.5C5.22386 9 5 8.77614 5 8.5V5.5C5 5.22386 5.22386 5 5.5 5Z" fill="black" fill-opacity="0.6"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13 5.5C13 4.11929 14.1193 3 15.5 3H18.5C19.8807 3 21 4.11929 21 5.5V8.5C21 9.88071 19.8807 11 18.5 11H15.5C14.1193 11 13 9.88071 13 8.5V5.5ZM15.5 5H18.5C18.7761 5 19 5.22386 19 5.5V8.5C19 8.77614 18.7761 9 18.5 9H15.5C15.2239 9 15 8.77614 15 8.5V5.5C15 5.22386 15.2239 5 15.5 5Z" fill="black" fill-opacity="0.6"/>
@@ -864,7 +866,7 @@
                 Appointments
             </div>
             
-            <div class="menu-item" onclick="showPage('manageCustomer.html')" data-page="manageCustomer.html">
+            <div class="menu-item" onclick="showPage('customers')" data-page="customers">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 6.5C14.5 8.98528 12.4853 11 10 11C7.51472 11 5.5 8.98528 5.5 6.5C5.5 4.01472 7.51472 2 10 2C12.4853 2 14.5 4.01472 14.5 6.5ZM12.5 6.5C12.5 7.88071 11.3807 9 10 9C8.61929 9 7.5 7.88071 7.5 6.5C7.5 5.11929 8.61929 4 10 4C11.3807 4 12.5 5.11929 12.5 6.5Z" fill="black" fill-opacity="0.6"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M2 18.9231C2 15.0996 5.09957 12 8.92308 12H11.0769C14.9004 12 18 15.0996 18 18.9231C18 20.0701 17.0701 21 15.9231 21H4.07692C2.92987 21 2 20.0701 2 18.9231ZM4 18.9231C4 16.2041 6.20414 14 8.92308 14H11.0769C13.7959 14 16 16.2041 16 18.9231C16 18.9656 15.9656 19 15.9231 19H4.07692C4.03444 19 4 18.9656 4 18.9231Z" fill="black" fill-opacity="0.6"/>
@@ -921,7 +923,6 @@
             <!-- ================= SERVICES TABLE ================= -->
 <div class="services-page">
 
-            <div class="services-page">
                 <div class="services-header">
                     <h2 class="services-title">List of Services</h2>
                     <div class="services-actions">
@@ -929,9 +930,9 @@
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7844 16.1991C11.646 18.6416 7.10629 18.4205 4.22156 15.5358C1.09737 12.4116 1.09737 7.34625 4.22156 4.22205C7.34576 1.09786 12.4111 1.09786 15.5353 4.22205C18.42 7.10677 18.6411 11.6464 16.1986 14.7849L20.4851 19.0713C20.8756 19.4618 20.8756 20.095 20.4851 20.4855C20.0945 20.876 19.4614 20.876 19.0708 20.4855L14.7844 16.1991ZM5.63578 14.1215C7.97892 16.4647 11.7779 16.4647 14.1211 14.1215C16.4642 11.7784 16.4642 7.97941 14.1211 5.63627C11.7779 3.29312 7.97892 3.29312 5.63578 5.63627C3.29263 7.97941 3.29263 11.7784 5.63578 14.1215Z" fill="#667085"/>
                             </svg>
-                            <input type="text" placeholder="Search service..."
-                   onkeyup="filterServices(this.value)">
+                            <input type="text" id="searchInput" placeholder="Search service..." onkeyup="searchServices()">
                         </div>
+
                         <button class="btn-add-service" onclick="openAddModal()">Add New Service</button>
                     </div>
                 </div>
@@ -956,19 +957,35 @@
 
     <!-- ✅ PAGINATION MOVED HERE -->
     <div class="services-footer">
-        <div class="pagination">
-            <button class="pagination-btn" onclick="changePage(-1)">
-                <!-- LEFT ARROW SVG -->
-            </button>
+    <div class="pagination">
 
-            <div class="pagination-number active" onclick="goToPage(1)">1</div>
-            <div class="pagination-number" onclick="goToPage(2)">2</div>
+        <!-- PREVIOUS -->
+        <button class="pagination-btn" onclick="changePage(-1)">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M12.6728 4.41058C12.9983 4.73602 12.9983 5.26366 12.6728 5.58909L8.26207 9.99984L12.6728 14.4106C12.9983 14.736 12.9983 15.2637 12.6728 15.5891C12.3474 15.9145 11.8197 15.9145 11.4943 15.5891L6.19968 10.2945C6.03696 10.1317 6.03696 9.86793 6.19968 9.70521L11.4943 4.41058C11.8197 4.08514 12.3474 4.08514 12.6728 4.41058Z"
+                      fill="#5C59E8"/>
+            </svg>
+        </button>
 
-            <button class="pagination-btn" onclick="changePage(1)">
-                <!-- RIGHT ARROW SVG -->
-            </button>
+        <div id="paginationNumbers" class="pagination-numbers-container">
+            <!-- JS will insert page numbers here dynamically -->
         </div>
+
+        <!-- NEXT -->
+        <button class="pagination-btn" onclick="changePage(1)">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M7.32757 4.41058C7.00214 4.73602 7.00214 5.26366 7.32757 5.58909L11.7383 9.99984L7.32757 14.4106C7.00214 14.736 7.00214 15.2637 7.32757 15.5891C7.65301 15.9145 8.18065 15.9145 8.50608 15.5891L13.8007 10.2945C13.9634 10.1317 13.9634 9.86793 13.8007 9.70521L8.50608 4.41058C8.18065 4.08514 7.65301 4.08514 7.32757 4.41058Z"
+                      fill="#5C59E8"/>
+            </svg>
+        </button>
+
     </div>
+</div>
+
 
 </div>
 
@@ -1110,65 +1127,92 @@
         </div>
     </div>
 
+            
+            <!-- Delete Service Confirmation Modal -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="confirmation-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 12L10.5 15L16.5 9M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#079455" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="confirmation-message">
+                    Are you sure you want to permanently delete this service information? This action is irreversible.
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 16px;">
+                    <button class="btn-modal btn-modal-danger" onclick="closeModal('deleteModal')">Cancel</button>
+                    <button class="btn-modal btn-modal-success" onclick="confirmDelete()">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Edit) -->
+    <div class="modal-overlay" id="successEditModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    Service details updated successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successEditModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal (Add) -->
+    <div class="modal-overlay" id="successAddModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    New service record added successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successAddModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
+    </div>
+    <!-- Success Modal (Delete) -->
+    <div class="modal-overlay" id="successDeleteModal">
+        <div class="modal-content modal-small">
+            <div class="modal-body">
+                <div class="modal-icon">
+                    <div class="icon-circle">
+                        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-message">
+                    Service record deleted successfully!
+                </div>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('successDeleteModal')" style="width: 100%;">Okay</button>
+            </div>
+        </div>
     </div>
 
 <!-- ================= JS ================= -->
 <script>
 let currentServiceId = null;
-    
-    function openEditModalDirect(id) {
-    currentServiceId = id;
+let currentPage = 1;
+let totalPages = 1;
+const pageSize = 5;
+let currentKeyword = "";
 
-    fetch("ServiceServlet?id=" + id)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("editCategory").value = data.category;
-            document.getElementById("editService").value = data.service;
-            document.getElementById("editPrice").value = data.price;
-            document.getElementById("editDescription").value = data.description;
-            openModal("editModal");
-        });
-}
-
-function deleteService(id) {
-    if (!confirm("Are you sure you want to delete this service?")) return;
-
-    const data = new URLSearchParams({
-        action: "delete",
-        id: id
-    });
-
-    fetch("ServiceServlet", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: data.toString()
-    }).then(() => {
-        loadServices();
-    });
-}
-
-function openAddModal() {
-    openModal("addModal");
-}
-
-function submitAddService(e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const data = new URLSearchParams(new FormData(form));
-
-    fetch("ServiceServlet", {
-        method: "POST",
-        body: data
-    }).then(() => {
-        closeModal("addModal");
-        form.reset();
-        loadServices();
-    });
-}
-
-
-/* ================= MODAL HELPERS ================= */
+/* ================= OPEN / CLOSE MODALS ================= */
 function openModal(id) {
     document.getElementById(id).classList.add("active");
 }
@@ -1178,15 +1222,55 @@ function closeModal(id) {
 }
 
 /* ================= LOAD SERVICES ================= */
-function loadServices() {
-    fetch("ServiceServlet")
+function loadServices(page = 1, keyword = "") {
+    currentPage = page;
+    currentKeyword = keyword;
+
+    fetch(`ServiceServlet?page=${page}&keyword=${encodeURIComponent(keyword)}`)
         .then(res => res.text())
         .then(html => {
+            // Extract total pages from comment <!--TOTAL_PAGES=7-->
+            const match = html.match(/<!--TOTAL_PAGES=(\d+)-->/);
+            if (match) totalPages = parseInt(match[1]);
+
             document.getElementById("servicesTableBody").innerHTML = html;
+            renderPagination();
         });
 }
 
-window.onload = loadServices;
+/* ================= PAGINATION ================= */
+function renderPagination() {
+    const container = document.getElementById("paginationNumbers");
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return; // 🔴 IMPORTANT
+
+    for (let i = 1; i <= totalPages; i++) {
+        const page = document.createElement("div");
+        page.className = "pagination-number" + (i === currentPage ? " active" : "");
+        page.innerText = i;
+        page.onclick = () => goToPage(i);
+        container.appendChild(page);
+    }
+}
+
+function goToPage(page) {
+    loadServices(page, currentKeyword);
+}
+
+function changePage(step) {
+    const nextPage = currentPage + step;
+    if (nextPage < 1 || nextPage > totalPages) return;
+    loadServices(nextPage, currentKeyword);
+}
+
+/* ================= SEARCH ================= */
+function searchServices() {
+    const keyword = document.getElementById("searchInput").value.trim();
+    currentPage = 1;
+    loadServices(1, keyword);
+}
+
 
 /* ================= VIEW SERVICE ================= */
 function openViewModal(id) {
@@ -1202,11 +1286,29 @@ function openViewModal(id) {
         });
 }
 
-/* ================= EDIT ================= */
-function openEditModalFromView() {
-    closeModal("viewModal");
+/* ================= ADD SERVICE ================= */
+function openAddModal() { openModal("addModal"); }
 
-    fetch("ServiceServlet?id=" + currentServiceId)
+function submitAddService(e) {
+    e.preventDefault();
+    const form = e.target;
+    const data = new URLSearchParams(new FormData(form));
+
+    fetch("ServiceServlet?action=add", {
+        method: "POST",
+        body: data
+    }).then(() => {
+        closeModal("addModal");
+        form.reset();
+        loadServices(currentPage, currentKeyword);
+        openModal("successAddModal");
+    });
+}
+
+/* ================= EDIT SERVICE ================= */
+function openEditModalDirect(id) {
+    currentServiceId = id;
+    fetch("ServiceServlet?id=" + id)
         .then(res => res.json())
         .then(data => {
             document.getElementById("editCategory").value = data.category;
@@ -1215,6 +1317,11 @@ function openEditModalFromView() {
             document.getElementById("editDescription").value = data.description;
             openModal("editModal");
         });
+}
+
+function openEditModalFromView() {
+    closeModal("viewModal");
+    openEditModalDirect(currentServiceId);
 }
 
 function saveEdit() {
@@ -1229,18 +1336,22 @@ function saveEdit() {
 
     fetch("ServiceServlet", {
         method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: data.toString()
     }).then(() => {
         closeModal("editModal");
-        loadServices();
+        loadServices(currentPage, currentKeyword);
+        openModal("successEditModal");
     });
 }
 
-/* ================= DELETE ================= */
-function openDeleteModalFromView() {
-    if (!confirm("Delete this service?")) return;
+/* ================= DELETE SERVICE ================= */
+function deleteService(id) {
+    currentServiceId = id;
+    openModal("deleteModal");
+}
 
+function confirmDelete() {
     const data = new URLSearchParams({
         action: "delete",
         id: currentServiceId
@@ -1248,21 +1359,25 @@ function openDeleteModalFromView() {
 
     fetch("ServiceServlet", {
         method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: data.toString()
     }).then(() => {
-        closeModal("viewModal");
-        loadServices();
+        closeModal("deleteModal");
+        loadServices(currentPage, currentKeyword);
+        openModal("successDeleteModal");
     });
 }
 
-/* ================= SEARCH ================= */
-function filterServices(keyword) {
-    keyword = keyword.toLowerCase();
-    document.querySelectorAll("#servicesTableBody tr").forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
-    });
+function openDeleteModalFromView() {
+    closeModal("viewModal");
+    openModal("deleteModal");
 }
+
+/* ================= INIT ================= */
+window.onload = () => {
+    loadServices(1);
+    document.getElementById("searchInput").addEventListener("input", searchServices);
+};
 </script>
 
 </body>
