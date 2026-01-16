@@ -39,9 +39,18 @@ public class LoginServlet extends HttpServlet {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                response.getWriter().write("success"); // login ok
+                if(role.equals("admin")) {
+                    String adminName = rs.getString("name");
+                    HttpSession session = request.getSession();
+                    session.setAttribute("adminName", adminName);
+                } else if(role.equals("staff")) {
+                    String staffName = rs.getString("name");
+                    HttpSession session = request.getSession();
+                    session.setAttribute("staffName", staffName);
+                }
+                response.getWriter().write("success");
             } else {
-                response.getWriter().write("failed");  // wrong login
+                response.getWriter().write("failed"); 
             }
 
             con.close();

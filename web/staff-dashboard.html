@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SALONIX - Admin Dashboard</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #FFF;
+                color: #333843;
+                overflow-x: hidden;
+            }
+
+            /* ==================== LAYOUT ==================== */
+            .admin-layout {
+                display: flex;
+                min-height: 100vh;
+                position: relative;
+            }
+
+            .admin-bg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+            }
+
+            .admin-bg-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .admin-bg-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                backdrop-filter: blur(4.5px);
+                background: rgba(0, 0, 0, 0.3);
+            }
+
+            /* ==================== MAIN CONTENT ==================== */
+            .main-content {
+                flex: 1;
+                margin-left: 264px;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+                position: relative;
+                z-index: 1;
+            }
+
+            /* ==================== TOP BAR ==================== */
+            .top-bar {
+                width: 100%;
+                position: fixed;
+                top: 0;              
+                left: 0;  
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 16px 24px;
+                background: #FFF;
+                border-bottom: 1px solid #F0F1F3;
+                box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
+                height: 72px;
+            }
+
+            .menu-icon {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+            }
+
+            .top-bar-right {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .divider {
+                width: 1px;
+                height: 40px;
+                background: #F0F1F3;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .user-avatar {
+                position: relative;
+            }
+
+            .user-avatar-img {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #E0E2E7;
+            }
+
+            .user-status {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 10px;
+                height: 10px;
+                background: #3DA172;
+                border: 2px solid #FFF;
+                border-radius: 50%;
+            }
+
+            .user-details h4 {
+                color: #1A1C21;
+                font-size: 14px;
+                font-weight: 500;
+                line-height: 20px;
+            }
+
+            .user-details p {
+                color: #667085;
+                font-size: 12px;
+                font-weight: 500;
+                line-height: 18px;
+            }
+
+            /* ==================== PAGE CONTAINER ==================== */
+            .page-container {
+                display: none;
+            }
+
+            .page-container.active {
+                display: block;
+            }
+
+            /* ==================== SERVICES/STAFFS PAGE ==================== */
+            .services-page, .staffs-page {
+            padding: 40px 24px;      
+            max-width: 1200px;      
+            margin: 0 auto;           
+            width: 100%;             
+            margin-top: 36px;        
+            }
+
+
+            .services-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 18px 24px;
+                background: #FFF;
+                border: 1px solid #F0F1F3;
+                border-bottom: none;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .services-title {
+                color: #333843;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 28px;
+            }
+
+            .services-actions {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .search-box {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 8px 12px;
+                border-radius: 8px;
+                border: 1px solid #5C59E8;
+                background: #F9F9FC;
+                min-width: 200px;
+            }
+
+            .search-box svg {
+                width: 24px;
+                height: 24px;
+                flex-shrink: 0;
+            }
+
+            .search-box input {
+                border: none;
+                background: transparent;
+                outline: none;
+                flex: 1;
+                color: #333843;
+                font-size: 14px;
+                font-family: 'Inter', sans-serif;
+            }
+
+            .btn-add-service {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px 12px;
+                gap: 8px;
+                border-radius: 8px;
+                background: #624DE3;
+                color: #FFF;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                white-space: nowrap;
+            }
+
+            .btn-add-service:hover {
+                background: #5243c7;
+            }
+
+            /* ==================== DASHBOARD STATS ==================== */
+            .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 300px)); /* max 300px */
+            gap: 24px;
+            margin-bottom: 46px;
+            justify-content: center; 
+            }
+
+
+            .stat-card {
+            background: #FFF;
+            border: 1px solid #E0E2E7;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1.5px 2px 0 rgba(16, 24, 40, 0.10);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 90px;   
+            max-width: 300px;
+            width: 100%;      
+            }
+
+            .stat-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .stat-icon.primary {
+                background: #DEDEFA;
+                border: 4px solid #EFEFFD;
+            }
+
+            .stat-icon.green {
+                background: #CFE7DC;
+                border: 4px solid #E7F4EE;
+            }
+
+            .stat-icon.red {
+                background: #FCDAD7;
+                border: 4px solid #FEEDEC;
+            }
+
+            .stat-icon.yellow {
+                background: #FAE1CF;
+                border: 4px solid #FDF1E8;
+            }
+
+            .stat-body {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .stat-label {
+                font-size: 16px;
+                font-weight: 500;
+                color: #667085;
+            }
+
+            .stat-value {
+                font-size: 24px;
+                font-weight: 500;
+                color: #333843;
+            }
+
+            /* ==================== PAGINATION ==================== */
+            .services-footer {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                padding: 14px 24px;
+                background: #FFF;
+                border: 1px solid #F0F1F3;
+                border-top: none;
+            }
+
+            .pagination {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .pagination-btn {
+                display: flex;
+                width: 32px;
+                height: 32px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 8px;
+                background: #DEDEFA;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .pagination-btn:hover {
+                background: #d0cdf7;
+            }
+
+            .pagination-btn svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .pagination-number {
+                display: flex;
+                width: 32px;
+                height: 32px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 8px;
+                color: #5C59E8;
+                font-size: 14px;
+                font-weight: 600;
+                background: #DEDEFA;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .pagination-number.active {
+                background: #5C59E8;
+                color: #FFF;
+            }
+
+            .pagination-number:hover:not(.active) {
+                background: #d0cdf7;
+            }
+
+            /* ==================== MODALS ==================== */
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .modal-overlay.active {
+                display: flex;
+                pointer-events: auto;
+                opacity: 1;
+            }
+
+            .modal-content {
+                background: #FFF;
+                border-radius: 8px;
+                max-width: 900px;
+                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
+                position: relative;
+                animation: modalSlideIn 0.3s ease;
+            }
+
+            @keyframes modalSlideIn {
+                from {
+                    transform: translateY(-50px);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+
+            .modal-header {
+                padding: 24px;
+                border-bottom: 1px solid #F0F1F3;
+            }
+
+            .modal-title {
+                color: #333843;
+                font-size: 18px;
+                font-weight: 500;
+                line-height: 28px;
+            }
+
+            .modal-body {
+                padding: 24px;
+            }
+
+            .service-details {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .detail-row {
+                display: flex;
+                align-items: flex-start;
+                gap: 20px;
+                padding-bottom: 16px;
+                border-bottom: 1px solid #979797;
+            }
+
+            .detail-row:last-child {
+                border-bottom: none;
+            }
+
+            .detail-label {
+                flex: 1;
+                color: #818181;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 150%;
+            }
+
+            .detail-value {
+                flex: 1;
+                color: #343434;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 150%;
+            }
+
+            .modal-footer {
+                padding: 24px;
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+
+            .btn-modal {
+                display: flex;
+                padding: 14px 24px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 8px;
+                font-family: 'Jost', sans-serif;
+                font-size: 18px;
+                font-weight: 700;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                min-width: 189px;
+            }
+
+            .btn-modal-primary {
+                background: #624DE3;
+                color: #FFF;
+            }
+
+            .btn-modal-primary:hover {
+                background: #5243c7;
+            }
+
+            .btn-modal-secondary {
+                background: #000;
+                color: #FFF;
+            }
+
+            .btn-modal-secondary:hover {
+                background: #333;
+            }
+
+            .btn-modal-danger {
+                background: #E34D50;
+                color: #FFF;
+            }
+
+            .btn-modal-danger:hover {
+                background: #d43f49;
+            }
+
+            .btn-modal-success {
+                background: #2DA831;
+                color: #FFF;
+            }
+
+            .btn-modal-success:hover {
+                background: #259328;
+            }
+
+            /* ==================== FORM STYLES ==================== */
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 24px;
+            }
+
+            .form-label {
+                color: #000;
+                font-family: 'Poppins', sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            .form-input,
+            .form-select,
+            .form-textarea {
+                padding: 16px;
+                border-radius: 9px;
+                border: 1px solid rgba(0, 0, 0, 0.4);
+                background: #FFF;
+                font-family: 'Poppins', sans-serif;
+                font-size: 14px;
+                outline: none;
+                transition: border-color 0.3s ease;
+            }
+
+            .form-input:focus,
+            .form-select:focus,
+            .form-textarea:focus {
+                border-color: #5C59E8;
+            }
+
+            .form-input::placeholder,
+            .form-textarea::placeholder {
+                color: rgba(0, 0, 0, 0.4);
+                font-weight: 300;
+            }
+
+            .form-select {
+                appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.7359 0.305918C11.5667 0.110038 11.3373 0 11.098 0C10.8588 0 10.6294 0.110038 10.4602 0.305918L5.99455 5.47795L1.52889 0.305919C1.35874 0.11559 1.13086 0.0102748 0.894315 0.0126552C0.657772 0.0150361 0.431501 0.124922 0.264235 0.318646C0.0969682 0.512371 0.00209099 0.774434 3.49167e-05 1.04839C-0.0020202 1.32235 0.0889117 1.58628 0.253246 1.78334L5.35673 7.69408C5.52591 7.88996 5.75534 8 5.99455 8C6.23377 8 6.4632 7.88996 6.63238 7.69408L11.7359 1.78334C11.905 1.5874 12 1.32169 12 1.04463C12 0.767572 11.905 0.501857 11.7359 0.305918Z' fill='black'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 16px center;
+                padding-right: 40px;
+            }
+
+            .form-textarea {
+                min-height: 151px;
+                resize: vertical;
+            }
+
+            .form-row {
+                display: flex;
+                gap: 24px;
+            }
+
+            .form-row .form-group {
+                flex: 1;
+            }
+
+            /* ==================== SUCCESS/CONFIRMATION MODALS ==================== */
+            .modal-small {
+                max-width: 556px;
+            }
+
+            .modal-icon {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 24px;
+            }
+
+            .icon-circle {
+                width: 72px;
+                height: 72px;
+                border-radius: 50%;
+                background: #E8DEF8;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .icon-circle svg {
+                width: 36px;
+                height: 36px;
+            }
+
+            .modal-message {
+                color: #344054;
+                text-align: center;
+                font-size: 16px;
+                font-weight: 400;
+                line-height: 24px;
+                margin-bottom: 32px;
+            }
+
+            .confirmation-message {
+                color: #101828;
+                font-size: 24px;
+                font-weight: 500;
+                line-height: 32px;
+                margin-bottom: 32px;
+            }
+
+            .confirmation-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: #DCFAE6;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 16px;
+            }
+
+            .confirmation-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            /* ==================== RESPONSIVE ==================== */
+            @media (max-width: 1024px) {
+                .sidebar {
+                    width: 220px;
+                }
+
+                .main-content {
+                    margin-left: 220px;
+                }
+
+                .services-page, .staffs-page {
+                    padding: 24px 16px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .sidebar {
+                    transform: translateX(-100%);
+                    transition: transform 0.3s ease;
+                }
+
+                .sidebar.mobile-open {
+                    transform: translateX(0);
+                }
+
+                .main-content {
+                    margin-left: 0;
+                }
+
+                .services-header {
+                    flex-direction: column;
+                    align-items: stretch;
+                }
+
+                .services-actions {
+                    width: 100%;
+                    flex-direction: column;
+                }
+
+                .search-box {
+                    width: 100%;
+                }
+
+                .btn-add-service {
+                    width: 100%;
+                }
+
+                .form-row {
+                    flex-direction: column;
+                }
+
+                .modal-footer {
+                    flex-direction: column;
+                }
+
+                .btn-modal {
+                    width: 100%;
+                }
+
+                .services-table {
+                    overflow-x: scroll;
+                }
+
+                table {
+                    min-width: 600px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .top-bar {
+                    padding: 12px 16px;
+                }
+
+                .services-page, .staffs-page {
+                    padding: 16px 12px;
+                }
+
+                .modal-content {
+                    width: 95%;
+                }
+
+                .modal-header,
+                .modal-body,
+                .modal-footer {
+                    padding: 16px;
+                }
+
+                th, td {
+                    padding: 12px 16px;
+                }
+
+                .action-buttons {
+                    flex-direction: column;
+                    width: 100%;
+                }
+
+                .btn-action {
+                    width: 100%;
+                }
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <!-- ================= BACKGROUND ================= -->
+        <div class="admin-bg">
+            <img src="https://api.builder.io/api/v1/image/assets/TEMP/1952c35b9d9f3235ef7d57200dcbbf59971acb5d?width=2880"
+                 class="admin-bg-image">
+            <div class="admin-bg-overlay"></div>
+        </div>
+
+        <!-- ================= MAIN CONTENT ================= -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <svg class="menu-icon" onclick="toggleSidebar()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 7C3 6.44772 3.44772 6 4 6H20C20.5523 6 21 6.44772 21 7C21 7.55228 20.5523 8 20 8H4C3.44772 8 3 7.55228 3 7Z" fill="#667085"/>
+                <path d="M3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12Z" fill="#667085"/>
+                <path d="M4 16C3.44772 16 3 16.4477 3 17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17C21 16.4477 20.5523 16 20 16H4Z" fill="#667085"/>
+                </svg>
+
+                <div class="top-bar-right">
+                    <div class="divider"></div>
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <div class="user-avatar-img"></div>
+                            <div class="user-status"></div>
+                        </div>
+                        <div class="user-details">
+                            <h4 id="adminName"></h4>
+                            <p>Admin</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= card ================= -->
+            <div class="stats-grid">
+                <!-- First card -->
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M15.9666 12.6975C16.3519 12.3017 16.3433 11.6686 15.9475 11.2834C15.5517 10.8982 14.9186 10.9068 14.5334 11.3025L11.2737 14.6517L9.8755 13.5309C9.44459 13.1854 8.81522 13.2547 8.46979 13.6856C8.12435 14.1166 8.19365 14.7459 8.62457 15.0914L11.0857 17.0643C11.2867 17.2254 11.5771 17.2075 11.7567 17.0229L15.9666 12.6975Z" fill="#5C59E8"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C8.55228 2 9 2.44772 9 3H15C15 2.44772 15.4477 2 16 2C16.5523 2 17 2.44772 17 3H18C19.6569 3 21 4.34315 21 6V19C21 20.6569 19.6569 22 18 22H6C4.34315 22 3 20.6569 3 19V6C3 4.34315 4.34315 3 6 3H7C7 2.44772 7.44772 2 8 2ZM19 6V7H5V6C5 5.44772 5.44772 5 6 5H7C7 5.55228 7.44772 6 8 6C8.55228 6 9 5.55228 9 5H15C15 5.55228 15.4477 6 16 6C16.5523 6 17 5.55228 17 5H18C18.5523 5 19 5.44772 19 6ZM5 19V9H19V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19Z" fill="#5C59E8"/>                                    
+                        </svg>
+                    </div>
+                    <div class="stat-body">
+                        <div class="stat-label">Hi,</div>
+                        <div class="stat-value" id="staffName"></div>
+                    </div>
+                </div>
+
+                <!-- Second card -->
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M15.9666 12.6975C16.3519 12.3017 16.3433 11.6686 15.9475 11.2834C15.5517 10.8982 14.9186 10.9068 14.5334 11.3025L11.2737 14.6517L9.8755 13.5309C9.44459 13.1854 8.81522 13.2547 8.46979 13.6856C8.12435 14.1166 8.19365 14.7459 8.62457 15.0914L11.0857 17.0643C11.2867 17.2254 11.5771 17.2075 11.7567 17.0229L15.9666 12.6975Z" fill="#5C59E8"/>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M8 2C8.55228 2 9 2.44772 9 3H15C15 2.44772 15.4477 2 16 2C16.5523 2 17 2.44772 17 3H18C19.6569 3 21 4.34315 21 6V19C21 20.6569 19.6569 22 18 22H6C4.34315 22 3 20.6569 3 19V6C3 4.34315 4.34315 3 6 3H7C7 2.44772 7.44772 2 8 2ZM19 6V7H5V6C5 5.44772 5.44772 5 6 5H7C7 5.55228 7.44772 6 8 6C8.55228 6 9 5.55228 9 5H15C15 5.55228 15.4477 6 16 6C16.5523 6 17 5.55228 17 5H18C18.5523 5 19 5.44772 19 6ZM5 19V9H19V19C19 19.5523 18.5523 20 18 20H6C5.44772 20 5 19.5523 5 19Z" fill="#5C59E8"/>                                    
+                        </svg>
+                    </div>
+                    <div class="stat-body">
+                        <div class="stat-label">Total Appointments</div>
+                        <div class="stat-value">25</div>
+                    </div>
+                </div>
+            </div>
+            <!-- ================= JS ================= -->
+            <script>
+                fetch('StaffServlet')
+                .then(response => response.text())
+                .then(name => {
+                document.getElementById('staffName').textContent = name;
+                })
+                .catch(err => {
+                document.getElementById('staffName').textContent = "";
+                console.error(err);
+                });
+                
+                let currentServiceId = null;
+
+                function openEditModalDirect(id) {
+                    currentServiceId = id;
+
+                    fetch("ServiceServlet?id=" + id)
+                            .then(res => res.json())
+                            .then(data => {
+                                document.getElementById("editCategory").value = data.category;
+                                document.getElementById("editService").value = data.service;
+                                document.getElementById("editPrice").value = data.price;
+                                document.getElementById("editDescription").value = data.description;
+                                openModal("editModal");
+                            });
+                }
+
+                function deleteService(id) {
+                    if (!confirm("Are you sure you want to delete this service?"))
+                        return;
+
+                    const data = new URLSearchParams({
+                        action: "delete",
+                        id: id
+                    });
+
+                    fetch("ServiceServlet", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                        body: data.toString()
+                    }).then(() => {
+                        loadServices();
+                    });
+                }
+
+                function openAddModal() {
+                    openModal("addModal");
+                }
+
+                function submitAddService(e) {
+                    e.preventDefault();
+
+                    const form = e.target;
+                    const data = new URLSearchParams(new FormData(form));
+
+                    fetch("ServiceServlet", {
+                        method: "POST",
+                        body: data
+                    }).then(() => {
+                        closeModal("addModal");
+                        form.reset();
+                        loadServices();
+                    });
+                }
+
+
+                /* ================= MODAL HELPERS ================= */
+                function openModal(id) {
+                    document.getElementById(id).classList.add("active");
+                }
+
+                function closeModal(id) {
+                    document.getElementById(id).classList.remove("active");
+                }
+
+                /* ================= LOAD SERVICES ================= */
+                function loadServices() {
+                    fetch("ServiceServlet")
+                            .then(res => res.text())
+                            .then(html => {
+                                document.getElementById("servicesTableBody").innerHTML = html;
+                            });
+                }
+
+                window.onload = loadServices;
+
+                /* ================= VIEW SERVICE ================= */
+                function openViewModal(id) {
+                    fetch("ServiceServlet?id=" + id)
+                            .then(res => res.json())
+                            .then(data => {
+                                currentServiceId = id;
+                                document.getElementById("viewCategory").innerText = data.category;
+                                document.getElementById("viewService").innerText = data.service;
+                                document.getElementById("viewPrice").innerText = "RM " + data.price;
+                                document.getElementById("viewDescription").innerText = data.description;
+                                openModal("viewModal");
+                            });
+                }
+
+                /* ================= EDIT ================= */
+                function openEditModalFromView() {
+                    closeModal("viewModal");
+
+                    fetch("ServiceServlet?id=" + currentServiceId)
+                            .then(res => res.json())
+                            .then(data => {
+                                document.getElementById("editCategory").value = data.category;
+                                document.getElementById("editService").value = data.service;
+                                document.getElementById("editPrice").value = data.price;
+                                document.getElementById("editDescription").value = data.description;
+                                openModal("editModal");
+                            });
+                }
+
+                function saveEdit() {
+                    const data = new URLSearchParams({
+                        action: "edit",
+                        id: currentServiceId,
+                        category: editCategory.value,
+                        service: editService.value,
+                        price: editPrice.value,
+                        description: editDescription.value
+                    });
+
+                    fetch("ServiceServlet", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                        body: data.toString()
+                    }).then(() => {
+                        closeModal("editModal");
+                        loadServices();
+                    });
+                }
+
+                /* ================= DELETE ================= */
+                function openDeleteModalFromView() {
+                    if (!confirm("Delete this service?"))
+                        return;
+
+                    const data = new URLSearchParams({
+                        action: "delete",
+                        id: currentServiceId
+                    });
+
+                    fetch("ServiceServlet", {
+                        method: "POST",
+                        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                        body: data.toString()
+                    }).then(() => {
+                        closeModal("viewModal");
+                        loadServices();
+                    });
+                }
+
+                /* ================= SEARCH ================= */
+                function filterServices(keyword) {
+                    keyword = keyword.toLowerCase();
+                    document.querySelectorAll("#servicesTableBody tr").forEach(row => {
+                        row.style.display = row.innerText.toLowerCase().includes(keyword) ? "" : "none";
+                    });
+                }
+            </script>
+
+    </body>
+
+</html>

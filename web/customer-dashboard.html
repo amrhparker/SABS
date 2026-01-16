@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SALONIX - Salon Booking Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;600;700&family=Jost:wght@400;500;600;700&family=Kiwi+Maru:wght@300;400;500&family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #FFFEF9;
+            color: #000;
+        }
+        
+        /* ==================== NAVIGATION ==================== */
+        .main-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 56px;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .site-logo {
+            width: 100px;
+            height: 79px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 70px;
+        }
+
+        .nav-link {
+            color: #FFF;
+            font-family: 'Jost', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .nav-link.inactive {
+            color: rgba(0, 0, 0, 0.40);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 9px;
+        }
+
+        .nav-btn {
+            width: 114px;
+            height: 53px;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.home {
+            background: #FCCAB8;
+            color: #230A01;
+        }
+
+        .nav-btn.logout {
+            background: #230A01;
+            color: #FFF;
+        }
+
+        .nav-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .nav-line {
+            width: 100%;
+            max-width: 1327px;
+            height: 1px;
+            background: #FFF;
+            margin: 23px auto 0;
+        }
+
+        .nav-line.dark {
+            background: #000;
+        }
+
+        .nav-highlight {
+            width: 140px;
+            height: 2px;
+            background: #F78C65;
+            margin: 0 auto;
+        }
+
+        /* ==================== HOME PAGE ==================== */
+        .hero-section {
+            min-height: 100vh;
+            position: relative;
+            background-image: url('https://api.builder.io/api/v1/image/assets/TEMP/1952c35b9d9f3235ef7d57200dcbbf59971acb5d?width=2880');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            backdrop-filter: blur(4.5px);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 0 20px;
+            margin-top: 100px;
+        }
+
+        .hero-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 60px;
+            font-weight: 600;
+            color: #FFF;
+            margin-bottom: 60px;
+            line-height: 1.2;
+        }
+
+        .hero-title .highlight {
+            font-family: 'Kiwi Maru', serif;
+            font-weight: 500;
+            color: #FCCAB8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 38px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-btn {
+            width: 251px;
+            height: 53px;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #FCCAB8;
+        }
+
+        .hero-btn.primary {
+            background: #FCCAB8;
+            color: #230A01;
+        }
+
+        .hero-btn.secondary {
+            background: transparent;
+            color: #FCCAB8;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(252, 202, 184, 0.4);
+        }
+
+        /* Service Categories Section */
+        .service-categories {
+            padding: 80px 20px;
+            background: #FFF;
+        }
+
+        .section-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            text-align: center;
+            color: #230A01;
+            margin-bottom: 60px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .category-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 17px;
+            background: #FFF;
+            box-shadow: 0 2px 8px 0 #2C001B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .category-name {
+            font-family: 'Jost', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 3.2px;
+            color: #000;
+        }
+
+        .view-services-btn {
+            width: 251px;
+            height: 53px;
+            border-radius: 8px;
+            background: #FCCAB8;
+            color: #230A01;
+            font-family: 'Jost', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            margin: 0 auto;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .view-services-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 60px 20px;
+            background: rgba(252, 202, 184, 0.37);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 22px;
+        }
+
+        .contact-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #230A01;
+            margin-bottom: 12px;
+        }
+
+        .contact-text {
+            font-family: 'Jost', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(35, 10, 1, 0.50);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .site-footer {
+            background: rgba(252, 202, 184, 0.37);
+            padding: 68px 20px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            width: 220px;
+            height: 250px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 37px;
+        }
+
+        .footer-link {
+            font-family: 'Jost', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #230A01;
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: #E24084;
+        }
+
+        .footer-bottom {
+            background: #ECD0C7;
+            padding: 11px 20px;
+            text-align: center;
+        }
+
+        .copyright {
+            font-family: 'Jost', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #230A01;
+        }
+
+        /* ==================== SERVICE MENU PAGE ==================== */
+        .service-header {
+            background: #FDE4DB;
+            padding: 160px 20px 60px;
+            text-align: center;
+        }
+
+        .service-header-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 50px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 20px;
+        }
+
+        .service-header-text {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: #000;
+            max-width: 577px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .service-category-section {
+            padding: 60px 20px;
+            background: #FFF;
+        }
+
+        .service-category-section.alt {
+            background: #FDE4DB;
+        }
+
+        .service-category-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: #000;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .service-category-desc {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 500;
+            color: #000;
+            text-align: center;
+            max-width: 613px;
+            margin: 0 auto 60px;
+            line-height: 1.4;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        .service-item {
+            background: transparent;
+        }
+
+        .service-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .service-name {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .service-price {
+            font-family: 'Jost', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #000;
+        }
+
+        .service-description {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.60);
+            line-height: 1.4;
+        }
+
+        .book-btn-outline {
+            width: 304px;
+            height: 53px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid #000;
+            color: #000;
+            font-family: 'Jost', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 60px auto 0;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .book-btn-outline:hover {
+            background: #FCCAB8;
+            border-color: #FCCAB8;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 556px;
+            box-shadow: 0 4px 4px 0 #2C001B;
+            animation: slideUp 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .modal-icon {
+            width: 72px;
+            height: 72px;
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .modal-icon-bg {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #FFD8E4;
+        }
+
+        .modal-icon svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 36px;
+            height: 36px;
+        }
+
+        .modal-body {
+            text-align: center;
+            width: 100%;
+        }
+
+        .modal-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.25rem;
+            font-weight: 600;
+            line-height: 1.22;
+            letter-spacing: -0.72px;
+            color: #101828;
+            margin-bottom: 8px;
+        }
+
+        .modal-message {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #344054;
+            margin-bottom: 32px;
+        }
+
+        .modal-button {
+            width: 100%;
+            height: 36px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #E24084;
+            background: #E24084;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.43;
+            cursor: pointer;
+            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+            transition: all 0.2s;
+        }
+
+        .modal-button:hover {
+            background: #d13575;
+            border-color: #d13575;
+        }
+
+        .modal-button:active {
+            transform: scale(0.98);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .register-card .card {
+            padding-top: 2.5rem;
+            padding-bottom: 2.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .register-card .card {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+        }
+
+        .register-form {
+            gap: 1.5rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 40px;
+            }
+
+            .section-title,
+            .story-title,
+            .service-header-title,
+            .service-category-title {
+                font-size: 32px;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            /* Cancel Appointment Table Responsive */
+            table {
+                font-size: 12px;
+            }
+
+            table th,
+            table td {
+                padding: 12px 4px !important;
+            }
+
+            table button {
+                min-width: 70px !important;
+                font-size: 11px !important;
+                padding: 6px 8px !important;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            /* Cancel appointment grid to single column on tablet */
+            #cancelPage .booking-container,
+            #cancelPage div[style*="grid-template-columns: 444px 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            #cancelPage .cancel-step {
+                display: inline-block;
+                min-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="homePage">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-overlay"></div>
+            
+            <!-- Header -->
+            <div class="main-header">
+                <div class="nav-container">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/db3e61846a007f94950a5874b027025362939df5?width=200" alt="SALONIX Logo" class="site-logo">
+                    
+                    <div class="nav-links">
+                        <a class="nav-link" onclick="">Book Appointment</a>
+                        <a class="nav-link" onclick="">Cancel Appointment</a>
+                        <a class="nav-link" onclick="window.location.href='customer-services.html'">Services</a>
+                        <a class="nav-link" onclick="window.location.href='ourStory.html'">Our story</a>
+                    </div>
+                    
+                    <div class="nav-buttons">
+                        <button class="nav-btn home" onclick="showPage('homePage')">H O M E</button>
+                        <button class="nav-btn logout" onclick="window.location.href='login.html'">LOG OUT</button>
+                    </div>
+                </div>
+                <div class="nav-line"></div>
+            </div>
+            
+            <!-- Hero Content -->
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Always Make Room for a <span class="highlight">Little Beauty</span> in Your Life
+                </h1>
+                <div class="hero-buttons">
+                    <button class="hero-btn primary" onclick="">Book Appointment</button>
+                    <button class="hero-btn secondary" onclick="">Cancel Appointment</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Service Categories -->
+        <div class="service-categories">
+            <h2 class="section-title">Service Category</h2>
+            <div class="categories-grid">
+                <div class="category-item">
+                    <div class="category-icon">
+                        <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+                            <path d="M25.92 17.568C25.92 12.672 29.952 8.64001 34.848 8.64001C39.744 8.64001 43.776 12.672 43.776 17.568V47.952" stroke="#2C001B" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M13.824 24.768C16.416 21.024 20.88 18.576 25.776 18.576C30.672 18.576 35.136 21.024 37.728 24.768" fill="url(#paint0_linear)" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M38.736 24.768H12.96V27.792H38.736V24.768Z" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M16.128 31.968V34.992M28.512 31.968V34.992M22.32 34.56V37.584M34.128 34.56V37.584M16.128 40.608V43.488M28.512 40.608V43.488M22.32 43.2V46.08M34.128 43.2V46.08" stroke="#2C001B" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="paint0_linear" x1="25.776" y1="18.576" x2="25.776" y2="24.768">
+                                    <stop stop-color="#FF84B7"/>
+                                    <stop offset="0.46875" stop-color="#EF5997"/>
+                                    <stop offset="1" stop-color="#E84287"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="category-name">Wash-Cut</div>
+                </div>
+                
+                <div class="category-item">
+                    <div class="category-icon">
+                        <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+                            <path d="M22.752 29.664C22.752 29.664 10.656 20.448 19.008 7.2L33.12 45.216" fill="url(#paint1_linear)" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M39.744 50.976C43.482 50.976 46.512 47.946 46.512 44.208C46.512 40.47 43.482 37.44 39.744 37.44C36.006 37.44 32.976 40.47 32.976 44.208C32.976 47.946 36.006 50.976 39.744 50.976Z" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M35.424 29.664C35.424 29.664 47.52 20.448 39.168 7.2L25.056 45.216" fill="url(#paint2_linear)" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M18.288 50.976C22.026 50.976 25.056 47.946 25.056 44.208C25.056 40.47 22.026 37.44 18.288 37.44C14.55 37.44 11.52 40.47 11.52 44.208C11.52 47.946 14.55 50.976 18.288 50.976Z" stroke="#2C001B" stroke-width="1.5"/>
+                            <defs>
+                                <linearGradient id="paint1_linear" x1="26.64" y1="33.12" x2="18" y2="9.36">
+                                    <stop stop-color="white" stop-opacity="0"/>
+                                    <stop offset="0.5066" stop-color="#E24084"/>
+                                </linearGradient>
+                                <linearGradient id="paint2_linear" x1="30.96" y1="33.84" x2="40.32" y2="10.8">
+                                    <stop stop-color="white" stop-opacity="0"/>
+                                    <stop offset="0.4672" stop-color="#E24084"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="category-name">Dry-Cut</div>
+                </div>
+                
+                <div class="category-item">
+                    <div class="category-icon">
+                        <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+                            <path d="M48.384 32.4C48.672 40.464 43.488 47.52 43.488 47.52C43.488 47.52 44.64 39.456 34.848 38.016C25.056 36.576 23.472 25.92 23.472 25.92C13.536 28.512 14.976 39.456 14.976 39.456C14.976 39.456 7.2 38.304 7.2 28.8C7.2 19.296 15.984 18.576 15.984 18.576C15.984 18.576 20.16 10.08 28.656 10.08C32.976 10.08 35.856 12.24 37.584 14.4" fill="url(#paint3_linear)" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M49.104 24.624C49.104 25.632 48.816 26.496 48.384 27.216C48.24 27.648 47.952 27.936 47.664 28.224C46.656 29.52 45.072 30.24 43.344 30.24C40.176 30.24 37.584 27.648 37.584 24.48C37.584 23.04 38.736 20.448 40.032 17.856C41.616 14.688 43.344 11.808 43.344 11.808C43.344 11.808 45.504 15.264 47.088 18.72C48.24 21.168 49.104 23.328 49.104 24.624Z" fill="white" stroke="#2C001B" stroke-width="1.5"/>
+                            <defs>
+                                <linearGradient id="paint3_linear" x1="27.798" y1="10.08" x2="27.798" y2="47.52">
+                                    <stop stop-color="#FF84B7"/>
+                                    <stop offset="0.46875" stop-color="#EF5997"/>
+                                    <stop offset="1" stop-color="#E84287"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="category-name">Hair-Color</div>
+                </div>
+                
+                <div class="category-item">
+                    <div class="category-icon">
+                        <svg width="58" height="58" viewBox="0 0 58 58" fill="none">
+                            <path d="M46.944 29.818V36.698C46.944 39.479 44.784 41.675 42.048 41.675V46.945H16.416V41.821C13.68 41.821 11.52 39.625 11.52 36.844V29.964H46.944V29.818Z" fill="url(#paint4_linear)" stroke="#2C001B" stroke-width="1.5"/>
+                            <path d="M20.448 42.699H37.728M25.488 29.818L40.176 15.912C41.616 14.594 43.776 14.594 45.072 16.058C46.368 17.522 46.368 19.718 44.928 21.035L35.712 29.818" stroke="#2C001B" stroke-width="1.5" stroke-linecap="round"/>
+                            <path d="M20.736 11.52V19.717M15.408 15.033V23.231M26.064 15.033V23.231" stroke="#2C001B" stroke-width="1.5" stroke-linecap="round"/>
+                            <defs>
+                                <linearGradient id="paint4_linear" x1="29.232" y1="29.818" x2="29.232" y2="46.945">
+                                    <stop stop-color="#FF84B7"/>
+                                    <stop offset="0.46875" stop-color="#EF5997"/>
+                                    <stop offset="1" stop-color="#E84287"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="category-name">Treatments</div>
+                </div>
+            </div>
+            <button class="view-services-btn" onclick="window.location.href='customer-services.html'">View Service Category</button>
+        </div>
+        
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/05f445110ac8b2bedca5fdeb8227b45467c30220?width=300" alt="Contact" class="contact-icon">
+                    <div class="contact-title">CONTACT</div>
+                    <div class="contact-text">T: 03 9485 7568<br>info@beautysalon.com</div>
+                </div>
+                <div class="contact-item">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/37c1c0b48a2c4fe60573c5294a99c287326b14a2?width=300" alt="Hours" class="contact-icon">
+                    <div class="contact-title">HOURS</div>
+                    <div class="contact-text">Mon to Fri: 7:30 am — 1:00 am<br>Sat: 9:00 am — 1:00 am<br>Sun: 9:00 am — 11:30 pm</div>
+                </div>
+                <div class="contact-item">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/59b2029a96b953e5f909846689eefeceb085ba1b?width=300" alt="Location" class="contact-icon">
+                    <div class="contact-title">LOCATION</div>
+                    <div class="contact-text">YG/25 Tingkat Bawah,<br>Pusat Komersial, Block G<br>Jalan Plumbum Y 7/Y<br>Seksyen 7,<br>40000 Shah Alam,<br>Selangor</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="site-footer">
+            <div class="footer-content">
+                <img src="https://api.builder.io/api/v1/image/assets/TEMP/66f64fa4e40cc7a57c1939f7f444c578ae8d0a99?width=440" alt="SALONIX Logo" class="footer-logo">
+                <div class="footer-links">
+                    <a class="footer-link" onclick="showPage('homePage')">Home</a>
+                    <a class="footer-link" onclick="">Book Appointment</a>
+                    <a class="footer-link" onclick="">Cancel Appointment</a>
+                    <a class="footer-link" onclick="window.location.href='customer-services.html'">Service</a>
+                    <a class="footer-link" onclick="window.location.href='ourStory.html'">Our story</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">2025 Salon All rights reserved</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Page navigation
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+            window.scrollTo(0, 0);
+        }
+        
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Click outside modal to close
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
+
+        // Close time dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('bookingTimeDropdown');
+            const selector = event.target.closest('[onclick="toggleBookingTimeDropdown()"]');
+            if (!selector && dropdown && dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

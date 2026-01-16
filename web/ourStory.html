@@ -10,24 +10,261 @@ and open the template in the editor.
         <link rel="stylesheet" href="style.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            
+        /* ==================== NAVIGATION ==================== */
+        .main-header {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 56px;
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .site-logo {
+            width: 100px;
+            height: 79px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 70px;
+        }
+
+        .nav-link {
+            color: #FFF;
+            font-family: 'Jost', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .nav-link.inactive {
+            color: rgba(0, 0, 0, 0.40);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 9px;
+        }
+
+        .nav-btn {
+            width: 114px;
+            height: 53px;
+            border-radius: 8px;
+            font-family: 'Jost', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.home {
+            background: #FCCAB8;
+            color: #230A01;
+        }
+
+        .nav-btn.logout {
+            background: #230A01;
+            color: #FFF;
+        }
+
+        .nav-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .nav-line {
+            width: 100%;
+            max-width: 1327px;
+            height: 1px;
+            background: #FFF;
+            margin: 23px auto 0;
+        }
+
+        .nav-line.dark {
+            background: #000;
+        }
+
+        .nav-highlight {
+            width: 140px;
+            height: 2px;
+            background: #F78C65;
+            margin: 0 auto;
+        }
+        
+        .story-hero {
+            background: #FDE4DB;
+            padding: 160px 20px 80px;
+            text-align: center;
+        }
+
+        .story-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 50px;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 40px;
+        }
+
+        .story-description {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 400;
+            color: #000;
+            max-width: 451px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+
+        .story-image {
+            max-width: 439px;
+            height: auto;
+            box-shadow: 0 20px 41.6px 0 rgba(0, 0, 0, 0.15);
+            margin: 40px auto;
+            display: block;
+        }
+
+        /* Philosophy Section */
+        .philosophy-section {
+            padding: 80px 20px;
+            background: #FFF;
+        }
+
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px 80px;
+            max-width: 1211px;
+            margin: 60px auto 0;
+        }
+
+        .philosophy-item {
+            text-align: center;
+        }
+
+        .philosophy-icon {
+            width: 63px;
+            height: 63px;
+            margin: 0 auto 16px;
+        }
+
+        .philosophy-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 15px;
+        }
+
+        .philosophy-text {
+            font-family: 'Jost', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            color: #000;
+            line-height: 1.4;
+        }
+
+        .book-appointment-btn {
+            width: 304px;
+            height: 53px;
+            border-radius: 8px;
+            background: #FCCAB8;
+            color: #000;
+            font-family: 'Jost', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            margin: 60px auto 0;
+            display: block;
+            transition: all 0.3s;
+        }
+
+        .book-appointment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 60px 20px;
+            background: rgba(252, 202, 184, 0.37);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 150px;
+            height: 150px;
+            margin-bottom: 22px;
+        }
+
+        .contact-title {
+            font-family: 'Jost', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            color: #230A01;
+            margin-bottom: 12px;
+        }
+
+        .contact-text {
+            font-family: 'Jost', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: rgba(35, 10, 1, 0.50);
+            line-height: 1.5;
+        }
+
+        </style>
     </head>
     <body>
-        <!-- Our Story Page -->
-    <div id="storyPage" class="page">
+    <div>
         <!-- Header -->
         <div class="main-header">
             <div class="nav-container">
-                <img src="images/logo.png" alt="SALONIX Logo" class="site-logo">
+                <img src="https://api.builder.io/api/v1/image/assets/TEMP/db3e61846a007f94950a5874b027025362939df5?width=200" alt="SALONIX Logo" class="site-logo">
                 
                 <div class="nav-links">
-                    <a class="nav-link inactive" onclick="window.location.href='bookAppointment.html'">Book Appointment</a>
-                    <a class="nav-link inactive" onclick="window.location.href='cancelAppointment.html'">Cancel Appointment</a>
-                    <a class="nav-link inactive" onclick="window.location.href='servicePage.html'">Service</a>
+                    <a class="nav-link inactive" onclick="">Book Appointment</a>
+                    <a class="nav-link inactive" onclick="">Cancel Appointment</a>
+                    <a class="nav-link inactive" onclick="window.location.href='customer-services.html'">Service</a>
                     <a class="nav-link" style="color: #000;" onclick="window.location.href='ourStory.html'">Our story</a>
                 </div>
                 
                 <div class="nav-buttons">
-                    <button class="nav-btn home" onclick="window.location.href='customerDashboard.html'">H O M E</button>
+                    <button class="nav-btn home" onclick="window.location.href='customer-dashboard.html'">H O M E</button>
                     <button class="nav-btn logout" onclick="window.location.href='login.html'">LOG OUT</button>
                 </div>
             </div>
@@ -51,7 +288,12 @@ and open the template in the editor.
             <h2 class="section-title">Philosophy</h2>
             <div class="philosophy-grid">
                 <div class="philosophy-item">
-                    <img src="images/love.png" alt="Hours" class="contact-icon">
+                    <svg class="philosophy-icon" viewBox="0 0 285 179" fill="none">
+                        <path d="M121.032 16.638C121.923 11.082 120.344 3.827 119.266 1C128.23 4.861 132.314 9.313 133.259 11.278C137.558 20.213 131.552 25.374 128.535 25.537C121.442 25.922 120.402 20.568 121.032 16.638Z" fill="#FDE4DB" stroke="black" stroke-width="2"/>
+                        <path d="M132.709 32.294C131.62 31.533 129.379 29.168 129.132 25.795" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M152 18C160.385 15.88 169.665 9.24 173 6C173 21 169.199 29.472 167 32C157 43.5 146.065 38.16 144 34C139.145 24.223 146.07 19.5 152 18Z" fill="#FDE4DB" stroke="black" stroke-width="2"/>
+                        <path d="M137 44C137.412 42 139.388 37.4 144 35" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
                     <div class="philosophy-title">Beauty Cosmetic</div>
                     <div class="philosophy-text">We choose only trusted, high-quality salon brands to ensure your hair receives the best care.</div>
                 </div>
@@ -97,26 +339,26 @@ and open the template in the editor.
                     <div class="philosophy-text">We truly love what we do and it shows in every cut, color and treatment.</div>
                 </div>
             </div>
-            <button class="book-appointment-btn" onclick="showPage('bookingPage')">Book an Appointment</button>
+            <button class="book-appointment-btn" onclick="">Book an Appointment</button>
         </div>
 
         <!-- Contact Section -->
         <div class="contact-section">
             <div class="contact-grid">
                 <div class="contact-item">
-                    <img src="images/contacts.png" alt="Contact" class="contact-icon">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/05f445110ac8b2bedca5fdeb8227b45467c30220?width=300" alt="Contact" class="contact-icon">
                     <div class="contact-title">CONTACT</div>
-                    <div class="contact-text">T: 070 9485 7568<br>info@beautysalon.com</div>
+                    <div class="contact-text">T: 03 9485 7568<br>info@beautysalon.com</div>
                 </div>
                 <div class="contact-item">
-                    <img src="images/hours.png" alt="Hours" class="contact-icon">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/37c1c0b48a2c4fe60573c5294a99c287326b14a2?width=300" alt="Hours" class="contact-icon">
                     <div class="contact-title">HOURS</div>
                     <div class="contact-text">Mon to Fri: 7:30 am — 1:00 am<br>Sat: 9:00 am — 1:00 am<br>Sun: 9:00 am — 11:30 pm</div>
                 </div>
                 <div class="contact-item">
-                    <img src="images.locationIcon" alt="Location" class="contact-icon">
+                    <img src="https://api.builder.io/api/v1/image/assets/TEMP/59b2029a96b953e5f909846689eefeceb085ba1b?width=300" alt="Location" class="contact-icon">
                     <div class="contact-title">LOCATION</div>
-                    <div class="contact-text">85 Royal Mint Street,<br>London, E1 8LG<br>United Kingdom</div>
+                    <div class="contact-text">YG/25 Tingkat Bawah,<br>Pusat Komersial, Block G<br>Jalan Plumbum Y 7/Y<br>Seksyen 7,<br>40000 Shah Alam,<br>Selangor</div>
                 </div>
             </div>
         </div>
@@ -124,13 +366,13 @@ and open the template in the editor.
         <!-- Footer -->
         <div class="site-footer">
             <div class="footer-content">
-                <img src="images/logo.png" alt="SALONIX Logo" class="footer-logo">
+                <img src="https://api.builder.io/api/v1/image/assets/TEMP/66f64fa4e40cc7a57c1939f7f444c578ae8d0a99?width=440" alt="SALONIX Logo" class="footer-logo">
                 <div class="footer-links">
-                    <a class="footer-link" onclick="showPage('homePage')">Home</a>
-                    <a class="footer-link" onclick="showPage('bookingPage')">Book Appointment</a>
-                    <a class="footer-link" onclick="showPage('cancelPage')">Cancel Appointment</a>
-                    <a class="footer-link" onclick="showPage('servicePage')">Service</a>
-                    <a class="footer-link" onclick="showPage('storyPage')">Our story</a>
+                    <a class="footer-link" onclick="window.location.href='customer-dashboard.html'">Home</a>
+                    <a class="footer-link" onclick="">Book Appointment</a>
+                    <a class="footer-link" onclick="">Cancel Appointment</a>
+                    <a class="footer-link" onclick="window.location.href='customer-services.html'">Service</a>
+                    <a class="footer-link" onclick="window.location.href='ourStory.html'">Our story</a>
                 </div>
             </div>
             <div class="footer-bottom">

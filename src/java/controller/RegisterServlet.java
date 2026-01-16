@@ -18,14 +18,12 @@ public class RegisterServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         String password = request.getParameter("password");
 
-        // Database credentials
         String url = "jdbc:derby://localhost:1527/SABSdb";
-        String dbUser = "app"; // DB username
-        String dbPassword = "app"; // DB password
+        String dbUser = "app";
+        String dbPassword = "app";
 
         try (Connection conn = DriverManager.getConnection(url, dbUser, dbPassword)) {
 
-            // 1. Check if email already exists
             String checkSql = "SELECT * FROM APP.CUSTOMER WHERE EMAIL = ?";
             try (PreparedStatement checkPs = conn.prepareStatement(checkSql)) {
                 checkPs.setString(1, email);
@@ -36,7 +34,6 @@ public class RegisterServlet extends HttpServlet {
                 }
             }
 
-            // 2. Insert new customer
             String insertSql = "INSERT INTO APP.CUSTOMER (NAME, EMAIL, PHONE, PASSWORD) VALUES (?, ?, ?, ?)";
             try (PreparedStatement ps = conn.prepareStatement(insertSql)) {
                 ps.setString(1, name);
