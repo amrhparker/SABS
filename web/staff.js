@@ -1,172 +1,413 @@
-const staffs = [
-    { id: 'STA001', name: 'Ameer Megat', nric: '010101-01-1010', email: 'ameermegat@gmail.com', phone: '+60 14-1234 567', password: 'Staff@2024' },
-    { id: 'STA002', name: 'Amirah Izzati', nric: '020202-02-2020', email: 'amirahizzati@gmail.com', phone: '+60 14-2345 678', password: 'Staff@2024' },
-    { id: 'STA003', name: 'Aina Sufia', nric: '040101-01-1010', email: 'ainasufia@gmail.com', phone: '+60 14-3677 414', password: 'Staff@2024' },
-    { id: 'STA004', name: 'Izyan Sarihah', nric: '040404-04-4040', email: 'izyansarihah@gmail.com', phone: '+60 14-4567 890', password: 'Staff@2024' },
-    { id: 'STA005', name: 'Siti Zulaikha', nric: '050505-05-5050', email: 'sitizulaikha@gmail.com', phone: '+60 14-5678 901', password: 'Staff@2024' },
-    { id: 'STA006', name: 'Masdiana Mahasim', nric: '060606-06-6060', email: 'masdiana@gmail.com', phone: '+60 14-6789 012', password: 'Staff@2024' },
-    { id: 'STA007', name: 'Ismail Punan', nric: '070707-07-7070', email: 'ismailpunan@gmail.com', phone: '+60 14-7890 123', password: 'Staff@2024' },
-    { id: 'STA008', name: 'Zul Black', nric: '080808-08-8080', email: 'zulblack@gmail.com', phone: '+60 14-8901 234', password: 'Staff@2024' }
-];
+// staff.js - Complete CRUD operations for Staff Management
+console.log("staff.js loaded successfully!");
 
-let currentServiceIndex = 0;
-let currentStaffIndex = 0;
+let currentStaffIndex = null;
+let staffData = [];
 
-// Page navigation
-function showPage(page) {
-    // Hide all pages
-    document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+// Load staff data on page load
+document.addEventListener('DOMContentLoaded', function () {
+    console.log("DOMContentLoaded - Starting staff management");
 
-    // Show selected page
-    const pageMap = {
-        'services': 'servicesPage',
-        'staffs': 'staffsPage'
-    };
+    // Call loadStaffData immediately
+    loadStaffData();
 
-    const pageId = pageMap[page];
-    if (pageId) {
-        document.getElementById(pageId).classList.add('active');
+    // Setup search functionality
+    const searchInput = document.getElementById('staffSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', function (e) {
+            console.log("Searching for:", e.target.value);
+            searchStaff(e.target.value);
+        });
     }
+});
 
-    // Update sidebar active state
-    document.querySelectorAll('.menu-item').forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('data-page') === page) {
-            item.classList.add('active');
+// ==================== CORE FUNCTIONS ====================
+
+// Load staff data from server
+async function loadStaffData() {
+    console.log("loadStaffData() called");
+
+    try {
+        console.log("Fetching data from StaffServlet...");
+        const response = await fetch('StaffServlet');
+        console.log("Response received, status:", response.status);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
+
+        const data = await response.json();
+        console.log("Data parsed successfully, records:", data.length);
+        console.log("Sample data:", data.length > 0 ? data[0] : "No data");
+
+        staffData = data;
+        populateStaffTable(staffData);
+
+    } catch (error) {
+        console.error('Error loading staff data:', error);
+
+        // Show error in table
+        const tbody = document.getElementById('staffTableBody');
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: red;">
+                        <h3>⚠️ Error Loading Data</h3>
+                        <p>${error.message}</p>
+                        <p>Check console for details</p>
+                    </td>
+                </tr>
+            `;
+        }
+
+        alert('Failed to load staff data. Check console for details.');
+    }
+}
+
+// Populate staff table
+function populateStaffTable(data) {
+    console.log("populateStaffTable() called with", data.length, "records");
+
+    const tbody = document.getElementById('staffTableBody');
+    if (!tbody) {
+        console.error("ERROR: staffTableBody not found in HTML!");
+        return;
+    }
+
+    tbody.innerHTML = '';
+
+    if (!data || data.length === 0) {
+        console.log("No data to display");
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                    <div style="font-size: 48px; color: #ddd; margin-bottom: 16px;">
+                        <i class="fas fa-users-slash"></i>
+                    </div>
+                    <h3>No Staff Members Found</h3>
+                    <p>The database appears to be empty.</p>
+                    <button onclick="openStaffAddModal()" style="margin-top: 10px; padding: 8px 16px; background: #624DE3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Add First Staff
+                    </button>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    console.log("Creating table rows...");
+    data.forEach((staff, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${staff.staffId || 'N/A'}</strong></td>
+            <td>${staff.name || 'N/A'}</td>
+            <td>${staff.email || 'N/A'}</td>
+            <td>
+                <div class="action-buttons">
+                    <button class="btn-action btn-view" onclick="window.openStaffViewModal(${index})">View</button>
+                    <button class="btn-action btn-edit" onclick="window.openStaffEditModal(${index})">Edit</button>
+                    <button class="btn-action btn-delete" onclick="window.openStaffDeleteModal(${index})">Delete</button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(row);
     });
+
+    console.log("Table populated with", data.length, "rows");
 }
 
-// Sidebar toggle for mobile
-function toggleSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('mobile-open');
-}
+// Search staff
+async function searchStaff(keyword) {
+    console.log("searchStaff() called with keyword:", keyword);
 
-// Modal functions
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('active');
+    if (!keyword || keyword.trim() === '') {
+        console.log("Empty search, showing all data");
+        populateStaffTable(staffData);
+        return;
+    }
+
+    try {
+        const response = await fetch(`StaffServlet?action=search&keyword=${encodeURIComponent(keyword)}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Search results:", data.length, "records");
+        populateStaffTable(data);
+    } catch (error) {
+        console.error('Error searching staff:', error);
+        alert('Search failed: ' + error.message);
     }
 }
 
-function openModal(modalId) {
-    // Close all modals first
-    document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+// ==================== MODAL FUNCTIONS ====================
 
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.add('active');
+// Open View Modal
+async function openStaffViewModal(index) {
+    console.log("openStaffViewModal() called for index:", index);
+    currentStaffIndex = index;
+    const staff = staffData[index];
+
+    if (!staff) {
+        console.error("No staff data at index:", index);
+        return;
     }
-}
-// ==================== STAFF FUNCTIONS ====================
 
-// View Staff modal
-function openStaffViewModal(index) {
+    // Update modal with staff data
+    document.getElementById('staffViewId').textContent = staff.staffId || 'N/A';
+    document.getElementById('staffViewName').textContent = staff.name || 'N/A';
+    document.getElementById('staffViewNric').textContent = staff.nric || 'N/A';
+    document.getElementById('staffViewEmail').textContent = staff.email || 'N/A';
+    document.getElementById('staffViewPhone').textContent = staff.phone || 'N/A';
+    document.getElementById('staffViewPassword').textContent = '••••••••';
+
+    window.openModal('staffViewModal');
+}
+
+// Open Edit Modal
+async function openStaffEditModal(index) {
+    console.log("openStaffEditModal() called for index:", index);
     currentStaffIndex = index;
-    const staff = staffs[index];
+    const staff = staffData[index];
 
-    document.getElementById('staffViewId').textContent = staff.id;
-    document.getElementById('staffViewName').textContent = staff.name;
-    document.getElementById('staffViewNric').textContent = staff.nric;
-    document.getElementById('staffViewEmail').textContent = staff.email;
-    document.getElementById('staffViewPhone').textContent = staff.phone;
-    document.getElementById('staffViewPassword').textContent = staff.password;
+    if (!staff) {
+        console.error("No staff data at index:", index);
+        return;
+    }
 
-    openModal('staffViewModal');
+    // Update form with staff data
+    document.getElementById('staffEditName').value = staff.name || '';
+    document.getElementById('staffEditNric').value = staff.nric || '';
+    document.getElementById('staffEditEmail').value = staff.email || '';
+    document.getElementById('staffEditPhone').value = staff.phone || '';
+    document.getElementById('staffEditPassword').value = '';
+    document.getElementById('staffEditConfirmPassword').value = '';
+
+    window.openModal('staffEditModal');
 }
 
-// Edit Staff modal
-function openStaffEditModal(index) {
-    currentStaffIndex = index;
-    const staff = staffs[index];
-
-    document.getElementById('staffEditName').value = staff.name;
-    document.getElementById('staffEditNric').value = staff.nric;
-    document.getElementById('staffEditEmail').value = staff.email;
-    document.getElementById('staffEditPhone').value = staff.phone;
-    document.getElementById('staffEditPassword').value = staff.password;
-    document.getElementById('staffEditConfirmPassword').value = staff.password;
-
-    openModal('staffEditModal');
-}
-
+// Open Edit Modal from View
 function openStaffEditModalFromView() {
-    closeModal('staffViewModal');
+    console.log("openStaffEditModalFromView() called");
+    window.closeModal('staffViewModal');
     openStaffEditModal(currentStaffIndex);
 }
 
-function saveStaffEdit() {
-    const staff = staffs[currentStaffIndex];
+// Open Add Modal
+async function openStaffAddModal() {
+    console.log("openStaffAddModal() called");
 
-    staff.name = document.getElementById('staffEditName').value;
-    staff.nric = document.getElementById('staffEditNric').value;
-    staff.email = document.getElementById('staffEditEmail').value;
-    staff.phone = document.getElementById('staffEditPhone').value;
-    staff.password = document.getElementById('staffEditPassword').value;
-
-    closeModal('staffEditModal');
-    openModal('staffSuccessEditModal');
-}
-
-// Add Staff modal
-function openStaffAddModal() {
+    // Clear form
     document.getElementById('staffAddForm').reset();
-    openModal('staffAddModal');
-}
 
-function saveStaffAdd() {
-    const newStaff = {
-        id: 'STA' + String(staffs.length + 1).padStart(3, '0'),
-        name: document.getElementById('staffAddName').value,
-        nric: document.getElementById('staffAddNric').value,
-        email: document.getElementById('staffAddEmail').value,
-        phone: document.getElementById('staffAddPhone').value,
-        password: document.getElementById('staffAddPassword').value
-    };
-
-    staffs.push(newStaff);
-
-    closeModal('staffAddModal');
-    openModal('staffSuccessAddModal');
-}
-
-// Delete Staff modal
-function openStaffDeleteModal(index) {
-    currentStaffIndex = index;
-    openModal('staffDeleteModal');
-}
-
-function openStaffDeleteModalFromView() {
-    closeModal('staffViewModal');
-    openStaffDeleteModal(currentStaffIndex);
-}
-
-function confirmStaffDelete() {
-    staffs.splice(currentStaffIndex, 1);
-
-    closeModal('staffDeleteModal');
-    openModal('staffSuccessDeleteModal');
-}
-
-// Close modal when clicking outside
-document.querySelectorAll('.modal-overlay').forEach(overlay => {
-    overlay.addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
+    // Try to get next staff ID (optional)
+    try {
+        const response = await fetch('StaffServlet?action=generateId');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Next staff ID would be:', data.nextId);
         }
-    });
-});
-
-// Close sidebar when clicking outside on mobile
-document.addEventListener('click', function(e) {
-    const sidebar = document.getElementById('sidebar');
-    const menuIcon = document.querySelector('.menu-icon');
-
-    if (window.innerWidth <= 768) {
-        if (!sidebar.contains(e.target) && !menuIcon.contains(e.target)) {
-            sidebar.classList.remove('mobile-open');
-        }
+    } catch (error) {
+        console.error('Error generating ID:', error);
     }
-});
+
+    window.openModal('staffAddModal');
+}
+
+// Open Delete Modal
+function openStaffDeleteModal(index) {
+    console.log("openStaffDeleteModal() called for index:", index);
+    currentStaffIndex = index;
+    window.openModal('staffDeleteModal');
+}
+
+// Open Delete Modal from View
+function openStaffDeleteModalFromView() {
+    console.log("openStaffDeleteModalFromView() called");
+    window.closeModal('staffViewModal');
+    window.openModal('staffDeleteModal');
+}
+
+// Save Edit
+async function saveStaffEdit() {
+    console.log("saveStaffEdit() called");
+
+    const staff = staffData[currentStaffIndex];
+    if (!staff) {
+        alert('No staff selected!');
+        return;
+    }
+
+    const form = document.getElementById('staffEditForm');
+
+    // Basic validation
+    const name = document.getElementById('staffEditName').value.trim();
+    const email = document.getElementById('staffEditEmail').value.trim();
+
+    if (!name || !email) {
+        alert('Name and Email are required!');
+        return;
+    }
+
+    // Check passwords match
+    const password = document.getElementById('staffEditPassword').value;
+    const confirmPassword = document.getElementById('staffEditConfirmPassword').value;
+
+    if (password && password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('action', 'update');
+        formData.append('staffId', staff.staffId);
+        formData.append('name', name);
+        formData.append('nric', document.getElementById('staffEditNric').value.trim());
+        formData.append('email', email);
+        formData.append('phone', document.getElementById('staffEditPhone').value.trim());
+        formData.append('password', password || '');
+
+        console.log("Saving staff update...");
+        const response = await fetch('StaffServlet', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log("Save result:", result);
+
+        if (result.success) {
+            window.closeModal('staffEditModal');
+            alert('Staff details updated successfully!');
+            loadStaffData(); // Refresh data
+        } else {
+            alert('Failed to update staff. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error updating staff:', error);
+        alert('Error updating staff: ' + error.message);
+    }
+}
+
+// Save Add
+async function saveStaffAdd() {
+    console.log("saveStaffAdd() called");
+
+    const form = document.getElementById('staffAddForm');
+
+    // Basic validation
+    const name = document.getElementById('staffAddName').value.trim();
+    const nric = document.getElementById('staffAddNric').value.trim();
+    const email = document.getElementById('staffAddEmail').value.trim();
+    const password = document.getElementById('staffAddPassword').value;
+    const confirmPassword = document.getElementById('staffAddConfirmPassword').value;
+
+    if (!name || !nric || !email || !password) {
+        alert('All fields except phone are required!');
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        alert('Passwords do not match!');
+        return;
+    }
+
+    try {
+        // Get next staff ID
+        const idResponse = await fetch('StaffServlet?action=generateId');
+        const idData = await idResponse.json();
+        const staffId = idData.nextId;
+
+        if (!staffId) {
+            throw new Error('Failed to generate staff ID');
+        }
+
+        // Prepare data
+        const formData = new FormData();
+        formData.append('action', 'add');
+        formData.append('staffId', staffId);
+        formData.append('name', name);
+        formData.append('nric', nric);
+        formData.append('email', email);
+        formData.append('phone', document.getElementById('staffAddPhone').value.trim());
+        formData.append('password', password);
+
+        console.log("Adding new staff...");
+        const response = await fetch('StaffServlet', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log("Add result:", result);
+
+        if (result.success) {
+            window.closeModal('staffAddModal');
+            alert('New staff added successfully!');
+            loadStaffData(); // Refresh data
+        } else {
+            alert('Failed to add staff. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error adding staff:', error);
+        alert('Error adding staff: ' + error.message);
+    }
+}
+
+// Confirm Delete
+async function confirmStaffDelete() {
+    console.log("confirmStaffDelete() called");
+
+    const staff = staffData[currentStaffIndex];
+    if (!staff || !staff.staffId) {
+        alert('Invalid staff data!');
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to delete ${staff.name}?`)) {
+        return;
+    }
+
+    try {
+        const formData = new FormData();
+        formData.append('action', 'delete');
+        formData.append('staffId', staff.staffId);
+
+        console.log("Deleting staff...");
+        const response = await fetch('StaffServlet', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        console.log("Delete result:", result);
+
+        if (result.success) {
+            window.closeModal('staffDeleteModal');
+            alert('Staff deleted successfully!');
+            loadStaffData(); // Refresh data
+        } else {
+            alert('Failed to delete staff. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error deleting staff:', error);
+        alert('Error deleting staff: ' + error.message);
+    }
+}
+
+// ==================== EXPORT FUNCTIONS ====================
+// Make functions available to HTML onclick handlers
+window.loadStaffData = loadStaffData;
+window.searchStaff = searchStaff;
+window.openStaffViewModal = openStaffViewModal;
+window.openStaffEditModal = openStaffEditModal;
+window.openStaffEditModalFromView = openStaffEditModalFromView;
+window.openStaffAddModal = openStaffAddModal;
+window.openStaffDeleteModal = openStaffDeleteModal;
+window.openStaffDeleteModalFromView = openStaffDeleteModalFromView;
+window.saveStaffEdit = saveStaffEdit;
+window.saveStaffAdd = saveStaffAdd;
+window.confirmStaffDelete = confirmStaffDelete;
+
+console.log("staff.js initialization complete!");
