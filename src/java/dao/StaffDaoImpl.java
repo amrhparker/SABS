@@ -13,7 +13,7 @@ public class StaffDaoImpl implements StaffDao {
         List<Staff> staffList = new ArrayList<>();
         String sql = "SELECT * FROM staff ORDER BY staff_id";
         
-        try (Connection conn = DBConnection.getConnection(); // Uses your group's DBConnection
+        try (Connection conn = DBConnection.getConnection(); 
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             

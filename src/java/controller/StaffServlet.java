@@ -19,6 +19,7 @@ import dao.StaffDaoImpl;
 import javax.json.JsonObject;
 import model.Staff;
 
+@WebServlet("/StaffServlet")
 public class StaffServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -47,6 +48,8 @@ public class StaffServlet extends HttpServlet {
                 checkNricExists(request, response);
             } else if (action.equals("generateId")) {
                 generateNextId(request, response);
+            } else if (action.equals("add")) {  // ADD THIS FOR DEBUGGING
+                addStaff(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action parameter");
             }
@@ -83,15 +86,15 @@ public class StaffServlet extends HttpServlet {
     private void getAllStaff(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         List<Staff> staffList = staffDao.getAllStaff();
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (Staff staff : staffList) {
             arrayBuilder.add(createStaffJson(staff));
         }
-        
+
         try (JsonWriter writer = Json.createWriter(response.getWriter())) {
             writer.writeArray(arrayBuilder.build());
         }
@@ -100,18 +103,18 @@ public class StaffServlet extends HttpServlet {
     private void getStaff(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String staffId = request.getParameter("staffId");
-        
+
         if (staffId == null || staffId.trim().isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Staff ID is required");
             return;
         }
-        
+
         Staff staff = staffDao.getStaffById(staffId);
 
         if (staff != null) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            
+
             try (JsonWriter writer = Json.createWriter(response.getWriter())) {
                 writer.writeObject((JsonObject) createStaffJson(staff));
             }
@@ -123,21 +126,21 @@ public class StaffServlet extends HttpServlet {
     private void searchStaff(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String keyword = request.getParameter("keyword");
-        
+
         if (keyword == null) {
             keyword = "";
         }
-        
+
         List<Staff> staffList = staffDao.searchStaff(keyword);
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for (Staff staff : staffList) {
             arrayBuilder.add(createStaffJson(staff));
         }
-        
+
         try (JsonWriter writer = Json.createWriter(response.getWriter())) {
             writer.writeArray(arrayBuilder.build());
         }
@@ -148,12 +151,12 @@ public class StaffServlet extends HttpServlet {
         String staffId = request.getParameter("staffId");
         String name = request.getParameter("name");
         String email = request.getParameter("email");
-        
+
         if (staffId == null || name == null || email == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Required parameters are missing");
             return;
         }
-        
+
         Staff staff = new Staff();
         staff.setStaffId(staffId);
         staff.setName(name);
@@ -172,12 +175,12 @@ public class StaffServlet extends HttpServlet {
     private void updateStaff(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String staffId = request.getParameter("staffId");
-        
+
         if (staffId == null || staffId.trim().isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Staff ID is required");
             return;
         }
-        
+
         Staff staff = new Staff();
         staff.setStaffId(staffId);
         staff.setName(request.getParameter("name"));
@@ -196,12 +199,12 @@ public class StaffServlet extends HttpServlet {
     private void deleteStaff(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String staffId = request.getParameter("staffId");
-        
+
         if (staffId == null || staffId.trim().isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Staff ID is required");
             return;
         }
-        
+
         boolean success = staffDao.deleteStaff(staffId);
 
         response.setContentType("application/json");
@@ -212,12 +215,12 @@ public class StaffServlet extends HttpServlet {
     private void checkEmailExists(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String email = request.getParameter("email");
-        
+
         if (email == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email parameter is required");
             return;
         }
-        
+
         boolean exists = staffDao.checkEmailExists(email);
 
         response.setContentType("application/json");
@@ -228,12 +231,12 @@ public class StaffServlet extends HttpServlet {
     private void checkNricExists(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
         String nric = request.getParameter("nric");
-        
+
         if (nric == null) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "NRIC parameter is required");
             return;
         }
-        
+
         boolean exists = staffDao.checkNricExists(nric);
 
         response.setContentType("application/json");
@@ -249,13 +252,13 @@ public class StaffServlet extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write("{\"nextId\": \"" + nextId + "\"}");
     }
-    
+
     private JsonObjectBuilder createStaffJson(Staff staff) {
         JsonObjectBuilder builder = Json.createObjectBuilder()
-            .add("staffId", staff.getStaffId() != null ? staff.getStaffId() : "")
-            .add("name", staff.getName() != null ? staff.getName() : "")
-            .add("email", staff.getEmail() != null ? staff.getEmail() : "");
-        
+                .add("staffId", staff.getStaffId() != null ? staff.getStaffId() : "")
+                .add("name", staff.getName() != null ? staff.getName() : "")
+                .add("email", staff.getEmail() != null ? staff.getEmail() : "");
+
         // Add optional fields if they exist
         if (staff.getNric() != null) {
             builder.add("nric", staff.getNric());
@@ -264,29 +267,31 @@ public class StaffServlet extends HttpServlet {
             builder.add("phone", staff.getPhone());
         }
         // Note: Do not include password in JSON response for security
-        
+
         return builder;
     }
-    
+
     private void handleError(HttpServletResponse response, Exception e) throws IOException {
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         response.getWriter().write(
-            "{\"error\": \"" + e.getClass().getSimpleName() + 
-            "\", \"message\": \"" + sanitizeJson(e.getMessage()) + "\"}"
+                "{\"error\": \"" + e.getClass().getSimpleName()
+                + "\", \"message\": \"" + sanitizeJson(e.getMessage()) + "\"}"
         );
-        
+
         e.printStackTrace();
     }
-    
+
     private String sanitizeJson(String input) {
-        if (input == null) return "";
+        if (input == null) {
+            return "";
+        }
         return input.replace("\\", "\\\\")
-                   .replace("\"", "\\\"")
-                   .replace("\n", "\\n")
-                   .replace("\r", "\\r")
-                   .replace("\t", "\\t");
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 }
