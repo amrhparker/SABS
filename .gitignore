@@ -35,3 +35,6 @@ Thumbs.db
 application-local.properties
 application-local.yml
 
+nbproject/genfiles.properties
+nbproject/build-impl.xml
+nbproject/project.xml
