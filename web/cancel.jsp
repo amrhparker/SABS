@@ -26,7 +26,7 @@
         rsCustomer = psCustomer.executeQuery();
 
         if (rsCustomer.next()) {
-            customerName = rsCustomer.getString("customer_name");
+            customerName = rsCustomer.getString("name");
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -275,7 +275,7 @@
                             </div>
 
                             <div style="display:flex; justify-content:flex-end; margin-top:3rem;">
-                                <button onclick="location.href='index.jsp'"
+                                <button onclick="location.href='customer-dashboard.html'"
                                         style="padding:1rem 2.5rem; background:#000; color:#FFF; border:none; border-radius:8px;">
                                     Back
                                 </button>
@@ -319,7 +319,7 @@
 
 
                             <h2>YOUR APPOINTMENT HAS BEEN CANCELED</h2>
-                            <button onclick="location.href = 'index.jsp'"
+                            <button onclick="location.href = 'cancel.jsp'"
                                     style="margin-top:2rem;padding:1rem 2.5rem;background:#000;color:#FFF;border:none;border-radius:8px;">
                                 HOME
                             </button>
