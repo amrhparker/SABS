@@ -295,11 +295,11 @@
                 <div class="footer-content">
                     <img src="https://api.builder.io/api/v1/image/assets/TEMP/66f64fa4e40cc7a57c1939f7f444c578ae8d0a99?width=440" alt="SALONIX Logo" class="footer-logo">
                     <div class="footer-links">
-                        <a href="index.jsp" class="footer-link">Home</a>
+                        <a href="customer-dashboard.html" class="footer-link">Home</a>
                         <a href="booking.jsp" class="footer-link">Book Appointment</a>
                         <a href="cancel.jsp" class="footer-link">List of Appointments</a>
-                        <a href="services.jsp" class="footer-link">Service</a>
-                        <a href="story.jsp" class="footer-link">Our story</a>
+                        <a href="customer-services.html" class="footer-link">Service</a>
+                        <a href="ourStory.html" class="footer-link">Our story</a>
                     </div>
                 </div>
                 <div class="footer-bottom">
