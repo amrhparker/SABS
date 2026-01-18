@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/ServiceServlet")
 public class ServiceServlet extends HttpServlet {
 
-    private static final String DB_URL  = "jdbc:derby://localhost:1527/Salonix";
+    private static final String DB_URL  = "jdbc:derby://localhost:1527/SABSdb";
     private static final String DB_USER = "app";
     private static final String DB_PASS = "app";
 
