@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.sql.*, db.DBConnection" %>
+<%@ page import="java.sql.*, util.DBConnection" %>
 
 <%
     if (session == null || session.getAttribute("customerId") == null) {
