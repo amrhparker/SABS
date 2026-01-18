@@ -1,7 +1,7 @@
 package controller;
 
 import model.Appointment;
-import db.DBConnection;
+import util.DBConnection;
 
 import java.io.IOException;
 import java.sql.*;
@@ -28,7 +28,7 @@ public class CancelAppointmentServlet extends HttpServlet {
         }
 
         String appointmentId = request.getParameter("appointmentId");
-        String customerId = (String) session.getAttribute("customerId");
+        Integer customerId = (Integer) session.getAttribute("customerId");
 
         if (appointmentId == null || appointmentId.trim().isEmpty()) {
             response.sendRedirect("cancel.jsp");
@@ -56,7 +56,7 @@ public class CancelAppointmentServlet extends HttpServlet {
             ps = conn.prepareStatement(sql);
             ps.setString(1, appt.getStatus());
             ps.setString(2, appt.getAppointmentId());
-            ps.setString(3, appt.getCustomerId());
+            ps.setInt(3, appt.getCustomerId());
 
             int updated = ps.executeUpdate();
 

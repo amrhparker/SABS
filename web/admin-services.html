@@ -144,8 +144,10 @@
             border-bottom: 1px solid #F0F1F3;
             box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
             height: 72px;
+            justify-content: flex-end; /* keeps it at right */
+            padding: 0 24px;           /* adjust right padding as needed */
         }
-
+        
         .menu-icon {
             width: 24px;
             height: 24px;
@@ -881,23 +883,20 @@
 
 <!-- ================= MAIN CONTENT ================= -->
 <main class="main-content">
-    <!-- Top Bar -->
-        <div class="top-bar">
-            
-            <div class="top-bar-right">
-                <div class="divider"></div>
-                <div class="user-info">
-                    <div class="user-avatar">
-                        <div class="user-avatar-img"></div>
-                        <div class="user-status"></div>
-                    </div>
-                    <div class="user-details">
-                        <h4>Megat Ameer</h4>
-                        <p>Admin</p>
-                    </div>
-                </div>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="user-info">
+            <div class="user-avatar">
+                <div class="user-avatar-img"></div>
+                <div class="user-status"></div>
+            </div>
+
+            <div class="user-details">
+                <h4 id="adminName">Loading...</h4>
+                <p>Admin</p>
             </div>
         </div>
+    </div>
 
             <!-- ================= SERVICES TABLE ================= -->
 <div class="services-page">
@@ -1185,11 +1184,22 @@
 
 <!-- ================= JS ================= -->
 <script>
+/* ================= CONFIG ================= */
+const BASE_URL = "/SABS"; // your project name
+
 let currentServiceId = null;
-let currentPage = 1;
+let pageIndex = 1;
 let totalPages = 1;
-const pageSize = 5;
 let currentKeyword = "";
+
+fetch(`${BASE_URL}/AdminServlet`)
+    .then(res => res.text())
+    .then(name => {
+        document.getElementById("adminName").textContent = name && name.trim() !== "" ? name : "Admin";
+    })
+    .catch(() => {
+        document.getElementById("adminName").textContent = "Admin";
+    });
 
 /* ================= OPEN / CLOSE MODALS ================= */
 function openModal(id) {
@@ -1202,19 +1212,19 @@ function closeModal(id) {
 
 /* ================= LOAD SERVICES ================= */
 function loadServices(page = 1, keyword = "") {
-    currentPage = page;
+    pageIndex = page;
     currentKeyword = keyword;
 
-    fetch(`ServiceServlet?page=${page}&keyword=${encodeURIComponent(keyword)}`)
+    fetch(`${BASE_URL}/ServiceServlet?page=${page}&keyword=${encodeURIComponent(keyword)}`)
         .then(res => res.text())
         .then(html => {
-            // Extract total pages from comment <!--TOTAL_PAGES=7-->
             const match = html.match(/<!--TOTAL_PAGES=(\d+)-->/);
             if (match) totalPages = parseInt(match[1]);
 
             document.getElementById("servicesTableBody").innerHTML = html;
             renderPagination();
-        });
+        })
+        .catch(err => console.error("Load services error:", err));
 }
 
 /* ================= PAGINATION ================= */
@@ -1222,64 +1232,59 @@ function renderPagination() {
     const container = document.getElementById("paginationNumbers");
     container.innerHTML = "";
 
-    if (totalPages <= 1) return; // 🔴 IMPORTANT
+    if (totalPages <= 1) return;
 
     for (let i = 1; i <= totalPages; i++) {
-        const page = document.createElement("div");
-        page.className = "pagination-number" + (i === currentPage ? " active" : "");
-        page.innerText = i;
-        page.onclick = () => goToPage(i);
-        container.appendChild(page);
+        const el = document.createElement("div");
+        el.className = "pagination-number" + (i === pageIndex ? " active" : "");
+        el.innerText = i;
+        el.onclick = () => loadServices(i, currentKeyword);
+        container.appendChild(el);
     }
 }
 
-function goToPage(page) {
-    loadServices(page, currentKeyword);
-}
-
 function changePage(step) {
-    const nextPage = currentPage + step;
-    if (nextPage < 1 || nextPage > totalPages) return;
-    loadServices(nextPage, currentKeyword);
+    const next = pageIndex + step;
+    if (next < 1 || next > totalPages) return;
+    loadServices(next, currentKeyword);
 }
 
 /* ================= SEARCH ================= */
 function searchServices() {
     const keyword = document.getElementById("searchInput").value.trim();
-    currentPage = 1;
     loadServices(1, keyword);
 }
 
-
 /* ================= VIEW SERVICE ================= */
 function openViewModal(id) {
-    fetch("ServiceServlet?id=" + id)
+    fetch(`${BASE_URL}/ServiceServlet?id=${id}`)
         .then(res => res.json())
         .then(data => {
             currentServiceId = id;
-            document.getElementById("viewCategory").innerText = data.category;
-            document.getElementById("viewService").innerText = data.service;
-            document.getElementById("viewPrice").innerText = "RM " + data.price;
-            document.getElementById("viewDescription").innerText = data.description;
+            viewCategory.innerText = data.category;
+            viewService.innerText = data.service;
+            viewPrice.innerText = "RM " + data.price;
+            viewDescription.innerText = data.description;
             openModal("viewModal");
         });
 }
 
 /* ================= ADD SERVICE ================= */
-function openAddModal() { openModal("addModal"); }
+function openAddModal() {
+    openModal("addModal");
+}
 
 function submitAddService(e) {
     e.preventDefault();
-    const form = e.target;
-    const data = new URLSearchParams(new FormData(form));
+    const data = new URLSearchParams(new FormData(e.target));
 
-    fetch("ServiceServlet?action=add", {
+    fetch(`${BASE_URL}/ServiceServlet?action=add`, {
         method: "POST",
         body: data
     }).then(() => {
         closeModal("addModal");
-        form.reset();
-        loadServices(currentPage, currentKeyword);
+        e.target.reset();
+        loadServices(pageIndex, currentKeyword);
         openModal("successAddModal");
     });
 }
@@ -1287,13 +1292,14 @@ function submitAddService(e) {
 /* ================= EDIT SERVICE ================= */
 function openEditModalDirect(id) {
     currentServiceId = id;
-    fetch("ServiceServlet?id=" + id)
+
+    fetch(`${BASE_URL}/ServiceServlet?id=${id}`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("editCategory").value = data.category;
-            document.getElementById("editService").value = data.service;
-            document.getElementById("editPrice").value = data.price;
-            document.getElementById("editDescription").value = data.description;
+            editCategory.value = data.category;
+            editService.value = data.service;
+            editPrice.value = data.price;
+            editDescription.value = data.description;
             openModal("editModal");
         });
 }
@@ -1313,13 +1319,13 @@ function saveEdit() {
         description: editDescription.value
     });
 
-    fetch("ServiceServlet", {
+    fetch(`${BASE_URL}/ServiceServlet`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: data.toString()
     }).then(() => {
         closeModal("editModal");
-        loadServices(currentPage, currentKeyword);
+        loadServices(pageIndex, currentKeyword);
         openModal("successEditModal");
     });
 }
@@ -1336,13 +1342,13 @@ function confirmDelete() {
         id: currentServiceId
     });
 
-    fetch("ServiceServlet", {
+    fetch(`${BASE_URL}/ServiceServlet`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: data.toString()
     }).then(() => {
         closeModal("deleteModal");
-        loadServices(currentPage, currentKeyword);
+        loadServices(pageIndex, currentKeyword);
         openModal("successDeleteModal");
     });
 }
@@ -1355,18 +1361,13 @@ function openDeleteModalFromView() {
 /* ================= INIT ================= */
 window.onload = () => {
     loadServices(1);
-    document.getElementById("searchInput").addEventListener("input", searchServices);
+
+    // Sidebar active highlight
+    const pageName = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".sidebar-menu a").forEach(link => {
+        link.classList.toggle("active", link.getAttribute("href") === pageName);
+    });
 };
-
-const currentPage = window.location.pathname.split("/").pop();
-
-document.querySelectorAll(".sidebar-menu a").forEach(link => {
-    if (link.getAttribute("href") === currentPage) {
-        link.classList.add("active");
-    } else {
-        link.classList.remove("active");
-    }
-});
 </script>
 
 </body>

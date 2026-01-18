@@ -1,7 +1,7 @@
 package controller;
 
 import model.Appointment;
-import db.DBConnection;
+import util.DBConnection;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -55,7 +55,7 @@ public class AppointmentServlet extends HttpServlet {
             while (rs.next()) {
                 Appointment appt = new Appointment();
                 appt.setAppointmentId(rs.getString("appointment_id"));
-                appt.setCustomerId(rs.getString("customer_id"));
+                appt.setCustomerId(rs.getInt("customer_id"));
                 appt.setAppointmentDatetime(rs.getTimestamp("appointment_datetime"));
                 appt.setStatus(rs.getString("status"));
 
