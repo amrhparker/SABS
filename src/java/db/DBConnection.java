@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DBConnection {
 
     // Use the same connection string as in NetBeans Services
-    private static final String URL = "jdbc:derby://localhost:1527/salondb";
+    private static final String URL = "jdbc:derby://localhost:1527/SABSdb";
     private static final String USER = "app";
     private static final String PASSWORD = "app";
 

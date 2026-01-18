@@ -138,15 +138,67 @@
             }
 
             /* ==================== TOP BAR ==================== */
-            .top-bar {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 16px 24px;
+            .admin-topbar {
+                height: 72px;
                 background: #FFF;
                 border-bottom: 1px solid #F0F1F3;
                 box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
-                height: 72px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 24px;
+                position: relative;
+                z-index: 50;
+            }
+
+            .admin-topbar .menu-icon {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+            }
+
+            .admin-user {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #E0E2E7;
+                position: relative;
+            }
+
+            .user-avatar::after {
+                content: '';
+                position: absolute;
+                right: -2px;
+                bottom: -2px;
+                width: 10px;
+                height: 10px;
+                background: #3DA172;
+                border: 2px solid #FFF;
+                border-radius: 50%;
+            }
+
+            .user-info {
+                display: flex;
+                flex-direction: column;
+                /*gap: 2px;*/
+            }
+
+            .user-name {
+                font-size: 14px;
+                font-weight: 500;
+                color: #1A1C21;
+            }
+
+            .user-role {
+                font-size: 12px;
+                font-weight: 500;
+                color: #667085;
             }
 
             .menu-icon {
@@ -194,6 +246,11 @@
                 border: 2px solid #FFF;
                 border-radius: 50%;
             }
+            .user-details {
+                display: flex;
+                flex-direction: column;
+                gap: 2px; /* Matches dashboard spacing */
+            }
 
             .user-details h4 {
                 color: #1A1C21;
@@ -206,7 +263,7 @@
                 color: #667085;
                 font-size: 12px;
                 font-weight: 500;
-                line-height: 18px;
+                /* Removed line-height: 18px; to match dashboard */
             }
 
             /* ==================== PAGE CONTAINER ==================== */
@@ -875,14 +932,15 @@
                     Customers
                 </a>
 
-                <a href="admin-staffs.html" class="menu-item">
+
+                <a href="admin-services.html" class="menu-item">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M16.6608 2C17.6951 2 18.6566 2.53286 19.2048 3.41L21.4103 6.93883C21.5695 7.19353 21.6539 7.48785 21.6539 7.78821C21.6539 8.84672 21.2108 9.80174 20.5 10.4779V18C20.5 20.2091 18.7091 22 16.5 22H7.5C5.29086 22 3.5 20.2091 3.5 18V10.4779C2.78924 9.80167 2.34619 8.84668 2.34619 7.78821C2.34619 7.48785 2.4306 7.19353 2.58979 6.93883L4.79531 3.41C5.34352 2.53286 6.30493 2 7.3393 2H16.6608ZM7.3393 4C6.99451 4 6.67404 4.17762 6.4913 4.47L4.34958 7.89676C4.40557 8.79158 5.14904 9.5 6.05798 9.5H6.23081C7.27165 9.5 8.11542 8.65623 8.11542 7.61538H10.1154C10.1154 8.65623 10.9592 9.5 12 9.5C13.0409 9.5 13.8847 8.65623 13.8847 7.61538H15.8847C15.8847 8.65623 16.7284 9.5 17.7693 9.5H17.9421C18.851 9.5 19.5945 8.79158 19.6505 7.89676L17.5088 4.47C17.326 4.17762 17.0056 4 16.6608 4H7.3393ZM17.9421 11.5C18.1317 11.5 18.318 11.4858 18.5 11.4583V18C18.5 19.1046 17.6046 20 16.5 20H16V16C16 14.3431 14.6569 13 13 13H11C9.34315 13 8 14.3431 8 16V20H7.5C6.39543 20 5.5 19.1046 5.5 18V11.4583C5.682 11.4858 5.86833 11.5 6.05798 11.5H6.23081C7.37546 11.5 8.40448 11.0049 9.11542 10.2172C9.82636 11.0049 10.8554 11.5 12 11.5C13.1447 11.5 14.1737 11.0049 14.8847 10.2172C15.5956 11.0049 16.6246 11.5 17.7693 11.5H17.9421ZM10 20H14V16C14 15.4477 13.5523 15 13 15H11C10.4477 15 10 15.4477 10 16V20Z" fill="#667085"/>
                     </svg>
-                    staffs
+                    Services
                 </a>
 
-                <a href="staff-dashboard.html" class="menu-item">
+                <a href="admin-staffs.html" class="menu-item">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M14.5 6.5C14.5 8.98528 12.4853 11 10 11C7.51472 11 5.5 8.98528 5.5 6.5C5.5 4.01472 7.51472 2 10 2C12.4853 2 14.5 4.01472 14.5 6.5ZM12.5 6.5C12.5 7.88071 11.3807 9 10 9C8.61929 9 7.5 7.88071 7.5 6.5C7.5 5.11929 8.61929 4 10 4C11.3807 4 12.5 5.11929 12.5 6.5Z" fill="black" fill-opacity="0.6"/>
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M2 18.9231C2 15.0996 5.09957 12 8.92308 12H11.0769C14.9004 12 18 15.0996 18 18.9231C18 20.0701 17.0701 21 15.9231 21H4.07692C2.92987 21 2 20.0701 2 18.9231ZM4 18.9231C4 16.2041 6.20414 14 8.92308 14H11.0769C13.7959 14 16 16.2041 16 18.9231C16 18.9656 15.9656 19 15.9231 19H4.07692C4.03444 19 4 18.9656 4 18.9231Z" fill="black" fill-opacity="0.6"/>
@@ -894,27 +952,52 @@
             </nav>
         </aside>
 
+        <!-- JavaScript to make the sidebar clickable and highlight active page -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const menuItems = document.querySelectorAll('.menu-item');
+                const currentPage = window.location.pathname.split("/").pop(); // get current file name
+
+                menuItems.forEach(item => {
+                    const page = item.getAttribute('data-page');
+
+                    // Highlight the active page
+                    if (page === currentPage) {
+                        item.classList.add('active');
+                    }
+
+                    // Make menu items clickable
+                    item.addEventListener('click', () => {
+                        window.location.href = page;
+                    });
+                });
+            });
+
+            fetch('AdminServlet')
+                    .then(response => response.text())
+                    .then(name => {
+                        document.getElementById('adminName').textContent = name;
+                    })
+                    .catch(err => {
+                        document.getElementById('adminName').textContent = "";
+                        console.error(err);
+                    });
+        </script>
+
         <!-- Main Content -->
         <main class="main-content">
             <!-- Top Bar -->
-            <div class="top-bar">
-                <svg class="menu-icon" onclick="toggleSidebar()" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="admin-topbar">
+                <svg class="menu-icon" viewBox="0 0 24 24" fill="none">
                 <path d="M3 7C3 6.44772 3.44772 6 4 6H20C20.5523 6 21 6.44772 21 7C21 7.55228 20.5523 8 20 8H4C3.44772 8 3 7.55228 3 7Z" fill="#667085"/>
                 <path d="M3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12Z" fill="#667085"/>
                 <path d="M4 16C3.44772 16 3 16.4477 3 17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17C21 16.4477 20.5523 16 20 16H4Z" fill="#667085"/>
                 </svg>
-
-                <div class="top-bar-right">
-                    <div class="divider"></div>
+                <div class="admin-user">
+                    <div class="user-avatar"></div>
                     <div class="user-info">
-                        <div class="user-avatar">
-                            <div class="user-avatar-img"></div>
-                            <div class="user-status"></div>
-                        </div>
-                        <div class="user-details">
-                            <h4>Megat Ameer</h4>
-                            <p>Admin</p>
-                        </div>
+                        <div class="user-name" id="adminName"></div>
+                        <div class="user-role">Admin</div>
                     </div>
                 </div>
             </div>
@@ -1193,46 +1276,58 @@
 
         <!-- Simple helper functions -->
         <script>
-            console.log("Inline JavaScript test");
+            console.log("Staff Management System Initializing...");
 
             let currentStaffIndex = null;
             let staffData = [];
 
-// Load staff data on page load
+            // Load staff data on page load
             document.addEventListener('DOMContentLoaded', function () {
                 console.log("DOMContentLoaded - Starting staff management");
-
-                // Call loadStaffData immediately
                 loadStaffData();
-
-                // Setup search functionality
-                const searchInput = document.getElementById('staffSearch');
-                if (searchInput) {
-                    searchInput.addEventListener('input', function (e) {
-                        console.log("Searching for:", e.target.value);
-                        searchStaff(e.target.value);
-                    });
-                }
             });
 
-// ==================== CORE FUNCTIONS ====================
+            // ==================== CORE FUNCTIONS ====================
 
-// Load staff data from server
+            // Load staff data from server
             async function loadStaffData() {
                 console.log("loadStaffData() called");
+                const tbody = document.getElementById('staffTableBody');
+
+                if (!tbody) {
+                    console.error("ERROR: staffTableBody not found in HTML!");
+                    return;
+                }
 
                 try {
                     console.log("Fetching data from StaffServlet...");
+
+                    // Show loading indicator
+                    tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </div>
+                        <p>Loading staff data...</p>
+                    </td>
+                </tr>
+            `;
+
                     const response = await fetch('StaffServlet');
-                    console.log("Response received, status:", response.status);
+                    console.log("Response status:", response.status);
 
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
 
                     const data = await response.json();
-                    console.log("Data parsed successfully, records:", data.length);
-                    console.log("Sample data:", data.length > 0 ? data[0] : "No data");
+                    console.log("Data received:", data);
+                    console.log("Number of records:", data.length);
+
+                    if (data.error) {
+                        throw new Error(data.message || data.error);
+                    }
 
                     staffData = data;
                     populateStaffTable(staffData);
@@ -1241,24 +1336,22 @@
                     console.error('Error loading staff data:', error);
 
                     // Show error in table
-                    const tbody = document.getElementById('staffTableBody');
-                    if (tbody) {
-                        tbody.innerHTML = `
+                    tbody.innerHTML = `
                 <tr>
                     <td colspan="4" style="text-align: center; padding: 40px; color: red;">
                         <h3>⚠️ Error Loading Data</h3>
                         <p>${error.message}</p>
                         <p>Check console for details</p>
+                        <button onclick="loadStaffData()" style="margin-top: 10px; padding: 8px 16px; background: #624DE3; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Retry
+                        </button>
                     </td>
                 </tr>
             `;
-                    }
-
-                    alert('Failed to load staff data. Check console for details.');
                 }
             }
 
-// Populate staff table
+            // Populate staff table
             function populateStaffTable(data) {
                 console.log("populateStaffTable() called with", data.length, "records");
 
@@ -1273,46 +1366,55 @@
                 if (!data || data.length === 0) {
                     console.log("No data to display");
                     tbody.innerHTML = `
-            <tr>
-                <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
-                    <div style="font-size: 48px; color: #ddd; margin-bottom: 16px;">
-                        <i class="fas fa-users-slash"></i>
-                    </div>
-                    <h3>No Staff Members Found</h3>
-                    <p>The database appears to be empty.</p>
-                    <button onclick="openStaffAddModal()" style="margin-top: 10px; padding: 8px 16px; background: #624DE3; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Add First Staff
-                    </button>
-                </td>
-            </tr>
-        `;
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                        <div style="font-size: 48px; color: #ddd; margin-bottom: 16px;">
+                            <i class="fas fa-users-slash"></i>
+                        </div>
+                        <h3>No Staff Members Found</h3>
+                        <p>Click "Add New Staff" to create your first staff account.</p>
+                    </td>
+                </tr>
+            `;
                     return;
                 }
 
                 console.log("Creating table rows...");
                 data.forEach((staff, index) => {
                     const row = document.createElement('tr');
+
+                    // Use safe property access with fallbacks
+                    const staffId = staff.staffId || 'N/A';
+                    const name = staff.name || 'N/A';
+                    const email = staff.email || 'N/A';
+                    const nric = staff.nric || 'Not provided';
+                    const phone = staff.phone || 'Not provided';
+
                     row.innerHTML = `
-            <td><strong>${staff.staffId || 'N/A'}</strong></td>
-            <td>${staff.name || 'N/A'}</td>
-            <td>${staff.email || 'N/A'}</td>
-            <td>
-                <div class="action-buttons">
-                    <button class="btn-action btn-view" onclick="window.openStaffViewModal(${index})">View</button>
-                    <button class="btn-action btn-edit" onclick="window.openStaffEditModal(${index})">Edit</button>
-                    <button class="btn-action btn-delete" onclick="window.openStaffDeleteModal(${index})">Delete</button>
-                </div>
-            </td>
-        `;
+                <td><strong>${staffId}</strong></td>
+                <td>${name}</td>
+                <td>${email}</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-action btn-view" onclick="openStaffViewModal(${index})">View</button>
+                        <button class="btn-action btn-edit" onclick="openStaffEditModal(${index})">Edit</button>
+                        <button class="btn-action btn-delete" onclick="openStaffDeleteModal(${index})">Delete</button>
+                    </div>
+                </td>
+            `;
                     tbody.appendChild(row);
                 });
 
                 console.log("Table populated with", data.length, "rows");
             }
 
-// Search staff
+            // Search staff
             async function searchStaff(keyword) {
                 console.log("searchStaff() called with keyword:", keyword);
+
+                const tbody = document.getElementById('staffTableBody');
+                if (!tbody)
+                    return;
 
                 if (!keyword || keyword.trim() === '') {
                     console.log("Empty search, showing all data");
@@ -1321,51 +1423,75 @@
                 }
 
                 try {
+                    // Show loading
+                    tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 20px; color: #666;">
+                        <i class="fas fa-spinner fa-spin"></i> Searching...
+                    </td>
+                </tr>
+            `;
+
                     const response = await fetch(`StaffServlet?action=search&keyword=${encodeURIComponent(keyword)}`);
+
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
+
                     const data = await response.json();
                     console.log("Search results:", data.length, "records");
                     populateStaffTable(data);
+
                 } catch (error) {
                     console.error('Error searching staff:', error);
-                    alert('Search failed: ' + error.message);
+
+                    // Fall back to client-side filtering
+                    const filtered = staffData.filter(staff => {
+                        const searchStr = keyword.toLowerCase();
+                        return (staff.staffId && staff.staffId.toLowerCase().includes(searchStr)) ||
+                                (staff.name && staff.name.toLowerCase().includes(searchStr)) ||
+                                (staff.email && staff.email.toLowerCase().includes(searchStr)) ||
+                                (staff.nric && staff.nric.toLowerCase().includes(searchStr)) ||
+                                (staff.phone && staff.phone.toLowerCase().includes(searchStr));
+                    });
+                    populateStaffTable(filtered);
                 }
             }
 
-// ==================== MODAL FUNCTIONS ====================
+            // ==================== MODAL FUNCTIONS ====================
 
-// Open View Modal
-            async function openStaffViewModal(index) {
+            // Open View Modal
+            function openStaffViewModal(index) {
                 console.log("openStaffViewModal() called for index:", index);
                 currentStaffIndex = index;
                 const staff = staffData[index];
 
                 if (!staff) {
                     console.error("No staff data at index:", index);
+                    alert('Staff data not found!');
                     return;
                 }
 
-                // Update modal with staff data
+                // Update modal with staff data (with fallbacks)
                 document.getElementById('staffViewId').textContent = staff.staffId || 'N/A';
                 document.getElementById('staffViewName').textContent = staff.name || 'N/A';
-                document.getElementById('staffViewNric').textContent = staff.nric || 'N/A';
+                document.getElementById('staffViewNric').textContent = staff.nric || 'Not provided';
                 document.getElementById('staffViewEmail').textContent = staff.email || 'N/A';
-                document.getElementById('staffViewPhone').textContent = staff.phone || 'N/A';
+                document.getElementById('staffViewPhone').textContent = staff.phone || 'Not provided';
                 document.getElementById('staffViewPassword').textContent = '••••••••';
 
-                window.openModal('staffViewModal');
+                openModal('staffViewModal');
             }
 
-// Open Edit Modal
-            async function openStaffEditModal(index) {
+            // Open Edit Modal
+            function openStaffEditModal(index) {
                 console.log("openStaffEditModal() called for index:", index);
                 currentStaffIndex = index;
                 const staff = staffData[index];
 
                 if (!staff) {
                     console.error("No staff data at index:", index);
+                    alert('Staff data not found!');
                     return;
                 }
 
@@ -1377,118 +1503,69 @@
                 document.getElementById('staffEditPassword').value = '';
                 document.getElementById('staffEditConfirmPassword').value = '';
 
-                window.openModal('staffEditModal');
+                openModal('staffEditModal');
             }
 
-// Open Edit Modal from View
+            // Open Edit Modal from View
             function openStaffEditModalFromView() {
                 console.log("openStaffEditModalFromView() called");
-                window.closeModal('staffViewModal');
+                closeModal('staffViewModal');
                 openStaffEditModal(currentStaffIndex);
             }
 
-// Open Add Modal
+            // Open Add Modal
             async function openStaffAddModal() {
                 console.log("openStaffAddModal() called");
 
                 // Clear form
                 document.getElementById('staffAddForm').reset();
 
-                // Try to get next staff ID (optional)
+                // Try to get next staff ID
                 try {
                     const response = await fetch('StaffServlet?action=generateId');
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('Next staff ID would be:', data.nextId);
+                        console.log('Next staff ID:', data.nextId);
+                        // You could pre-fill the ID field if you have one
                     }
                 } catch (error) {
                     console.error('Error generating ID:', error);
                 }
 
-                window.openModal('staffAddModal');
+                openModal('staffAddModal');
             }
 
-// Open Delete Modal
+            // Open Delete Modal
             function openStaffDeleteModal(index) {
                 console.log("openStaffDeleteModal() called for index:", index);
                 currentStaffIndex = index;
-                window.openModal('staffDeleteModal');
+                const staff = staffData[index];
+
+                if (staff) {
+                    // Show staff name in confirmation message
+                    const messageDiv = document.querySelector('#staffDeleteModal .confirmation-message');
+                    if (messageDiv) {
+                        messageDiv.textContent = `Are you sure you want to permanently delete staff "${staff.name}"? This action is irreversible.`;
+                    }
+                }
+
+                openModal('staffDeleteModal');
             }
 
-// Open Delete Modal from View
+            // Open Delete Modal from View
             function openStaffDeleteModalFromView() {
                 console.log("openStaffDeleteModalFromView() called");
-                window.closeModal('staffViewModal');
-                window.openModal('staffDeleteModal');
+                closeModal('staffViewModal');
+                openStaffDeleteModal(currentStaffIndex);
             }
 
-// Save Edit
+            // Save Edit
             async function saveStaffEdit() {
                 console.log("saveStaffEdit() called");
 
                 const staff = staffData[currentStaffIndex];
-                if (!staff) {
-                    alert('No staff selected!');
-                    return;
-                }
-
-                const form = document.getElementById('staffEditForm');
-
-                // Basic validation
-                const name = document.getElementById('staffEditName').value.trim();
-                const email = document.getElementById('staffEditEmail').value.trim();
-
-                if (!name || !email) {
-                    alert('Name and Email are required!');
-                    return;
-                }
-
-                // Check passwords match
-                const password = document.getElementById('staffEditPassword').value;
-                const confirmPassword = document.getElementById('staffEditConfirmPassword').value;
-
-                if (password && password !== confirmPassword) {
-                    alert('Passwords do not match!');
-                    return;
-                }
-
-                try {
-                    const formData = new FormData();
-                    formData.append('action', 'update');
-                    formData.append('staffId', staff.staffId);
-                    formData.append('name', name);
-                    formData.append('nric', document.getElementById('staffEditNric').value.trim());
-                    formData.append('email', email);
-                    formData.append('phone', document.getElementById('staffEditPhone').value.trim());
-                    formData.append('password', password || '');
-
-                    console.log("Saving staff update...");
-                    const response = await fetch('StaffServlet', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const result = await response.json();
-                    console.log("Save result:", result);
-
-                    if (result.success) {
-                        window.closeModal('staffEditModal');
-                        alert('Staff details updated successfully!');
-                        loadStaffData(); // Refresh data
-                    } else {
-                        alert('Failed to update staff. Please try again.');
-                    }
-                } catch (error) {
-                    console.error('Error updating staff:', error);
-                    alert('Error updating staff: ' + error.message);
-                }
-            }
-            async function saveStaffEdit() {
-                console.log("saveStaffEdit() called");
-
-                const staff = staffData[currentStaffIndex];
-                if (!staff) {
-                    alert('No staff selected!');
+                if (!staff || !staff.staffId) {
+                    alert('No staff selected or invalid staff data!');
                     return;
                 }
 
@@ -1501,7 +1578,7 @@
                     return;
                 }
 
-                // Check passwords match
+                // Check passwords match (if provided)
                 const password = document.getElementById('staffEditPassword').value;
                 const confirmPassword = document.getElementById('staffEditConfirmPassword').value;
 
@@ -1511,7 +1588,6 @@
                 }
 
                 try {
-                    // Use URLSearchParams instead of FormData
                     const params = new URLSearchParams();
                     params.append('action', 'update');
                     params.append('staffId', staff.staffId);
@@ -1521,8 +1597,7 @@
                     params.append('phone', document.getElementById('staffEditPhone').value.trim());
                     params.append('password', password || '');
 
-                    console.log("Saving staff update...");
-                    console.log("Params:", params.toString());
+                    console.log("Updating staff...");
 
                     const response = await fetch('StaffServlet', {
                         method: 'POST',
@@ -1533,10 +1608,10 @@
                     });
 
                     const result = await response.json();
-                    console.log("Save result:", result);
+                    console.log("Update result:", result);
 
                     if (result.success) {
-                        window.closeModal('staffEditModal');
+                        closeModal('staffEditModal');
                         alert('Staff details updated successfully!');
                         loadStaffData(); // Refresh data
                     } else {
@@ -1548,11 +1623,9 @@
                 }
             }
 
-// Save Add
+            // Save Add
             async function saveStaffAdd() {
                 console.log("saveStaffAdd() called");
-
-                const form = document.getElementById('staffAddForm');
 
                 // Basic validation
                 const name = document.getElementById('staffAddName').value.trim();
@@ -1574,17 +1647,14 @@
 
                 try {
                     // Get next staff ID
-                    console.log("Getting next staff ID...");
                     const idResponse = await fetch('StaffServlet?action=generateId');
                     const idData = await idResponse.json();
                     const staffId = idData.nextId;
-                    console.log('Next staff ID:', staffId);
 
                     if (!staffId) {
                         throw new Error('Failed to generate staff ID');
                     }
 
-                    // Use URLSearchParams instead of FormData
                     const params = new URLSearchParams();
                     params.append('action', 'add');
                     params.append('staffId', staffId);
@@ -1594,7 +1664,7 @@
                     params.append('phone', phone);
                     params.append('password', password);
 
-                    console.log("Sending POST request with:", params.toString());
+                    console.log("Adding new staff...");
 
                     const response = await fetch('StaffServlet', {
                         method: 'POST',
@@ -1608,7 +1678,7 @@
                     console.log("Add result:", result);
 
                     if (result.success) {
-                        window.closeModal('staffAddModal');
+                        closeModal('staffAddModal');
                         alert('New staff added successfully!');
                         loadStaffData(); // Refresh data
                     } else {
@@ -1620,7 +1690,7 @@
                 }
             }
 
-// Confirm Delete
+            // Confirm Delete
             async function confirmStaffDelete() {
                 console.log("confirmStaffDelete() called");
 
@@ -1630,18 +1700,12 @@
                     return;
                 }
 
-                if (!confirm(`Are you sure you want to delete ${staff.name}?`)) {
-                    return;
-                }
-
                 try {
-                    // Use URLSearchParams instead of FormData
                     const params = new URLSearchParams();
                     params.append('action', 'delete');
                     params.append('staffId', staff.staffId);
 
                     console.log("Deleting staff...");
-                    console.log("Params:", params.toString());
 
                     const response = await fetch('StaffServlet', {
                         method: 'POST',
@@ -1655,7 +1719,7 @@
                     console.log("Delete result:", result);
 
                     if (result.success) {
-                        window.closeModal('staffDeleteModal');
+                        closeModal('staffDeleteModal');
                         alert('Staff deleted successfully!');
                         loadStaffData(); // Refresh data
                     } else {
@@ -1667,8 +1731,32 @@
                 }
             }
 
-// ==================== EXPORT FUNCTIONS ====================
-// Make functions available to HTML onclick handlers
+            // ==================== MODAL UTILITIES ====================
+
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'flex';
+                    setTimeout(() => modal.classList.add('active'), 10);
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            }
+
+            function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('mobile-open');
+            }
+
+            // ==================== EXPORT FUNCTIONS ====================
+            // Make functions available to HTML onclick handlers
             window.loadStaffData = loadStaffData;
             window.searchStaff = searchStaff;
             window.openStaffViewModal = openStaffViewModal;
@@ -1680,86 +1768,9 @@
             window.saveStaffEdit = saveStaffEdit;
             window.saveStaffAdd = saveStaffAdd;
             window.confirmStaffDelete = confirmStaffDelete;
-
-            console.log("staff.js initialization complete!");
-
-            // Simple modal functions for HTML onclick handlers
-            function openModal(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    // Close all modals first
-                    document.querySelectorAll('.modal-overlay').forEach(m => {
-                        m.style.display = 'none';
-                        m.classList.remove('active');
-                    });
-
-                    modal.style.display = 'flex';
-                    setTimeout(() => modal.classList.add('active'), 10);
-                }
-            }
-
-            function closeModal(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.style.display = 'none';
-                    modal.classList.remove('active');
-                }
-            }
-
-            // Sidebar toggle
-            function toggleSidebar() {
-                document.getElementById('sidebar').classList.toggle('mobile-open');
-            }
-
-            // Search function (needed for onkeyup)
-            async function searchStaff(keyword) {
-                console.log("searchStaff() called with keyword:", keyword);
-
-                if (!keyword || keyword.trim() === '') {
-                    console.log("Empty search, showing all data");
-                    populateStaffTable(staffData);
-                    return;
-                }
-
-                try {
-                    console.log("Fetching from: StaffServlet?action=search&keyword=" + encodeURIComponent(keyword));
-
-                    const response = await fetch(`StaffServlet?action=search&keyword=${encodeURIComponent(keyword)}`);
-
-                    console.log("Response status:", response.status);
-                    console.log("Response OK:", response.ok);
-
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error("Response error text:", errorText);
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    console.log("Search results:", data.length, "records");
-                    console.log("Results data:", data);
-
-                    if (data.length === 0) {
-                        console.log("No results found for:", keyword);
-                    }
-
-                    populateStaffTable(data);
-
-                } catch (error) {
-                    console.error('Error searching staff:', error);
-                    console.error('Error stack:', error.stack);
-
-                    // Fall back to client-side filtering
-                    console.log("Falling back to client-side search...");
-                    const filtered = staffData.filter(staff =>
-                        (staff.staffId && staff.staffId.toLowerCase().includes(keyword.toLowerCase())) ||
-                                (staff.name && staff.name.toLowerCase().includes(keyword.toLowerCase())) ||
-                                (staff.email && staff.email.toLowerCase().includes(keyword.toLowerCase()))
-                    );
-                    console.log("Client-side filtered results:", filtered.length);
-                    populateStaffTable(filtered);
-                }
-            }
+            window.openModal = openModal;
+            window.closeModal = closeModal;
+            window.toggleSidebar = toggleSidebar;
 
             // Close modal when clicking outside
             document.addEventListener('click', function (e) {
@@ -1767,6 +1778,8 @@
                     closeModal(e.target.id);
                 }
             });
+
+            console.log("Staff Management System initialized!");
         </script>
     </body>
 </html>
