@@ -239,4 +239,21 @@ public class StaffDaoImpl implements StaffDao {
         }
         return nextId;
     }
+    
+    public int getTotalStaffs(){
+        int total = 0;
+        String sql = "SELECT COUNT(*) as total_count FROM staff";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt("total_count");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error getting total staff count", e);
+        }
+        return total;
+    }
 }

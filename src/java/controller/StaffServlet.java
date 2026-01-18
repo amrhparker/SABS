@@ -48,9 +48,11 @@ public class StaffServlet extends HttpServlet {
                 checkNricExists(request, response);
             } else if (action.equals("generateId")) {
                 generateNextId(request, response);
-            } else if (action.equals("add")) {  // ADD THIS FOR DEBUGGING
+            } else if (action.equals("add")) {  
                 addStaff(request, response);
-            } else {
+            } else if(action.equals("totalStaffs")){
+                totalStaffs(request,response);
+            }else {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid action parameter");
             }
         } catch (Exception e) {
@@ -143,6 +145,21 @@ public class StaffServlet extends HttpServlet {
 
         try (JsonWriter writer = Json.createWriter(response.getWriter())) {
             writer.writeArray(arrayBuilder.build());
+        }
+    }
+    
+    private void totalStaffs(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+
+        try {
+            StaffDao dao = new StaffDaoImpl();
+            int total = dao.getTotalStaffs();
+            response.getWriter().print(total);
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().print("Error retrieving staff count");
+            e.printStackTrace();
         }
     }
 

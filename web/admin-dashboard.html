@@ -1057,7 +1057,7 @@
                                 </div>
                                 <div class="stat-body">
                                     <div class="stat-label">Total Staffs</div>
-                                    <div class="stat-value"></div>
+                                    <div class="stat-value" id="totalStaffs">0</div>
                                 </div>
                             </div>
                         </div>
@@ -1104,6 +1104,29 @@
 
             // Auto refresh every 5 seconds
             setInterval(loadTotalCustomers, 5000);
+
+            function loadTotalStaffs() {
+                fetch('StaffServlet?action=totalStaffs')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+                            return response.text();
+                        })
+                        .then(count => {
+                            document.getElementById('totalStaffs').textContent = count;
+                        })
+                        .catch(err => {
+                            console.error("Error loading staffs:", err);
+                            document.getElementById('totalStaffs').textContent = "Error";
+                        });
+            }
+
+            // Load immediately
+            loadTotalStaffs();
+
+            // Auto refresh every 5 seconds
+            setInterval(loadTotalStaffs, 5000);
         </script>
 
     </body>

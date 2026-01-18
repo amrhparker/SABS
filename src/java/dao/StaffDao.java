@@ -14,4 +14,5 @@ public interface StaffDao {
     boolean checkNricExists(String nric);
     List<Staff> searchStaff(String keyword);
     String generateNextStaffId();
+    int getTotalStaffs();
 }
