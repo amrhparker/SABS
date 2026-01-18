@@ -6,9 +6,8 @@ import java.util.List;
 import db.DBConnection;
 import model.Service;
 
-public class ServiceDaoImpl implements ServiceDao {
+public class ServiceDaoImpl extends ServiceDao {
 
-    @Override
     public List<Service> getAllServices() {
         List<Service> services = new ArrayList<>();
         String sql = "SELECT * FROM service";
@@ -33,7 +32,6 @@ public class ServiceDaoImpl implements ServiceDao {
         return services;
     }
 
-    @Override
     public Service getServiceByID(int serviceID) {
         String sql = "SELECT * FROM service WHERE serviceID = ?";
         Service s = null;

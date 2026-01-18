@@ -1042,7 +1042,8 @@
                                 </div>
                                 <div class="stat-body">
                                     <div class="stat-label">Total Services</div>
-                                    <div class="stat-value"></div>
+                                    <div class="stat-value" id="totalServices">0</div>
+
                                 </div>
                             </div>
 
@@ -1088,7 +1089,7 @@
             </div>
         </div>
 
-
+        <!--totalcustomer-->
         <script>
             function loadTotalCustomers() {
                 fetch('totalCustomers')
@@ -1105,5 +1106,24 @@
             // Auto refresh every 5 seconds
             setInterval(loadTotalCustomers, 5000);
         </script>
+
+        <!--totalservices-->
+        <script>
+            function loadTotalServices() {
+                fetch('totalServices')
+                        .then(response => response.text())
+                        .then(count => {
+                            document.getElementById('totalServices').textContent = count;
+                        })
+                        .catch(err => console.error("Error loading services:", err));
+            }
+
+            // load immediately
+            loadTotalServices();
+
+            // auto refresh every 5 seconds
+            setInterval(loadTotalServices, 5000);
+        </script>
+
 
     </body>
