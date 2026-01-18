@@ -1209,7 +1209,7 @@
         <!--recent appointments-->
         <script>
             function loadRecentAppointments() {
-                fetch('RecentAppointmentsServlet')
+                fetch('recentAppointments')
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error('Failed to load appointments');

@@ -679,7 +679,7 @@
 </head>
 <body>
     <!-- Home Page -->
-    <div id="homePage">
+    <div>
         <!-- Hero Section -->
         <div class="hero-section">
             <div class="hero-overlay"></div>
@@ -697,7 +697,7 @@
                     </div>
                     
                     <div class="nav-buttons">
-                        <button class="nav-btn home" onclick="showPage('homePage')">H O M E</button>
+                        <button class="nav-btn home" onclick="window.location.href='customer-dashboard.html'">H O M E</button>
                         <button class="nav-btn logout" onclick="window.location.href='login.html'">LOG OUT</button>
                     </div>
                 </div>
@@ -837,47 +837,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Page navigation
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-            window.scrollTo(0, 0);
-        }
-        
-        // Modal functions
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Click outside modal to close
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                }
-            });
-        });
-
-        // Close time dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('bookingTimeDropdown');
-            const selector = event.target.closest('[onclick="toggleBookingTimeDropdown()"]');
-            if (!selector && dropdown && dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>
