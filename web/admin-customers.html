@@ -55,37 +55,38 @@
             background: rgba(0, 0, 0, 0.3);
         }
 
+       
         /* ==================== SIDEBAR ==================== */
-        .admin-sidebar {
+        .sidebar {
             width: 264px;
             background: #FFF;
             border-right: 1px solid #F0F1F3;
             box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
+            z-index: 100;
             display: flex;
             flex-direction: column;
-            position: relative;
-            z-index: 100;
-            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
         }
 
         .sidebar-logo {
-            padding: 8px 20px;
-            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-           
+            padding: 8px 20px;
+            height: 80px;
         }
 
         .sidebar-logo img {
             width: 100px;
             height: 79px;
-            
         }
 
         .sidebar-menu {
             flex: 1;
-            padding: 24px 18px 32px;
+            padding: 24px 18px 32px 18px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -98,10 +99,11 @@
             padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s ease;
+            color: rgba(0, 0, 0, 0.6);
             font-size: 14px;
             font-weight: 600;
-            color: #667085;
+            line-height: 20px;
         }
 
         .menu-item:hover {
@@ -112,15 +114,29 @@
             background: #5C59E8;
             color: #FFF;
         }
-
-        .menu-item svg {
+        
+        .menu-item img {
             width: 24px;
             height: 24px;
             flex-shrink: 0;
+            object-fit: contain;
+        }
+        
+        .sidebar-menu a {
+            text-decoration: none;
+            color: inherit;
         }
 
-        .menu-item.active svg path {
-            fill: #FFF;
+        
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            margin-left: 264px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
         }
 
         /* ==================== TOP BAR ==================== */
@@ -775,33 +791,40 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="admin-sidebar">
-            <div class="sidebar-logo">
-                <img src="https://api.builder.io/api/v1/image/assets/TEMP/db3e61846a007f94950a5874b027025362939df5?width=200" alt="SALONIX">
-            </div>
-            <div class="sidebar-menu">
-                <div class="menu-item" onclick="window.location.href='admin-dashboard.html'">
-                    <img src="images/dashboard-sidebar.png" alt="Dashboard" class="menu-icon">
-                    <span>Dashboard</span>
-                </div>
-                <div class="menu-item" onclick="window.location.href='admin-appointments.html'">
-                   <img src="images/appointment-sidebar.png" alt="Appointments" class="menu-icon">
-                    <span>Appointments</span>
-                </div>
-                <div class="menu-item active" onclick="window.location.href='admin-customers.html'">
-                    <img src="images/customer-sidebar.png" alt="Customers" class="menu-icon">
-                    <span>Customers</span>
-                </div>
-                <div class="menu-item" onclick="window.location.href='admin-services.html'">
-                    <img src="images/service-sidebar.png" alt="Services" class="menu-icon">
-                    <span>Services</span>
-                </div>
-                <div class="menu-item" onclick="window.location.href='admin-staffs.html'">
-                    <img src="images/staff-sidebar.png" alt="Staffs" class="menu-icon">
-                    <span>Staffs</span>
-                </div>
-            </div>
+        <!-- ================= SIDEBAR ================= -->
+<!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <img src="https://tinyurl.com/2k72rnvp" alt="SALONIX Logo">
         </div>
+        
+        <nav class="sidebar-menu">
+            <a href="admin-dashboard.html" class="menu-item">
+                <img src="images/dashboard-sidebar.png">
+                Dashboard
+            </a>
+
+            <a href="admin-appointments.jsp" class="menu-item">
+                <img src="images/appointment-sidebar.png">
+                Appointments
+            </a>
+
+            <a href="admin-customers.html" class="menu-item active">
+                <img src="images/customer-sidebar.png">
+                Customers
+            </a>
+
+            <a href="admin-services.html" class="menu-item">
+                <img src="images/service-sidebar.png">
+                Services
+            </a>
+
+            <a href="admin-staffs.html" class="menu-item">
+                <img src="images/staff-sidebar.png">
+                Staffs
+            </a>
+        </nav>
+    </aside>
 
         <!-- Main Content -->
         <div class="admin-main">
