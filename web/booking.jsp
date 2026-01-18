@@ -8,7 +8,8 @@
         return;
     }
 
-    String customerId = (String) session.getAttribute("customerId");
+    Integer customerId = (Integer) session.getAttribute("customerId");
+
 %>
 
 <%
@@ -23,7 +24,7 @@
         psCustomer = connCustomer.prepareStatement(
             "SELECT customer_name FROM customer WHERE customer_id = ?"
         );
-        psCustomer.setString(1, customerId);
+        psCustomer.setInt(1, customerId);
         rsCustomer = psCustomer.executeQuery();
 
         if (rsCustomer.next()) {
