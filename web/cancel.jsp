@@ -110,13 +110,13 @@
                     <div class="nav-links">
                         <a class="nav-link inactive" onclick="location.href='booking.jsp'">Book Appointment</a>
                         <a class="nav-link" style="color: #000;" onclick="location.href='cancel.jsp'">List of Appointments</a>
-                        <a class="nav-link inactive" onclick="location.href='services.jsp'">Service</a>
-                        <a class="nav-link inactive" onclick="location.href='story.jsp'">Our story</a>
+                        <a class="nav-link inactive" onclick="location.href='customer-services.html'">Service</a>
+                        <a class="nav-link inactive" onclick="location.href='ourStory.html'">Our story</a>
                     </div>
 
                     <div class="nav-buttons">
-                        <button class="nav-btn home" onclick="location.href='index.jsp'">H O M E</button>
-                        <button class="nav-btn logout" onclick="location.href='login.jsp'">LOG OUT</button>
+                        <button class="nav-btn home" onclick="location.href='customer-dashboard.html'">H O M E</button>
+                        <button class="nav-btn logout" onclick="location.href='login.html'">LOG OUT</button>
                     </div>
                 </div>
                 <div class="nav-line dark"></div>
@@ -319,7 +319,7 @@
 
 
                             <h2>YOUR APPOINTMENT HAS BEEN CANCELED</h2>
-                            <button onclick="location.href = 'index.jsp'"
+                            <button onclick="location.href = 'customer-dashboard.html'"
                                     style="margin-top:2rem;padding:1rem 2.5rem;background:#000;color:#FFF;border:none;border-radius:8px;">
                                 HOME
                             </button>
@@ -334,11 +334,11 @@
                 <div class="footer-content">
                     <img src="https://api.builder.io/api/v1/image/assets/TEMP/66f64fa4e40cc7a57c1939f7f444c578ae8d0a99?width=440" alt="SALONIX Logo" class="footer-logo">
                     <div class="footer-links">
-                        <a href="index.jsp" class="footer-link">Home</a>
+                        <a href="customer-dashboard.html" class="footer-link">Home</a>
                         <a href="booking.jsp" class="footer-link">Book Appointment</a>
                         <a href="cancel.jsp" class="footer-link">List of Appointments</a>
-                        <a href="services.jsp" class="footer-link">Service</a>
-                        <a href="story.jsp" class="footer-link">Our story</a>
+                        <a href="customer-services.html" class="footer-link">Service</a>
+                        <a href="ourStory.html" class="footer-link">Our story</a>
                     </div>
                 </div>
                 <div class="footer-bottom">
