@@ -7,183 +7,183 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@500;700&family=Jost:wght@700&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
         <style>
             * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #FFF;
-            color: #333843;
-            overflow-x: hidden;
-        }
+            body {
+                font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #FFF;
+                color: #333843;
+                overflow-x: hidden;
+            }
 
-        /* ==================== ADMIN LAYOUT ==================== */
-        .admin-layout {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
+            /* ==================== ADMIN LAYOUT ==================== */
+            .admin-layout {
+                display: flex;
+                min-height: 100vh;
+                position: relative;
+            }
 
-        .admin-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+            .admin-bg {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                pointer-events: none;
+            }
 
-        .admin-bg-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-           
-        }
+            .admin-bg-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
 
-        .admin-bg-overlay{
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(4.5px);
-            background: rgba(0, 0, 0, 0.3);
-        }
+            }
 
-        /* ==================== SIDEBAR ==================== */
-        .admin-sidebar {
-            width: 264px;
-            background: #FFF;
-            border-right: 1px solid #F0F1F3;
-            box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            z-index: 100;
-            flex-shrink: 0;
-        }
+            .admin-bg-overlay{
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                backdrop-filter: blur(4.5px);
+                background: rgba(0, 0, 0, 0.3);
+            }
 
-        .sidebar-logo {
-            padding: 8px 20px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-           
-        }
+            /* ==================== SIDEBAR ==================== */
+            .admin-sidebar {
+                width: 264px;
+                background: #FFF;
+                border-right: 1px solid #F0F1F3;
+                box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                z-index: 100;
+                flex-shrink: 0;
+            }
 
-        .sidebar-logo img {
-            width: 100px;
-            height: 79px;
-            
-        }
+            .sidebar-logo {
+                padding: 8px 20px;
+                height: 80px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
-        .sidebar-menu {
-            flex: 1;
-            padding: 24px 18px 32px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+            }
 
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 14px;
-            font-weight: 600;
-            color: #667085;
-        }
+            .sidebar-logo img {
+                width: 100px;
+                height: 79px;
 
-        .menu-item:hover {
-            background: #F9F9FC;
-        }
+            }
 
-        .menu-item.active {
-            background: #5C59E8;
-            color: #FFF;
-        }
+            .sidebar-menu {
+                flex: 1;
+                padding: 24px 18px 32px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
 
-        .menu-item svg {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
-        }
+            .menu-item {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                transition: background 0.2s;
+                font-size: 14px;
+                font-weight: 600;
+                color: #667085;
+            }
 
-        .menu-item.active svg path {
-            fill: #FFF;
-        }
+            .menu-item:hover {
+                background: #F9F9FC;
+            }
 
-        /* ==================== TOP BAR ==================== */
-        .admin-topbar {
-            height: 72px;
-            background: #FFF;
-            border-bottom: 1px solid #F0F1F3;
-            box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 24px;
-            position: relative;
-            z-index: 50;
-        }
+            .menu-item.active {
+                background: #5C59E8;
+                color: #FFF;
+            }
 
-        .admin-topbar .menu-icon {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-        }
+            .menu-item svg {
+                width: 24px;
+                height: 24px;
+                flex-shrink: 0;
+            }
 
-        .admin-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+            .menu-item.active svg path {
+                fill: #FFF;
+            }
 
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #E0E2E7;
-            position: relative;
-        }
+            /* ==================== TOP BAR ==================== */
+            .admin-topbar {
+                height: 72px;
+                background: #FFF;
+                border-bottom: 1px solid #F0F1F3;
+                box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 16px 24px;
+                position: relative;
+                z-index: 50;
+            }
 
-        .user-avatar::after {
-            content: '';
-            position: absolute;
-            right: -2px;
-            bottom: -2px;
-            width: 10px;
-            height: 10px;
-            background: #3DA172;
-            border: 2px solid #FFF;
-            border-radius: 50%;
-        }
+            .admin-topbar .menu-icon {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+            }
 
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+            .admin-user {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
 
-        .user-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: #1A1C21;
-        }
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                background: #E0E2E7;
+                position: relative;
+            }
 
-        .user-role {
-            font-size: 12px;
-            font-weight: 500;
-            color: #667085;
-        }
+            .user-avatar::after {
+                content: '';
+                position: absolute;
+                right: -2px;
+                bottom: -2px;
+                width: 10px;
+                height: 10px;
+                background: #3DA172;
+                border: 2px solid #FFF;
+                border-radius: 50%;
+            }
+
+            .user-info {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+
+            .user-name {
+                font-size: 14px;
+                font-weight: 500;
+                color: #1A1C21;
+            }
+
+            .user-role {
+                font-size: 12px;
+                font-weight: 500;
+                color: #667085;
+            }
 
             /* ==================== MAIN CONTENT ==================== */
             .admin-main {
@@ -971,16 +971,16 @@
                             });
                         });
                     });
-                    
+
                     fetch('AdminServlet')
-                    .then(response => response.text())
-                    .then(name => {
-                    document.getElementById('adminName').textContent = name;
-                    })
-                    .catch(err => {
-                    document.getElementById('adminName').textContent = "";
-                    console.error(err);
-                    });
+                            .then(response => response.text())
+                            .then(name => {
+                                document.getElementById('adminName').textContent = name;
+                            })
+                            .catch(err => {
+                                document.getElementById('adminName').textContent = "";
+                                console.error(err);
+                            });
                 </script>
 
                 <!-- Main Content -->
@@ -1029,8 +1029,9 @@
                                 </div>
                                 <div class="stat-body">
                                     <div class="stat-label">Total Customers</div>
-                                    <div class="stat-value"></div>
+                                    <div class="stat-value" id="totalCustomers">0</div>
                                 </div>
+
                             </div>
 
                             <div class="stat-card">
@@ -1077,13 +1078,32 @@
                                             <th>Status</th>
                                         </tr>
                                     </thead>
-                                    
+
                                 </table>
                             </div>
-                            <button class="view-all-btn" onclick="window.location.href='admin-appointments.html'">View List of Appointment</button>
+                            <button class="view-all-btn" onclick="window.location.href = 'admin-appointments.html'">View List of Appointment</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <script>
+            function loadTotalCustomers() {
+                fetch('totalCustomers')
+                        .then(response => response.text())
+                        .then(count => {
+                            document.getElementById('totalCustomers').textContent = count;
+                        })
+                        .catch(err => console.error("Error loading customers:", err));
+            }
+
+            // Load immediately
+            loadTotalCustomers();
+
+            // Auto refresh every 5 seconds
+            setInterval(loadTotalCustomers, 5000);
+        </script>
+
     </body>
