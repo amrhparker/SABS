@@ -1,7 +1,7 @@
 package controller;
 
 import model.Appointment;
-import db.DBConnection;
+import util.DBConnection;
 
 import java.io.IOException;
 import java.sql.*;
@@ -23,15 +23,15 @@ public class BookingAppointmentServlet extends HttpServlet {
             return;
         }
 
-        String customerId = (String) session.getAttribute("customerId");
+        Integer customerId = (Integer) session.getAttribute("customerId");
 
         /* ================= FORM DATA ================= */
-        String serviceId = request.getParameter("service"); // NOW service_id
+        Integer serviceId = Integer.parseInt(request.getParameter("service")); // NOW service_id
         String date = request.getParameter("date");
         String time = request.getParameter("time");
         
         if (serviceId == null || date == null || time == null
-                || serviceId.isEmpty() || date.isEmpty() || time.isEmpty()) {
+                || date.isEmpty() || time.isEmpty()) {
             response.sendRedirect("booking.jsp?error=true");
             return;
         }
@@ -79,9 +79,9 @@ public class BookingAppointmentServlet extends HttpServlet {
 
             ps.setString(1, appt.getAppointmentId());
             ps.setTimestamp(2, appt.getAppointmentDatetime());
-            ps.setString(3, appt.getServiceId());
+            ps.setInt(3, appt.getServiceId());
             ps.setString(4, appt.getStatus());
-            ps.setString(5, appt.getCustomerId());
+            ps.setInt(5, appt.getCustomerId());
 
             ps.executeUpdate();
 

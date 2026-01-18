@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.sql.*, db.DBConnection" %>
+<%@ page import="java.sql.*, util.DBConnection" %>
 <%@ page import="java.util.*" %>
 
 <%
@@ -22,13 +22,13 @@
     try {
         connCustomer = DBConnection.getConnection();
         psCustomer = connCustomer.prepareStatement(
-            "SELECT customer_name FROM customer WHERE customer_id = ?"
+            "SELECT name FROM customer WHERE customer_id = ?"
         );
         psCustomer.setInt(1, customerId);
         rsCustomer = psCustomer.executeQuery();
 
         if (rsCustomer.next()) {
-            customerName = rsCustomer.getString("customer_name");
+            customerName = rsCustomer.getString("name");
         }
     } catch (Exception e) {
         e.printStackTrace();
@@ -133,17 +133,16 @@
                                     try {
                                         c = DBConnection.getConnection();
                                         ps = c.prepareStatement(
-                                                "SELECT service_id, service_name FROM service ORDER BY service_id"
+                                                "SELECT service_id, service_name FROM services ORDER BY service_id"
                                         );
                                         r = ps.executeQuery();
 
                                         while (r.next()) {
-                                            String serviceId = r.getString("service_id");
+                                            int serviceId = r.getInt("service_id");
                                             String serviceName = r.getString("service_name");
                                 %>
-                                <option value="<%= serviceId%>" data-name="<%= serviceName%>">
-                                    <%= serviceName%>
-                                </option>
+                                <option value="<%= serviceId%>"><%= serviceName%></option>
+
 
                                 <%
                                     }
@@ -283,7 +282,7 @@
                             <div style="font-size: 18px; font-weight: 500; letter-spacing: 3.6px; color: #000; margin-bottom: 1.5rem;">YOUR APPOINTMENT HAS BEEN BOOKED!</div>
                             <div style="font-size: 18px; font-weight: 400; color: #000;">Please be on time, we will be waiting for you :)</div>
                             <div style="display: flex; gap: 1.5rem; justify-content: center; margin-top: 3rem;">
-                                <button onclick="location.href = 'index.jsp'" style="padding: 1rem 2.5rem; border: none; border-radius: 8px; background: #000; color: #FFF; font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; min-width: 189px;">H O M E</button>
+                                <button onclick="location.href = 'customer-dashboard.html'" style="padding: 1rem 2.5rem; border: none; border-radius: 8px; background: #000; color: #FFF; font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; min-width: 189px;">H O M E</button>
                             </div>
                         </div>
 
@@ -351,7 +350,5 @@
                 changeBookingStep(4);
             <% }%>
         </script>
-
-
     </body>
 </html>
