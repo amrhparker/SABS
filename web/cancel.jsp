@@ -7,7 +7,7 @@
         return;
     }
 
-    String customerId = (String) session.getAttribute("customerId");
+    Integer customerId = (Integer) session.getAttribute("customerId");
 %>
 
 <%
@@ -20,9 +20,9 @@
     try {
         connCustomer = DBConnection.getConnection();
         psCustomer = connCustomer.prepareStatement(
-            "SELECT customer_name FROM customer WHERE customer_id = ?"
+            "SELECT name FROM customer WHERE customer_id = ?"
         );
-        psCustomer.setString(1, customerId);
+        psCustomer.setInt(1, customerId);
         rsCustomer = psCustomer.executeQuery();
 
         if (rsCustomer.next()) {
@@ -54,11 +54,11 @@
             conn2 = DBConnection.getConnection();
             ps2 = conn2.prepareStatement(
                     "SELECT a.APPOINTMENT_DATETIME, s.SERVICE_NAME "
-                    + "FROM APPOINTMENT a JOIN SERVICE s ON a.SERVICE_ID = s.SERVICE_ID "
+                    + "FROM APPOINTMENT a JOIN SERVICES s ON a.SERVICE_ID = s.SERVICE_ID "
                     + "WHERE a.APPOINTMENT_ID = ? AND a.CUSTOMER_ID = ?"
             );
             ps2.setString(1, selectedAppointmentId);
-            ps2.setString(2, customerId);
+            ps2.setInt(2, customerId);
             rs2 = ps2.executeQuery();
 
             if (rs2.next()) {
@@ -181,12 +181,12 @@
                                                 String sql
                                                         = "SELECT a.APPOINTMENT_ID, a.APPOINTMENT_DATETIME, a.STATUS, s.SERVICE_NAME "
                                                         + "FROM APPOINTMENT a "
-                                                        + "JOIN SERVICE s ON a.SERVICE_ID = s.SERVICE_ID "
+                                                        + "JOIN SERVICES s ON a.SERVICE_ID = s.SERVICE_ID "
                                                         + "WHERE a.CUSTOMER_ID = ? "
                                                         + "ORDER BY a.APPOINTMENT_DATETIME DESC";
 
                                                 ps = conn.prepareStatement(sql);
-                                                ps.setString(1, customerId);
+                                                ps.setInt(1, customerId);
                                                 rs = ps.executeQuery();
 
                                                 while (rs.next()) {
