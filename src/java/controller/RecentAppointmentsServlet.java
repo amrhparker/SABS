@@ -31,8 +31,6 @@ public class RecentAppointmentsServlet extends HttpServlet {
         }
 
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
-        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
         
         for (String[] row : recent) {
             String appointmentId = row[0];
@@ -44,16 +42,7 @@ public class RecentAppointmentsServlet extends HttpServlet {
             // Format date and time
             String formattedDate = "";
             String formattedTime = "";
-            try {
-                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
-                Date date = inputFormat.parse(datetimeStr);
-                formattedDate = dateFormat.format(date);
-                formattedTime = timeFormat.format(date);
-            } catch (Exception e) {
-                // If parsing fails, use original string
-                formattedDate = datetimeStr;
-                formattedTime = "";
-            }
+            String formattedDateTime = datetimeStr;
             
             // Get status class for styling
             String statusClass = getStatusClass(status);
@@ -61,7 +50,7 @@ public class RecentAppointmentsServlet extends HttpServlet {
             sb.append("<tr>");
             sb.append("<td>").append(appointmentId).append("</td>");
             sb.append("<td>").append(customerId).append("</td>");
-            sb.append("<td>").append(formattedDate).append(" | ").append(formattedTime).append("</td>");
+            sb.append("<td>").append(formattedDateTime).append("</td>");
             sb.append("<td>").append(serviceName != null ? serviceName : "N/A").append("</td>");
             
             // Status badge
