@@ -4,7 +4,7 @@
 
 <%
     if (session == null || session.getAttribute("customerId") == null) {
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("login.html");
         return;
     }
 
