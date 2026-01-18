@@ -435,6 +435,43 @@
                 background: #d13f42;
             }
 
+            .action-btn {
+                padding: 6px 12px;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                font-family: 'Montserrat', sans-serif;
+                font-size: 12px;
+                font-weight: 700;
+                transition: all 0.2s;
+                white-space: nowrap;
+                min-width: 80px;
+            }
+
+            .action-btn.accept {
+                background: #624DE3;
+                color: #FFF;
+            }
+
+            .action-btn.accept:hover:not(:disabled) {
+                background: #5242d4;
+            }
+
+            .action-btn.complete {
+                background: #2DA831;
+                color: #FFF;
+            }
+
+            .action-btn.complete:hover:not(:disabled) {
+                background: #259628;
+            }
+
+            .action-btn:disabled {
+                background: #DEDEDE;
+                color: #838383;
+                cursor: not-allowed;
+            }
+
             .table-footer {
                 padding: 14px 24px;
                 border-top: 1px solid #F0F1F3;
@@ -1079,9 +1116,12 @@
                                             <th>Date | Time</th>
                                             <th>Service</th>
                                             <th>Status</th>
+                                            <th>Actions</th> <!-- Added actions column -->
                                         </tr>
                                     </thead>
-
+                                    <tbody id="appointmentsTableBody">
+                                        <!-- Appointments will be loaded here via JavaScript -->
+                                    </tbody>
                                 </table>
                             </div>
                             <button class="view-all-btn" onclick="window.location.href = 'admin-appointments.jsp'">View List of Appointment</button>
@@ -1169,20 +1209,87 @@
         <!--recent appointments-->
         <script>
             function loadRecentAppointments() {
-                fetch('recentAppointments')
-                        .then(response => response.text())
-                        .then(htmlRows => {
-                            const tbody = document.querySelector('#recentAppointmentsTable tbody');
-                            tbody.innerHTML = htmlRows;
+                fetch('RecentAppointmentsServlet')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to load appointments');
+                            }
+                            return response.text();
                         })
-                        .catch(err => console.error('Error loading recent appointments:', err));
+                        .then(html => {
+                            const tbody = document.getElementById('appointmentsTableBody');
+                            if (tbody) {
+                                tbody.innerHTML = html;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading appointments:', error);
+                            const tbody = document.getElementById('appointmentsTableBody');
+                            if (tbody) {
+                                tbody.innerHTML = '<tr><td colspan="6" style="color:red;text-align:center;">Error loading appointments</td></tr>';
+                            }
+                        });
             }
 
-            loadRecentAppointments();
-            setInterval(loadRecentAppointments, 10000);
+// Load appointments when page loads
+            document.addEventListener('DOMContentLoaded', function () {
+                loadRecentAppointments();
+
+                // Refresh every 10 seconds
+                setInterval(loadRecentAppointments, 10000);
+            });
+
+// Function to accept appointment
+            function acceptAppointment(appointmentId) {
+                if (confirm('Accept appointment #' + appointmentId + '?')) {
+                    fetch('UpdateAppointmentStatusServlet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'appointmentId=' + appointmentId + '&status=ONGOING'
+                    })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Appointment accepted successfully!');
+                                    loadRecentAppointments(); // Refresh the list
+                                    loadTotalAppointments(); // Refresh the count
+                                } else {
+                                    alert('Failed to accept appointment');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred');
+                            });
+                }
+            }
+
+// Function to complete appointment
+            function completeAppointment(appointmentId) {
+                if (confirm('Mark appointment #' + appointmentId + ' as completed?')) {
+                    fetch('UpdateAppointmentStatusServlet', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'appointmentId=' + appointmentId + '&status=COMPLETED'
+                    })
+                            .then(response => {
+                                if (response.ok) {
+                                    alert('Appointment marked as completed!');
+                                    loadRecentAppointments(); // Refresh the list
+                                    loadTotalAppointments(); // Refresh the count
+                                } else {
+                                    alert('Failed to complete appointment');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred');
+                            });
+                }
+            }
         </script>
-
-
-
-
     </body>
+</html>

@@ -27,12 +27,14 @@ public class AppointmentDao {
         return total;
     }
 
-    //get recent appointments
+    // Get recent appointments with service names
     public java.util.List<String[]> getRecentAppointments(int limit) {
         java.util.List<String[]> list = new java.util.ArrayList<>();
-        String sql = "SELECT appointment_id, customer_id, service_id, appointment_date, status "
-                + "FROM APP.APPOINTMENT "
-                + "ORDER BY appointment_date DESC "
+        String sql = "SELECT a.appointment_id, a.customer_id, "
+                + "a.appointment_datetime, a.status, s.service_name " // Changed to appointment_datetime
+                + "FROM APP.APPOINTMENT a "
+                + "LEFT JOIN APP.SERVICES s ON a.service_id = s.service_id "
+                + "ORDER BY a.appointment_datetime DESC " // Changed to appointment_datetime
                 + "FETCH FIRST ? ROWS ONLY";
 
         try (Connection conn = DBConnection.getConnection();
@@ -45,8 +47,10 @@ public class AppointmentDao {
                 String[] row = new String[5];
                 row[0] = String.valueOf(rs.getInt("appointment_id"));
                 row[1] = String.valueOf(rs.getInt("customer_id"));
-                row[2] = String.valueOf(rs.getInt("service_id"));
-                row[3] = String.valueOf(rs.getDate("appointment_date"));
+                // Get timestamp and format it
+                java.sql.Timestamp timestamp = rs.getTimestamp("appointment_datetime");
+                row[2] = timestamp != null ? timestamp.toString() : "";
+                row[3] = rs.getString("service_name");
                 row[4] = rs.getString("status");
                 list.add(row);
             }
@@ -57,5 +61,4 @@ public class AppointmentDao {
 
         return list;
     }
-
 }
