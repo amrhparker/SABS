@@ -867,7 +867,9 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            
+                            <tbody id="customerTableBody">
+                               <!-- DATA FROM DATABASE -->
+                            </tbody>
                         </table>
                     </div>
                     <div class="table-footer">
@@ -1017,100 +1019,192 @@
         </div>
     </div>
 
-    <script>
-        let currentCustomerId = null;
-        let currentCustomerData = {};
+    <!-- ================= JS ================= -->
+<script>
+/* ================= CONFIG ================= */
+const BASE_URL = "/SABS"; // your project name
 
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.admin-sidebar');
-            sidebar.classList.toggle('mobile-open');
-        }
-        
-        fetch('AdminServlet')
-        .then(response => response.text())
-        .then(name => {
-        document.getElementById('adminName').textContent = name;
+let currentServiceId = null;
+let pageIndex = 1;
+let totalPages = 1;
+let currentKeyword = "";
+
+fetch(`${BASE_URL}/adminCustomerServlet`)
+    .then(res => res.text())
+    .then(name => {
+        document.getElementById("customerName").textContent = name && name.trim() !== "" ? name : "Customer";
+    })
+    .catch(() => {
+        document.getElementById("customerName").textContent = "Customer";
+    });
+
+/* ================= OPEN / CLOSE MODALS ================= */
+function openModal(id) {
+    document.getElementById(id).classList.add("active");
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove("active");
+}
+
+/* ================= LOAD CUSTOMERS ================= */
+function loadServices(page = 1, keyword = "") {
+    pageIndex = page;
+    currentKeyword = keyword;
+
+    fetch(`${BASE_URL}/adminCustomerServlet?page=${page}&keyword=${encodeURIComponent(keyword)}`)
+        .then(res => res.text())
+        .then(html => {
+            const match = html.match(/<!--TOTAL_PAGES=(\d+)-->/);
+            if (match) totalPages = parseInt(match[1]);
+
+            document.getElementById("customerTableBody").innerHTML = html;
+            renderPagination();
         })
-        .catch(err => {
-        document.getElementById('adminName').textContent = "";
-        console.error(err);
+        .catch(err => console.error("Load customer error:", err));
+}
+
+/* ================= PAGINATION ================= */
+function renderPagination() {
+    const container = document.getElementById("paginationNumbers");
+    container.innerHTML = "";
+
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const el = document.createElement("div");
+        el.className = "pagination-number" + (i === pageIndex ? " active" : "");
+        el.innerText = i;
+        el.onclick = () => loadServices(i, currentKeyword);
+        container.appendChild(el);
+    }
+}
+
+function changePage(step) {
+    const next = pageIndex + step;
+    if (next < 1 || next > totalPages) return;
+    loadServices(next, currentKeyword);
+}
+
+/* ================= SEARCH ================= */
+function searchServices() {
+    const keyword = document.getElementById("searchInput").value.trim();
+    loadServices(1, keyword);
+}
+
+/* ================= VIEW SERVICE ================= */
+function openViewModal(id) {
+    fetch(`${BASE_URL}/adminCustomerServlet?id=${id}`)
+        .then(res => res.json())
+        .then(data => {
+            currentCustomer_ID = id;
+            viewName.innerText = data.name;
+            viewEmail.innerText = data.email;
+            viewPhone.innerText = data.phone;
+            viewPassword.innerText = data.password;
+            openModal("viewModal");
         });
+}
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
+/* ================= ADD SERVICE ================= */
+function openAddModal() {
+    openModal("addModal");
+}
 
-        // Customer Modal Functions
-        function openCustomerViewModal(id, name, email, phone, password) {
-            currentCustomerId = id;
-            currentCustomerData = { id, name, email, phone, password };
-            
-            document.getElementById('viewCustomerId').textContent = id;
-            document.getElementById('viewCustomerName').textContent = name;
-            document.getElementById('viewCustomerEmail').textContent = email;
-            document.getElementById('viewCustomerPhone').textContent = phone;
-            document.getElementById('viewCustomerPassword').textContent = password;
-            
-            document.getElementById('customerViewModal').classList.add('active');
-        }
+function submitAddService(e) {
+    e.preventDefault();
+    const data = new URLSearchParams(new FormData(e.target));
 
-        function openCustomerEditModal(id, name, email, phone, password) {
-            currentCustomerId = id;
-            currentCustomerData = { id, name, email, phone, password };
-            
-            document.getElementById('editCustomerName').value = name;
-            document.getElementById('editCustomerEmail').value = email;
-            document.getElementById('editCustomerPhone').value = phone;
-            document.getElementById('editCustomerPassword').value = password;
-            document.getElementById('editCustomerPasswordConfirm').value = password;
-            
-            document.getElementById('customerEditModal').classList.add('active');
-        }
+    fetch(`${BASE_URL}/adminCustomerServlet?action=add`, {
+        method: "POST",
+        body: data
+    }).then(() => {
+        closeModal("addModal");
+        e.target.reset();
+        loadServices(pageIndex, currentKeyword);
+        openModal("successAddModal");
+    });
+}
 
-        function openCustomerDeleteModal(id) {
-            currentCustomerId = id;
-            document.getElementById('customerDeleteModal').classList.add('active');
-        }
+/* ================= EDIT SERVICE ================= */
+function openEditModalDirect(id) {
+    currentServiceId = id;
 
-        function switchToEditFromView() {
-            closeModal('customerViewModal');
-            setTimeout(() => {
-                openCustomerEditModal(
-                    currentCustomerData.id,
-                    currentCustomerData.name,
-                    currentCustomerData.email,
-                    currentCustomerData.phone,
-                    currentCustomerData.password
-                );
-            }, 300);
-        }
-
-        function switchToDeleteFromView() {
-            closeModal('customerViewModal');
-            setTimeout(() => {
-                openCustomerDeleteModal(currentCustomerId);
-            }, 300);
-        }
-
-        function saveCustomerEdit() {
-            closeModal('customerEditModal');
-            setTimeout(() => {
-                document.getElementById('customerUpdateSuccessModal').classList.add('active');
-            }, 300);
-        }
-
-        function confirmCustomerDelete() {
-            closeModal('customerDeleteModal');
-            setTimeout(() => {
-                document.getElementById('customerDeleteSuccessModal').classList.add('active');
-            }, 300);
-        }
-
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
+    fetch(`${BASE_URL}/adminCustomerServlet?id=${id}`)
+        .then(res => res.json())
+        .then(data => {
+            editName.value = data.name;
+            editEmail.value = data.email;
+            editPhone.value = data.phone;
+            editPassword.value = data.password;
+            openModal("editModal");
         });
-    </script>
+}
+
+function openEditModalFromView() {
+    closeModal("viewModal");
+    openEditModalDirect(currentServiceId);
+}
+
+function saveEdit() {
+    const data = new URLSearchParams({
+        action: "edit",
+        id: currentCustomer_id,
+        name: editName.value,
+        email: editEmail.value,
+        phone: editPhone.value,
+        password: editPassword.value
+    });
+
+    fetch(`${BASE_URL}/adminCustomerServlet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: data.toString()
+    }).then(() => {
+        closeModal("editModal");
+        loadServices(pageIndex, currentKeyword);
+        openModal("successEditModal");
+    });
+}
+
+/* ================= DELETE SERVICE ================= */
+function deleteCustomer(id) {
+    currentCustomer_Id = id;
+    openModal("deleteModal");
+}
+
+function confirmDelete() {
+    const data = new URLSearchParams({
+        action: "delete",
+        id: currentServiceId
+    });
+
+    fetch(`${BASE_URL}/adminCustomerServlet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: data.toString()
+    }).then(() => {
+        closeModal("deleteModal");
+        loadServices(pageIndex, currentKeyword);
+        openModal("successDeleteModal");
+    });
+}
+
+function openDeleteModalFromView() {
+    closeModal("viewModal");
+    openModal("deleteModal");
+}
+
+/* ================= INIT ================= */
+window.onload = () => {
+    loadServices(1);
+
+    // Sidebar active highlight
+    const pageName = window.location.pathname.split("/").pop();
+    document.querySelectorAll(".sidebar-menu a").forEach(link => {
+        link.classList.toggle("active", link.getAttribute("href") === pageName);
+    });
+};
+</script>
   </body>
 </html>
