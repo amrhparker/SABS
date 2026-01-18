@@ -47,6 +47,11 @@ public class LoginServlet extends HttpServlet {
                     String staffName = rs.getString("name");
                     HttpSession session = request.getSession();
                     session.setAttribute("staffName", staffName);
+                } else if ("customer".equals(role)) {
+                    int customerId = rs.getInt("customer_id");
+                    HttpSession session = request.getSession();
+                    session.setAttribute("customerId", customerId);
+                    session.setAttribute("customerName", rs.getString("name"));
                 }
                 response.getWriter().write("success");
             } else {

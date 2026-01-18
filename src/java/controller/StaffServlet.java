@@ -257,15 +257,9 @@ public class StaffServlet extends HttpServlet {
         JsonObjectBuilder builder = Json.createObjectBuilder()
                 .add("staffId", staff.getStaffId() != null ? staff.getStaffId() : "")
                 .add("name", staff.getName() != null ? staff.getName() : "")
-                .add("email", staff.getEmail() != null ? staff.getEmail() : "");
-
-        // Add optional fields if they exist
-        if (staff.getNric() != null) {
-            builder.add("nric", staff.getNric());
-        }
-        if (staff.getPhone() != null) {
-            builder.add("phone", staff.getPhone());
-        }
+                .add("email", staff.getEmail() != null ? staff.getEmail() : "")
+                .add("nric", staff.getNric() != null ? staff.getNric() : "")
+                .add("phone", staff.getPhone() != null ? staff.getPhone() : "");
         // Note: Do not include password in JSON response for security
 
         return builder;
