@@ -889,6 +889,7 @@
                     width: 100%;
                 }
             }
+
         </style>
     </head>
 
@@ -1014,7 +1015,8 @@
                                 </div>
                                 <div class="stat-body">
                                     <div class="stat-label">Total Appointments</div>
-                                    <div class="stat-value"></div>
+                                    <div class="stat-value" id="totalAppointments">0</div>
+
                                 </div>
                             </div>
 
@@ -1082,7 +1084,7 @@
 
                                 </table>
                             </div>
-                            <button class="view-all-btn" onclick="window.location.href = 'admin-appointments.html'">View List of Appointment</button>
+                            <button class="view-all-btn" onclick="window.location.href = 'admin-appointments.jsp'">View List of Appointment</button>
                         </div>
                     </div>
                 </div>
@@ -1106,6 +1108,7 @@
             // Auto refresh every 5 seconds
             setInterval(loadTotalCustomers, 5000);
 
+//            totalstaffs
             function loadTotalStaffs() {
                 fetch('StaffServlet?action=totalStaffs')
                         .then(response => {
@@ -1147,6 +1150,39 @@
             // auto refresh every 5 seconds
             setInterval(loadTotalServices, 5000);
         </script>
+
+        <!--totalappointment-->
+        <script>
+            function loadTotalAppointments() {
+                fetch('totalAppointments')
+                        .then(response => response.text())
+                        .then(count => {
+                            document.getElementById('totalAppointments').textContent = count;
+                        })
+                        .catch(err => console.error("Error loading appointments:", err));
+            }
+
+            loadTotalAppointments();
+            setInterval(loadTotalAppointments, 5000);
+        </script>
+
+        <!--recent appointments-->
+        <script>
+            function loadRecentAppointments() {
+                fetch('recentAppointments')
+                        .then(response => response.text())
+                        .then(htmlRows => {
+                            const tbody = document.querySelector('#recentAppointmentsTable tbody');
+                            tbody.innerHTML = htmlRows;
+                        })
+                        .catch(err => console.error('Error loading recent appointments:', err));
+            }
+
+            loadRecentAppointments();
+            setInterval(loadRecentAppointments, 10000);
+        </script>
+
+
 
 
     </body>
