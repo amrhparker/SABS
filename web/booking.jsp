@@ -270,7 +270,7 @@
 
 
                             <div style="display: flex; justify-content: space-between; margin-top: 3rem;">
-                                <button onclick="changeBookingStep(2)" style="padding: 1rem 2.5rem; border: none; border-radius: 8px; background: #E34D50; color: #FFF; font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; min-width: 189px;">Back</button>
+                                <button type ="button" onclick="changeBookingStep(2)" style="padding: 1rem 2.5rem; border: none; border-radius: 8px; background: #E34D50; color: #FFF; font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; min-width: 189px;">Back</button>
                                 <button type="submit" style="padding: 1rem 2.5rem; border: none; border-radius: 8px; background: #2DA831; color: #FFF; font-family: 'Jost', sans-serif; font-size: 18px; font-weight: 700; cursor: pointer; min-width: 189px;">Confirm</button>
                             </div>
                             </form>
