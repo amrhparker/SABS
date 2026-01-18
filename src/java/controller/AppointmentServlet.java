@@ -33,11 +33,11 @@ public class AppointmentServlet extends HttpServlet {
                     = "SELECT a.appointment_id, a.customer_id, a.appointment_datetime, "
                     + "a.status, s.service_name "
                     + "FROM appointment a "
-                    + "JOIN service s ON a.service_id = s.service_id ";
+                    + "JOIN services s ON a.service_id = s.service_id ";
 
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                 sql += "WHERE LOWER(a.appointment_id) LIKE ? "
-                        + "OR LOWER(a.customer_id) LIKE ? ";
+                        + "OR a.customer_id = ? ";
             }
 
             sql += "ORDER BY a.appointment_datetime DESC";
@@ -45,10 +45,16 @@ public class AppointmentServlet extends HttpServlet {
             PreparedStatement ps = conn.prepareStatement(sql);
 
             if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-                String pattern = "%" + searchQuery.toLowerCase() + "%";
-                ps.setString(1, pattern);
-                ps.setString(2, pattern);
+                ps.setString(1, "%" + searchQuery.toLowerCase() + "%");
+
+                // try parse customer ID safely
+                try {
+                    ps.setInt(2, Integer.parseInt(searchQuery));
+                } catch (NumberFormatException e) {
+                    ps.setInt(2, -1); // impossible ID, avoids SQL error
+                }
             }
+
 
             ResultSet rs = ps.executeQuery();
 

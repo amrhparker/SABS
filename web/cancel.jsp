@@ -110,8 +110,8 @@
                     <div class="nav-links">
                         <a class="nav-link inactive" onclick="location.href='booking.jsp'">Book Appointment</a>
                         <a class="nav-link" style="color: #000;" onclick="location.href='cancel.jsp'">List of Appointments</a>
-                        <a class="nav-link inactive" onclick="location.href='services.jsp'">Service</a>
-                        <a class="nav-link inactive" onclick="location.href='story.jsp'">Our story</a>
+                        <a class="nav-link inactive" onclick="location.href='customer-services.html'">Service</a>
+                        <a class="nav-link inactive" onclick="location.href='tory.html'">Our story</a>
                     </div>
 
                     <div class="nav-buttons">
