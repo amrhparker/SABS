@@ -16,25 +16,19 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #FFF;
             color: #333843;
             overflow-x: hidden;
+            background: #f5f5f5;
         }
 
-        /* ==================== ADMIN LAYOUT ==================== */
-        .admin-layout {
-            display: flex;
-            min-height: 100vh;
-            position: relative;
-        }
-
+        /* ==================== BACKGROUND ==================== */
         .admin-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: -1;
             pointer-events: none;
         }
 
@@ -42,10 +36,9 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-           
         }
 
-        .admin-bg-overlay{
+        .admin-bg-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -55,20 +48,25 @@
             background: rgba(0, 0, 0, 0.3);
         }
 
-       
+        /* ==================== ADMIN LAYOUT ==================== */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
         /* ==================== SIDEBAR ==================== */
         .sidebar {
             width: 264px;
             background: #FFF;
             border-right: 1px solid #F0F1F3;
             box-shadow: 4px 0 30px 0 rgba(131, 98, 234, 0.05);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-logo {
@@ -77,11 +75,13 @@
             justify-content: center;
             padding: 8px 20px;
             height: 80px;
+            border-bottom: 1px solid #F0F1F3;
         }
 
         .sidebar-logo img {
             width: 100px;
             height: 79px;
+            object-fit: contain;
         }
 
         .sidebar-menu {
@@ -90,13 +90,14 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            overflow-y: auto;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 12px;
+            padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -104,6 +105,7 @@
             font-size: 14px;
             font-weight: 600;
             line-height: 20px;
+            text-decoration: none;
         }
 
         .menu-item:hover {
@@ -121,42 +123,55 @@
             flex-shrink: 0;
             object-fit: contain;
         }
-        
-        .sidebar-menu a {
-            text-decoration: none;
-            color: inherit;
-        }
 
-        
         /* ==================== MAIN CONTENT ==================== */
         .main-content {
             flex: 1;
             margin-left: 264px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            background: transparent;
             position: relative;
-            z-index: 1;
         }
 
         /* ==================== TOP BAR ==================== */
-        .admin-topbar {
-            height: 72px;
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 16px 32px;
             background: #FFF;
             border-bottom: 1px solid #F0F1F3;
             box-shadow: 0 4px 30px 0 rgba(131, 98, 234, 0.05);
-            display: flex;
-            align-items: center;
+            height: 80px;
             justify-content: space-between;
-            padding: 16px 24px;
-            position: relative;
-            z-index: 50;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .admin-topbar .menu-icon {
-            width: 24px;
-            height: 24px;
+        .top-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-toggle {
+            display: none;
             cursor: pointer;
+            padding: 8px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333843;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 24px;
         }
 
         .admin-user {
@@ -166,11 +181,16 @@
         }
 
         .user-avatar {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: #E0E2E7;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #5C59E8;
         }
 
         .user-avatar::after {
@@ -203,62 +223,71 @@
             color: #667085;
         }
 
-        /* ==================== MAIN CONTENT ==================== */
-        .admin-main {
+        /* ==================== CONTENT AREA ==================== */
+        .content-area {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            position: relative;
-            z-index: 10;
-        }
-
-        .admin-content {
-            flex: 1;
-            padding: 24px;
+            padding: 32px;
             overflow-y: auto;
+            position: relative;
         }
 
-        /* ==================== TABLE STYLES ==================== */
-        .table-container {
+        /* ==================== PAGE HEADER ==================== */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333843;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: #667085;
+        }
+
+        /* ==================== CARD ==================== */
+        .card {
             background: #FFF;
+            border-radius: 12px;
             border: 1px solid #E0E2E7;
-            border-radius: 8px;
-            box-shadow: 0 1.5px 2px 0 rgba(16, 24, 40, 0.10);
+            box-shadow: 0 1px 3px 0 rgba(16, 24, 40, 0.10);
             overflow: hidden;
         }
 
-        .table-header {
-            padding: 18px 24px;
+        .card-header {
+            padding: 24px;
             border-bottom: 1px solid #F0F1F3;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             flex-wrap: wrap;
             gap: 16px;
         }
 
-        .table-title {
+        .card-title {
             font-size: 18px;
-            font-weight: 500;
+            font-weight: 600;
             color: #333843;
         }
 
         .search-box {
             display: flex;
             align-items: center;
-            gap: 4px;
-            padding: 8px 12px;
-            border: 1px solid #5C59E8;
+            gap: 8px;
+            padding: 10px 16px;
+            border: 1px solid #D0D5DD;
             border-radius: 8px;
-            background: #F9F9FC;
-            min-width: 200px;
+            background: #FFF;
+            min-width: 300px;
+            transition: all 0.3s;
         }
 
-        .search-box svg {
-            width: 24px;
-            height: 24px;
-            flex-shrink: 0;
+        .search-box:focus-within {
+            border-color: #5C59E8;
+            box-shadow: 0 0 0 3px rgba(92, 89, 232, 0.1);
         }
 
         .search-box input {
@@ -275,137 +304,100 @@
             color: #667085;
         }
 
-        .data-table {
-            width: 100%;
+        /* ==================== TABLE ==================== */
+        .table-responsive {
             overflow-x: auto;
         }
 
-        table {
+        .data-table {
             width: 100%;
+            min-width: 800px;
             border-collapse: collapse;
         }
 
-        thead {
+        .data-table thead {
             background: #F9F9FC;
         }
 
-        th {
-            padding: 18px 22px;
+        .data-table th {
+            padding: 16px 24px;
             text-align: left;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             color: #333843;
             border-bottom: 1px solid #F0F1F3;
             white-space: nowrap;
         }
 
-        td {
-            padding: 18px 22px;
+        .data-table td {
+            padding: 16px 24px;
             font-size: 14px;
-            font-weight: 500;
             color: #667085;
             border-bottom: 1px solid #F0F1F3;
         }
 
-        tbody tr {
-            background: #FFF;
+        .data-table tbody tr {
+            transition: background-color 0.2s;
         }
 
-        tbody tr:hover {
+        .data-table tbody tr:hover {
             background: #F9F9FC;
         }
 
         .action-buttons {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             border: none;
             cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
             transition: all 0.2s;
             white-space: nowrap;
         }
 
-        .btn-primary {
+        .btn-view {
             background: #624DE3;
-            color: #FFF;
         }
 
-        .btn-primary:hover {
-            background: #5242d4;
+        .btn-view:hover {
+            background:  #5243c7;
+        }
+
+        .btn-edit {
+            background: #624DE3;
+        }
+
+        .btn-edit:hover {
+            background: #5243c7;
         }
 
         .btn-delete {
             background: #E34D57;
-            color: #FFF;
         }
 
         .btn-delete:hover {
-            background: #d13f42;
+            background: #d43f49;
         }
 
-        .table-footer {
-            padding: 14px 24px;
-            border-top: 1px solid #F0F1F3;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .pagination-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: #DEDEFA;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .pagination-btn:hover {
-            background: #CFCCFF;
-        }
-
-        .pagination-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* ==================== LOADING ==================== */
+        .loading {
+            padding: 40px;
+            text-align: center;
+            color: #667085;
             font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .pagination-number.active {
-            background: #5C59E8;
-            color: #FFF;
-        }
-
-        .pagination-number:not(.active) {
-            background: #DEDEFA;
-            color: #5C59E8;
-        }
-
-        .pagination-number:not(.active):hover {
-            background: #CFCCFF;
+        .error {
+            padding: 40px;
+            text-align: center;
+            color: #F04438;
+            font-size: 14px;
         }
 
         /* ==================== MODALS ==================== */
@@ -419,7 +411,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
+            z-index: 2000;
             padding: 20px;
         }
 
@@ -431,8 +423,8 @@
             background: #FFF;
             border-radius: 16px;
             box-shadow: 0 4px 4px 0 rgba(44, 0, 27, 0.25);
-            padding: 24px;
-            max-width: 900px;
+            padding: 0;
+            max-width: 600px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -440,234 +432,108 @@
         }
 
         .modal.modal-sm {
-            max-width: 556px;
+            max-width: 480px;
+        }
+
+        .modal.modal-lg {
+            max-width: 800px;
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .modal-success {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+        /* Modal Header */
+        .modal-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #F0F1F3;
+            background: #FFF;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #101828;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            color: #667085;
+            margin-top: 4px;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 32px;
+        }
+
+        /* Customer Details Modal */
+        .customer-details-grid {
+            display: grid;
+            grid-template-columns: 1fr;
             gap: 24px;
         }
 
-        .modal-icon-circle {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background: #E8DEF8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-icon-circle svg {
-            width: 36px;
-            height: 36px;
-        }
-
-        .modal-message {
-            font-size: 16px;
-            font-weight: 400;
-            color: #344054;
-            line-height: 1.5;
-        }
-
-        .modal-btn {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #624DE3;
-            background: #624DE3;
-            color: #FFF;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-            transition: all 0.2s;
-        }
-
-        .modal-btn:hover {
-            background: #5242d4;
-            border-color: #5242d4;
-        }
-
-        .modal-confirm {
+        .detail-item {
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 8px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #EAECF0;
         }
 
-        .modal-confirm-header {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
         }
 
-        .modal-icon-green {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #DCFAE6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .detail-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #667085;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .modal-icon-green svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .modal-confirm-title {
-            font-size: 24px;
+        .detail-value {
+            font-size: 16px;
             font-weight: 500;
             color: #101828;
-            line-height: 1.33;
         }
 
-        .modal-actions {
+        .password-display {
             display: flex;
-            justify-content: flex-end;
-            gap: 16px;
+            align-items: center;
+            gap: 8px;
         }
 
-        .modal-btn-cancel {
-            padding: 8px 12px;
-            border-radius: 4px;
-            background: #E34D50;
-            color: #FFF;
+        .password-dots {
+            font-size: 20px;
+            letter-spacing: 2px;
+            color: #101828;
+        }
+
+        .show-password-btn {
+            background: none;
             border: none;
-            font-family: 'Inter', sans-serif;
+            color: #624DE3;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-btn-cancel:hover {
-            background: #d13f42;
-        }
-
-        .modal-btn-confirm {
-            padding: 8px 12px;
+            padding: 4px 8px;
             border-radius: 4px;
-            background: #2DA831;
-            color: #FFF;
-            border: 1px solid #2DA831;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-            transition: all 0.2s;
+            transition: background-color 0.2s;
         }
 
-        .modal-btn-confirm:hover {
-            background: #259628;
-            border-color: #259628;
+        .show-password-btn:hover {
+            background: #F9F9FC;
         }
 
-        /* ==================== CUSTOMER DETAILS MODAL ==================== */
-        .customer-details {
-            display: flex;
-            flex-direction: column;
-            gap: 32px;
-        }
-
-        .customer-details-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333843;
-        }
-
-        .customer-details-body {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .customer-detail-row {
-            display: flex;
-            align-items: flex-start;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #979797;
-        }
-
-        .customer-detail-label {
-            flex: 1;
-            font-size: 16px;
-            font-weight: 500;
-            color: #818181;
-        }
-
-        .customer-detail-value {
-            flex: 1;
-            font-size: 16px;
-            font-weight: 500;
-            color: #343434;
-        }
-
-        .customer-details-actions {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-        }
-
-        .customer-action-btn {
-            padding: 14px 24px;
-            border-radius: 8px;
-            border: none;
-            font-family: 'Jost', sans-serif;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            min-width: 189px;
-        }
-
-        .customer-action-btn.btn-back {
-            background: #000;
-            color: #FFF;
-        }
-
-        .customer-action-btn.btn-edit {
-            background: #624DE3;
-            color: #FFF;
-        }
-
-        .customer-action-btn.btn-delete-main {
-            background: #E34D50;
-            color: #FFF;
-        }
-
-        /* ==================== CUSTOMER EDIT MODAL ==================== */
-        .customer-edit {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .customer-edit-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: #333843;
-        }
-
-        .customer-edit-form {
+        /* Edit Form Styles */
+        .edit-form {
             display: flex;
             flex-direction: column;
             gap: 24px;
@@ -676,87 +542,243 @@
         .form-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
 
         .form-row {
-            display: flex;
-            gap: 24px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
 
         .form-label {
-            font-size: 16px;
-            font-weight: 400;
-            color: #000;
-            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: #344054;
+            display: block;
+        }
+
+        .form-label.required::after {
+            content: "*";
+            color: #F04438;
+            margin-left: 4px;
         }
 
         .form-input {
-            padding: 16px;
-            border: 1px solid rgba(0, 0, 0, 0.4);
-            border-radius: 9px;
+            padding: 12px 16px;
+            border: 1px solid #D0D5DD;
+            border-radius: 8px;
             font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 300;
-            color: #000;
+            font-family: 'Inter', sans-serif;
+            color: #101828;
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
+            width: 100%;
         }
 
         .form-input:focus {
             border-color: #624DE3;
+            box-shadow: 0 0 0 3px rgba(92, 89, 232, 0.1);
         }
 
-        .customer-edit-actions {
+        .form-input::placeholder {
+            color: #98A2B3;
+        }
+
+        .password-input-group {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #667085;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            padding: 24px 32px;
+            border-top: 1px solid #F0F1F3;
             display: flex;
-            gap: 16px;
-            justify-content: center;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #FFF;
+            border-radius: 0 0 16px 16px;
         }
 
-        .customer-action-btn.btn-cancel {
-            background: #E34D50;
-            color: #FFF;
+        /* Button Styles */
+        .btn-modal {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            min-width: 120px;
         }
 
-        .customer-action-btn.btn-save {
+        .btn-modal-secondary {
+            background: #FFF;
+            border-color: #D0D5DD;
+            color: #344054;
+        }
+
+        .btn-modal-secondary:hover {
+            background: #F9F9FC;
+            border-color: #D0D5DD;
+        }
+
+        .btn-modal-primary {
             background: #624DE3;
+            border-color: #624DE3;
             color: #FFF;
         }
 
-        /* ==================== RESPONSIVE ==================== */
+        .btn-modal-primary:hover {
+            background: #5242d4;
+            border-color: #5242d4;
+        }
+
+        .btn-modal-danger {
+            background: #F04438;
+            border-color: #F04438;
+            color: #FFF;
+        }
+
+        .btn-modal-danger:hover {
+            background: #D92D20;
+            border-color: #D92D20;
+        }
+
+        .btn-modal-success {
+            background: #12B76A;
+            border-color: #12B76A;
+            color: #FFF;
+        }
+
+        .btn-modal-success:hover {
+            background: #079455;
+            border-color: #079455;
+        }
+
+        /* Delete Confirmation Modal */
+        .delete-confirmation {
+            text-align: center;
+            padding: 40px 32px;
+        }
+
+        .delete-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #FEF3F2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .delete-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #F04438;
+        }
+
+        .delete-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #101828;
+            margin-bottom: 8px;
+        }
+
+        .delete-message {
+            font-size: 14px;
+            color: #667085;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* Success Modal */
+        .success-modal {
+            text-align: center;
+            padding: 40px 32px;
+        }
+
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: #ECFDF3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .success-icon svg {
+            width: 32px;
+            height: 32px;
+            color: #12B76A;
+        }
+
+        .success-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #101828;
+            margin-bottom: 8px;
+        }
+
+        .success-message {
+            font-size: 14px;
+            color: #667085;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .top-bar {
+                padding: 16px 20px;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+        }
+
         @media (max-width: 768px) {
-            .admin-sidebar {
-                position: fixed;
-                left: -264px;
-                top: 0;
-                bottom: 0;
-                transition: left 0.3s;
-                z-index: 200;
-            }
-
-            .admin-sidebar.mobile-open {
-                left: 0;
-            }
-
-            .table-header {
+            .card-header {
                 flex-direction: column;
                 align-items: stretch;
             }
 
             .search-box {
-                width: 100%;
-            }
-
-            .data-table {
-                font-size: 12px;
-            }
-
-            th, td {
-                padding: 12px 8px;
+                min-width: 100%;
             }
 
             .action-buttons {
@@ -765,446 +787,733 @@
 
             .btn {
                 width: 100%;
+                text-align: center;
             }
 
             .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer {
                 flex-direction: column;
             }
 
-            .customer-details-actions,
-            .customer-edit-actions {
-                flex-direction: column;
-            }
-
-            .customer-action-btn {
+            .btn-modal {
                 width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div class="admin-layout">
-        <!-- Background -->
-        <div class="admin-bg">
-            <img src="https://api.builder.io/api/v1/image/assets/TEMP/1952c35b9d9f3235ef7d57200dcbbf59971acb5d?width=2880" alt="" class="admin-bg-image">
-            <div class="admin-bg-blur"></div>
-        </div>
+    <!-- Background -->
+    <div class="admin-bg">
+        <img src="https://api.builder.io/api/v1/image/assets/TEMP/1952c35b9d9f3235ef7d57200dcbbf59971acb5d?width=2880" alt="Background" class="admin-bg-image">
+        <div class="admin-bg-overlay"></div>
+    </div>
 
+    <div class="admin-container">
         <!-- Sidebar -->
-        <!-- ================= SIDEBAR ================= -->
-<!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-logo">
-            <img src="https://tinyurl.com/2k72rnvp" alt="SALONIX Logo">
-        </div>
-        
-        <nav class="sidebar-menu">
-            <a href="admin-dashboard.html" class="menu-item">
-                <img src="images/dashboard-sidebar.png">
-                Dashboard
-            </a>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="https://tinyurl.com/2k72rnvp" alt="SALONIX Logo">
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="admin-dashboard.html" class="menu-item">
+                    <img src="images/dashboard-sidebar.png" alt="Dashboard">
+                    Dashboard
+                </a>
 
-            <a href="admin-appointments.jsp" class="menu-item">
-                <img src="images/appointment-sidebar.png">
-                Appointments
-            </a>
+                <a href="admin-appointments.jsp" class="menu-item">
+                    <img src="images/appointment-sidebar.png" alt="Appointments">
+                    Appointments
+                </a>
 
-            <a href="admin-customers.html" class="menu-item active">
-                <img src="images/customer-sidebar.png">
-                Customers
-            </a>
+                <a href="admin-customers.html" class="menu-item active">
+                    <img src="images/customer-sidebar.png" alt="Customers">
+                    Customers
+                </a>
 
-            <a href="admin-services.html" class="menu-item">
-                <img src="images/service-sidebar.png">
-                Services
-            </a>
+                <a href="admin-services.html" class="menu-item">
+                    <img src="images/service-sidebar.png" alt="Services">
+                    Services
+                </a>
 
-            <a href="admin-staffs.html" class="menu-item">
-                <img src="images/staff-sidebar.png">
-                Staffs
-            </a>
-        </nav>
-    </aside>
+                <a href="admin-staffs.html" class="menu-item">
+                    <img src="images/staff-sidebar.png" alt="Staffs">
+                    Staffs
+                </a>
+            </nav>
+        </aside>
 
         <!-- Main Content -->
-        <div class="admin-main">
+        <div class="main-content">
             <!-- Top Bar -->
-            <div class="admin-topbar">
-                <svg class="menu-icon" viewBox="0 0 24 24" fill="none" onclick="toggleSidebar()">
-                    <path d="M3 7C3 6.44772 3.44772 6 4 6H20C20.5523 6 21 6.44772 21 7C21 7.55228 20.5523 8 20 8H4C3.44772 8 3 7.55228 3 7Z" fill="#667085"/>
-                    <path d="M3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12Z" fill="#667085"/>
-                    <path d="M4 16C3.44772 16 3 16.4477 3 17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17C21 16.4477 20.5523 16 20 16H4Z" fill="#667085"/>
-                </svg>
-                <div class="admin-user">
-                    <div class="user-avatar"></div>
-                    <div class="user-info">
-                        <div class="user-name" id="adminName"></div>
-                        <div class="user-role">Admin</div>
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <div class="menu-toggle" onclick="toggleSidebar()">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 7C3 6.44772 3.44772 6 4 6H20C20.5523 6 21 6.44772 21 7C21 7.55228 20.5523 8 20 8H4C3.44772 8 3 7.55228 3 7Z" fill="#667085"/>
+                            <path d="M3 12C3 11.4477 3.44772 11 4 11H20C20.5523 11 21 11.4477 21 12C21 12.5523 20.5523 13 20 13H4C3.44772 13 3 12.5523 3 12Z" fill="#667085"/>
+                            <path d="M4 16C3.44772 16 3 16.4477 3 17C3 17.5523 3.44772 18 4 18H20C20.5523 18 21 17.5523 21 17C21 16.4477 20.5523 16 20 16H4Z" fill="#667085"/>
+                        </svg>
+                    </div>
+                    <div class="page-title">Customers</div>
+                </div>
+                
+                <div class="top-bar-right">
+                    <div class="admin-user">
+                        <div class="user-avatar">
+                            <span>A</span>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name" id="adminName">Masdiana Mahasim</div>
+                            <div class="user-role">Administrator</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Content -->
-            <div class="admin-content">
-                <!-- Customers Table -->
-                <div class="table-container">
-                    <div class="table-header">
-                        <div class="table-title">List of Customers</div>
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="page-header">
+                    <h1>List of Customers</h1>
+                    <p>Manage and view all customer information</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Customer Records</div>
                         <div class="search-box">
-                            <svg viewBox="0 0 24 24" fill="none">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7847 16.1991C11.6462 18.6416 7.10654 18.4205 4.22181 15.5358C1.09761 12.4116 1.09761 7.34625 4.22181 4.22205C7.346 1.09786 12.4113 1.09786 15.5355 4.22205C18.4202 7.10677 18.6414 11.6464 16.1989 14.7849L20.4853 19.0713C20.8758 19.4618 20.8758 20.095 20.4853 20.4855C20.0948 20.876 19.4616 20.876 19.0711 20.4855L14.7847 16.1991ZM5.63602 14.1215C7.97917 16.4647 11.7782 16.4647 14.1213 14.1215C16.4644 11.7784 16.4644 7.97941 14.1213 5.63627C11.7782 3.29312 7.97917 3.29312 5.63602 5.63627C3.29288 7.97941 3.29288 11.7784 5.63602 14.1215Z" fill="#667085"/>
                             </svg>
-                            <input type="text" placeholder="Search customers...">
+                            <input type="text" placeholder="Search customers..." id="searchInput">
                         </div>
                     </div>
-                    <div class="data-table">
-                        <table>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
                             <thead>
                                 <tr>
                                     <th>Customer ID</th>
                                     <th>Name</th>
                                     <th>Email Address</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="customerTableBody">
-                               <!-- DATA FROM DATABASE -->
+                                <!-- Data will be loaded from database -->
+                                <tr>
+                                    <td colspan="4" class="loading">Loading customers...</td>
+                                </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="table-footer">
-                        <div class="pagination">
-                            <button class="pagination-btn">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.6726 4.41058C12.998 4.73602 12.998 5.26366 12.6726 5.58909L8.26183 9.99984L12.6726 14.4106C12.998 14.736 12.998 15.2637 12.6726 15.5891C12.3471 15.9145 11.8195 15.9145 11.4941 15.5891L6.19943 10.2945C6.03671 10.1317 6.03671 9.86793 6.19943 9.70521L11.4941 4.41058C11.8195 4.08514 12.3471 4.08514 12.6726 4.41058Z" fill="#5C59E8"/>
-                                </svg>
-                            </button>
-                            <div class="pagination-number active">1</div>
-                            <div class="pagination-number">2</div>
-                            <div class="pagination-number">3</div>
-                            <button class="pagination-btn">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.32733 4.41058C7.00189 4.73602 7.00189 5.26366 7.32733 5.58909L11.7381 9.99984L7.32733 14.4106C7.00189 14.736 7.00189 15.2637 7.32733 15.5891C7.65277 15.9145 8.1804 15.9145 8.50584 15.5891L13.8005 10.2945C13.9632 10.1317 13.9632 9.86793 13.8005 9.70521L8.50584 4.41058C8.1804 4.08514 7.65277 4.08514 7.32733 4.41058Z" fill="#5C59E8"/>
-                                </svg>
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- MODALS -->
+    
     <!-- Customer View Modal -->
     <div id="customerViewModal" class="modal-overlay" onclick="closeModal('customerViewModal')">
         <div class="modal" onclick="event.stopPropagation()">
-            <div class="customer-details">
-                <div class="customer-details-title">Customer Details</div>
-                <div class="customer-details-body">
-                    <div class="customer-detail-row">
-                        <div class="customer-detail-label">Customer ID</div>
-                        <div class="customer-detail-value" id="viewCustomerId">CUS006</div>
+            <div class="modal-header">
+                <h2 class="modal-title">Customer Details</h2>
+                <div class="modal-subtitle">View complete customer information</div>
+            </div>
+            <div class="modal-body">
+                <div class="customer-details-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Customer ID</div>
+                        <div class="detail-value" id="viewCustomerId">CUS001</div>
                     </div>
-                    <div class="customer-detail-row">
-                        <div class="customer-detail-label">Name</div>
-                        <div class="customer-detail-value" id="viewCustomerName">Masdiana Mahasim</div>
+                    <div class="detail-item">
+                        <div class="detail-label">Full Name</div>
+                        <div class="detail-value" id="viewCustomerName">Loading...</div>
                     </div>
-                    <div class="customer-detail-row">
-                        <div class="customer-detail-label">Email</div>
-                        <div class="customer-detail-value" id="viewCustomerEmail">masdiana@gmail.com</div>
+                    <div class="detail-item">
+                        <div class="detail-label">Email Address</div>
+                        <div class="detail-value" id="viewCustomerEmail">Loading...</div>
                     </div>
-                    <div class="customer-detail-row">
-                        <div class="customer-detail-label">Phone Number</div>
-                        <div class="customer-detail-value" id="viewCustomerPhone">+60 18-6761 514</div>
+                    <div class="detail-item">
+                        <div class="detail-label">Phone Number</div>
+                        <div class="detail-value" id="viewCustomerPhone">Loading...</div>
                     </div>
-                    <div class="customer-detail-row">
-                        <div class="customer-detail-label">Password</div>
-                        <div class="customer-detail-value" id="viewCustomerPassword">Customer@2025</div>
+                    <div class="detail-item">
+                        <div class="detail-label">Password</div>
+                        <div class="detail-value">
+                            <div class="password-display">
+                                <span class="password-dots" id="viewPasswordDots">••••••••</span>
+                                <button class="show-password-btn" onclick="toggleViewPassword()">Show</button>
+                            </div>
+                            <input type="text" id="viewPasswordText" class="form-input" style="display: none;" readonly value="">
+                        </div>
                     </div>
                 </div>
-                <div class="customer-details-actions">
-                    <button class="customer-action-btn btn-back" onclick="closeModal('customerViewModal')">Back</button>
-                    <button class="customer-action-btn btn-edit" onclick="switchToEditFromView()">Edit</button>
-                    <button class="customer-action-btn btn-delete-main" onclick="switchToDeleteFromView()">Delete</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-secondary" onclick="closeModal('customerViewModal')">Back</button>
+                <button class="btn-modal btn-modal-primary" onclick="switchToEditFromView()">Edit</button>
+                <button class="btn-modal btn-modal-danger" onclick="switchToDeleteFromView()">Delete</button>
             </div>
         </div>
     </div>
 
     <!-- Customer Edit Modal -->
     <div id="customerEditModal" class="modal-overlay" onclick="closeModal('customerEditModal')">
-        <div class="modal" onclick="event.stopPropagation()">
-            <div class="customer-edit">
-                <div class="customer-edit-title">Customer Details - Edit</div>
-                <div class="customer-edit-form">
+        <div class="modal modal-lg" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Customer Details</h2>
+                <div class="modal-subtitle">Update customer information</div>
+            </div>
+            <div class="modal-body">
+                <form class="edit-form" id="editCustomerForm" onsubmit="saveCustomerEdit(event)">
                     <div class="form-group">
-                        <label class="form-label">Name</label>
-                        <input type="text" class="form-input" id="editCustomerName" value="Masdiana Mahasim">
+                        <label class="form-label required">Full Name</label>
+                        <input type="text" class="form-input" id="editCustomerName" required>
                     </div>
+                    
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Email Address</label>
-                            <input type="email" class="form-input" id="editCustomerEmail" value="masdiana@gmail.com">
+                            <label class="form-label required">Email Address</label>
+                            <input type="email" class="form-input" id="editCustomerEmail" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" class="form-input" id="editCustomerPhone" value="+60 18-6761 514">
+                            <label class="form-label required">Phone Number</label>
+                            <input type="tel" class="form-input" id="editCustomerPhone" required>
                         </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label class="form-label">Password</label>
-                        <input type="password" class="form-input" id="editCustomerPassword" value="Customer@2025">
+                        <label class="form-label required">Password</label>
+                        <div class="password-input-group">
+                            <input type="password" class="form-input" id="editCustomerPassword" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('editCustomerPassword', this)">Show</button>
+                        </div>
                     </div>
+                    
                     <div class="form-group">
-                        <label class="form-label">Confirm Password</label>
-                        <input type="password" class="form-input" id="editCustomerPasswordConfirm" value="Customer@2025">
+                        <label class="form-label required">Confirm Password</label>
+                        <div class="password-input-group">
+                            <input type="password" class="form-input" id="editCustomerPasswordConfirm" required>
+                            <button type="button" class="toggle-password" onclick="togglePassword('editCustomerPasswordConfirm', this)">Show</button>
+                        </div>
                     </div>
-                </div>
-                <div class="customer-edit-actions">
-                    <button class="customer-action-btn btn-cancel" onclick="closeModal('customerEditModal')">Cancel</button>
-                    <button class="customer-action-btn btn-save" onclick="saveCustomerEdit()">Save</button>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-secondary" onclick="closeModal('customerEditModal')">Cancel</button>
+                <button class="btn-modal btn-modal-primary" onclick="saveCustomerEdit()">Save Changes</button>
             </div>
         </div>
     </div>
 
-    <!-- Customer Delete Confirmation Modal -->
+    <!-- Delete Confirmation Modal -->
     <div id="customerDeleteModal" class="modal-overlay" onclick="closeModal('customerDeleteModal')">
         <div class="modal modal-sm" onclick="event.stopPropagation()">
-            <div class="modal-confirm">
-                <div class="modal-confirm-header">
-                    <div class="modal-icon-green">
-                        <svg viewBox="0 0 24 24" fill="none">
-                            <path d="M7.5 12L10.5 15L16.5 9M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="#079455" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="modal-confirm-title">Are you sure you want to permanently delete this customer account? This action is irreversible.</div>
-                    </div>
-                </div>
-                <div class="modal-actions">
-                    <button class="modal-btn-cancel" onclick="closeModal('customerDeleteModal')">Cancel</button>
-                    <button class="modal-btn-confirm" onclick="confirmCustomerDelete()">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Customer Update Success Modal -->
-    <div id="customerUpdateSuccessModal" class="modal-overlay" onclick="closeModal('customerUpdateSuccessModal')">
-        <div class="modal modal-sm" onclick="event.stopPropagation()">
-            <div class="modal-success">
-                <div class="modal-icon-circle">
-                    <svg viewBox="0 0 36 36" fill="none">
-                        <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="delete-confirmation">
+                <div class="delete-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M15 9L9 15" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M9 9L15 15" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <div class="modal-message">Customer details updated successfully!</div>
-                <button class="modal-btn" onclick="closeModal('customerUpdateSuccessModal')">Okay</button>
+                <h3 class="delete-title">Confirm Delete</h3>
+                <p class="delete-message">
+                    Are you sure you want to permanently delete <strong id="deleteCustomerName">Customer Name</strong>? 
+                    This action is irreversible and all associated data will be removed.
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button class="btn-modal btn-modal-secondary" onclick="closeModal('customerDeleteModal')">Cancel</button>
+                    <button class="btn-modal btn-modal-danger" onclick="confirmCustomerDelete()">Delete Customer</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Customer Delete Success Modal -->
-    <div id="customerDeleteSuccessModal" class="modal-overlay" onclick="closeModal('customerDeleteSuccessModal')">
+    <!-- Success Modal (Update) -->
+    <div id="updateSuccessModal" class="modal-overlay" onclick="closeModal('updateSuccessModal')">
         <div class="modal modal-sm" onclick="event.stopPropagation()">
-            <div class="modal-success">
-                <div class="modal-icon-circle">
-                    <svg viewBox="0 0 36 36" fill="none">
-                        <path d="M13.5 18L16.5 21L23.25 14.25M11.0007 5.72804C12.2064 5.63182 13.3511 5.15769 14.2717 4.37313C16.4201 2.54229 19.5799 2.54229 21.7283 4.37313C22.6489 5.15769 23.7936 5.63182 24.9993 5.72804C27.8131 5.95258 30.0474 8.18692 30.272 11.0007C30.3682 12.2064 30.8423 13.3511 31.6269 14.2717C33.4577 16.4201 33.4577 19.5799 31.6269 21.7283C30.8423 22.6489 30.3682 23.7936 30.272 24.9993C30.0474 27.8131 27.8131 30.0474 24.9993 30.272C23.7936 30.3682 22.6489 30.8423 21.7283 31.6269C19.5799 33.4577 16.4201 33.4577 14.2717 31.6269C13.3511 30.8423 12.2064 30.3682 11.0007 30.272C8.18692 30.0474 5.95258 27.8131 5.72804 24.9993C5.63182 23.7936 5.15769 22.6489 4.37313 21.7283C2.54229 19.5799 2.54229 16.4201 4.37313 14.2717C5.15769 13.3511 5.63182 12.2064 5.72804 11.0007C5.95258 8.18692 8.18692 5.95258 11.0007 5.72804Z" stroke="#5C59E8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="success-modal">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.86" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 4L12 14.01L9 11.01" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </div>
-                <div class="modal-message">Customer account deleted successfully!</div>
-                <button class="modal-btn" onclick="closeModal('customerDeleteSuccessModal')">Okay</button>
+                <h3 class="success-title">Success!</h3>
+                <p class="success-message">Customer details have been updated successfully.</p>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('updateSuccessModal')">Okay</button>
             </div>
         </div>
     </div>
 
-    <!-- ================= JS ================= -->
-<script>
-/* ================= CONFIG ================= */
-const BASE_URL = "/SABS"; // your project name
+    <!-- Success Modal (Delete) -->
+    <div id="deleteSuccessModal" class="modal-overlay" onclick="closeModal('deleteSuccessModal')">
+        <div class="modal modal-sm" onclick="event.stopPropagation()">
+            <div class="success-modal">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.709 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.86" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 4L12 14.01L9 11.01" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3 class="success-title">Deleted Successfully</h3>
+                <p class="success-message">The customer account has been permanently deleted.</p>
+                <button class="btn-modal btn-modal-primary" onclick="closeModal('deleteSuccessModal')">Okay</button>
+            </div>
+        </div>
+    </div>
 
-let currentServiceId = null;
-let pageIndex = 1;
-let totalPages = 1;
-let currentKeyword = "";
+    <script>
+        // Configuration
+        const BASE_URL = "/SABS";
+        let currentCustomerId = null;
+        let currentCustomerName = "";
 
-fetch(`${BASE_URL}/adminCustomerServlet`)
-    .then(res => res.text())
-    .then(name => {
-        document.getElementById("customerName").textContent = name && name.trim() !== "" ? name : "Customer";
-    })
-    .catch(() => {
-        document.getElementById("customerName").textContent = "Customer";
-    });
+        // Password toggle functions
+        function toggleViewPassword() {
+            const dots = document.getElementById('viewPasswordDots');
+            const text = document.getElementById('viewPasswordText');
+            const btn = document.querySelector('.show-password-btn');
+            
+            if (dots.style.display !== 'none') {
+                dots.style.display = 'none';
+                text.style.display = 'block';
+                btn.textContent = 'Hide';
+            } else {
+                dots.style.display = 'inline';
+                text.style.display = 'none';
+                btn.textContent = 'Show';
+            }
+        }
 
-/* ================= OPEN / CLOSE MODALS ================= */
-function openModal(id) {
-    document.getElementById(id).classList.add("active");
-}
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = 'Hide';
+            } else {
+                input.type = 'password';
+                button.textContent = 'Show';
+            }
+        }
 
-function closeModal(id) {
-    document.getElementById(id).classList.remove("active");
-}
+        // Load customers from database - FIXED VERSION
+        function loadCustomers() {
+            const tableBody = document.getElementById('customerTableBody');
+            
+            // Show loading
+            tableBody.innerHTML = '<tr><td colspan="4" class="loading">Loading customers...</td></tr>';
+            
+            console.log('Fetching customers from servlet...');
+            
+            // Fetch data from Servlet
+            fetch(`${BASE_URL}/adminCustomerServlet`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response ok:', response.ok);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    
+                    // Get response as text first to see what we're getting
+                    return response.text();
+                })
+                .then(text => {
+                    console.log('Received text:', text.substring(0, 500) + '...');
+                    
+                    // Check if we got valid HTML table rows
+                    if (text && text.trim() !== '') {
+                        if (text.includes('<tr>') || text.includes('<td>')) {
+                            // Replace the entire table body with the received HTML
+                            tableBody.innerHTML = text;
+                            console.log('Successfully loaded HTML table rows');
+                            
+                            // Update button styles
+                            setTimeout(updateTableButtons, 100);
+                        } else {
+                            // No table data received
+                            tableBody.innerHTML = '<tr><td colspan="4" class="loading">No customers found</td></tr>';
+                            console.log('No table rows found in response');
+                        }
+                    } else {
+                        // Empty response
+                        tableBody.innerHTML = '<tr><td colspan="4" class="loading">No customers found</td></tr>';
+                        console.log('Empty response from server');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading customers:', error);
+                    tableBody.innerHTML = '<tr><td colspan="4" class="error">Error loading customers. Please check console and try again.</td></tr>';
+                });
+        }
 
-/* ================= LOAD CUSTOMERS ================= */
-function loadServices(page = 1, keyword = "") {
-    pageIndex = page;
-    currentKeyword = keyword;
+        // Update table buttons with proper styling
+        function updateTableButtons() {
+            const rows = document.querySelectorAll('#customerTableBody tr');
+            
+            console.log(`Found ${rows.length} rows to update`);
+            
+            rows.forEach((row, index) => {
+                const actionCell = row.querySelector('td:last-child');
+                const customerIdCell = row.querySelector('td:first-child');
+                const nameCell = row.querySelector('td:nth-child(2)');
+                
+                if (actionCell && customerIdCell && nameCell) {
+                    const customerId = customerIdCell.textContent.trim();
+                    const customerName = nameCell.textContent.trim();
+                    
+                    console.log(`Row ${index}: ID=${customerId}, Name=${customerName}`);
+                    
+                    // Only update if the cell doesn't already have styled buttons
+                    if (!actionCell.querySelector('.action-buttons')) {
+                        // Extract any existing onclick attributes if present
+                        const existingButtons = actionCell.querySelectorAll('button');
+                        let hasValidButtons = false;
+                        
+                        // Check if buttons already have onclick handlers
+                        existingButtons.forEach(btn => {
+                            const onclickAttr = btn.getAttribute('onclick');
+                            if (onclickAttr && onclickAttr.includes('openViewModal') || 
+                                onclickAttr && onclickAttr.includes('openEditModal') ||
+                                onclickAttr && onclickAttr.includes('deleteCustomer')) {
+                                hasValidButtons = true;
+                            }
+                        });
+                        
+                        // If we don't have valid buttons, create them
+                        if (!hasValidButtons) {
+                            actionCell.innerHTML = `
+                                <div class="action-buttons">
+                                    <button class="btn btn-view" onclick="viewCustomer('${customerId}', '${customerName.replace(/'/g, "\\'")}')">View</button>
+                                    <button class="btn btn-edit" onclick="editCustomer('${customerId}', '${customerName.replace(/'/g, "\\'")}')">Edit</button>
+                                    <button class="btn btn-delete" onclick="deleteCustomer('${customerId}', '${customerName.replace(/'/g, "\\'")}')">Delete</button>
+                                </div>
+                            `;
+                        } else {
+                            // If we already have buttons, just add the CSS classes
+                            existingButtons.forEach((btn, btnIndex) => {
+                                if (btnIndex === 0) {
+                                    btn.className = 'btn btn-view';
+                                    btn.setAttribute('onclick', `viewCustomer('${customerId}', '${customerName.replace(/'/g, "\\'")}')`);
+                                } else if (btnIndex === 1) {
+                                    btn.className = 'btn btn-edit';
+                                    btn.setAttribute('onclick', `editCustomer('${customerId}', '${customerName.replace(/'/g, "\\'")}')`);
+                                } else if (btnIndex === 2) {
+                                    btn.className = 'btn btn-delete';
+                                    btn.setAttribute('onclick', `deleteCustomer('${customerId}', '${customerName.replace(/'/g, "\\'")}')`);
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+            
+            console.log('Finished updating table buttons');
+        }
 
-    fetch(`${BASE_URL}/adminCustomerServlet?page=${page}&keyword=${encodeURIComponent(keyword)}`)
-        .then(res => res.text())
-        .then(html => {
-            const match = html.match(/<!--TOTAL_PAGES=(\d+)-->/);
-            if (match) totalPages = parseInt(match[1]);
+        // View customer details
+        function viewCustomer(customerId, customerName) {
+            console.log('Viewing customer:', customerId, customerName);
+            
+            currentCustomerId = customerId;
+            currentCustomerName = customerName;
+            
+            // Update modal with basic info immediately
+            document.getElementById('viewCustomerId').textContent = customerId;
+            document.getElementById('viewCustomerName').textContent = customerName;
+            
+            // Fetch detailed customer info for the modal
+            fetch(`${BASE_URL}/adminCustomerServlet?id=${customerId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch customer details');
+                }
+                return response.json();
+            })
+            .then(customer => {
+                console.log('Customer details fetched:', customer);
+                
+                // Update modal with customer data
+                document.getElementById('viewCustomerId').textContent = customer.id || customerId;
+                document.getElementById('viewCustomerEmail').textContent = customer.email || 'Not available';
+                document.getElementById('viewCustomerPhone').textContent = customer.phone || 'Not available';
+                
+                // Set password value
+                const passwordText = document.getElementById('viewPasswordText');
+                passwordText.value = customer.password || '';
+                
+                // Open the view modal
+                openModal('customerViewModal');
+            })
+            .catch(error => {
+                console.error('Error fetching customer details:', error);
+                // Still open modal with basic info
+                openModal('customerViewModal');
+            });
+        }
 
-            document.getElementById("customerTableBody").innerHTML = html;
-            renderPagination();
-        })
-        .catch(err => console.error("Load customer error:", err));
-}
+        // Edit customer
+        function editCustomer(customerId, customerName) {
+            console.log('Editing customer:', customerId, customerName);
+            
+            currentCustomerId = customerId;
+            currentCustomerName = customerName;
+            
+            // Set current name in form
+            document.getElementById('editCustomerName').value = customerName;
+            
+            // Fetch customer details for editing
+            fetch(`${BASE_URL}/adminCustomerServlet?id=${customerId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to fetch customer');
+                return response.json();
+            })
+            .then(customer => {
+                console.log('Edit customer data:', customer);
+                
+                // Populate edit form
+                document.getElementById('editCustomerEmail').value = customer.email || '';
+                document.getElementById('editCustomerPhone').value = customer.phone || '';
+                document.getElementById('editCustomerPassword').value = customer.password || '';
+                document.getElementById('editCustomerPasswordConfirm').value = customer.password || '';
+                
+                // Open the edit modal
+                openModal('customerEditModal');
+            })
+            .catch(error => {
+                console.error('Error fetching customer for edit:', error);
+                // Open modal anyway with basic info
+                openModal('customerEditModal');
+            });
+        }
 
-/* ================= PAGINATION ================= */
-function renderPagination() {
-    const container = document.getElementById("paginationNumbers");
-    container.innerHTML = "";
+        // Save edited customer
+        function saveCustomerEdit(event) {
+            if (event) event.preventDefault();
+            
+            const name = document.getElementById('editCustomerName').value;
+            const email = document.getElementById('editCustomerEmail').value;
+            const phone = document.getElementById('editCustomerPhone').value;
+            const password = document.getElementById('editCustomerPassword').value;
+            const confirmPassword = document.getElementById('editCustomerPasswordConfirm').value;
+            
+            // Validate form
+            if (!name || !email || !password) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            const formData = new URLSearchParams({
+                action: 'update',
+                id: currentCustomerId,
+                name: name,
+                email: email,
+                password: password,
+                phone: phone
+            });
+            
+            console.log('Saving customer data:', formData.toString());
+            
+            fetch(`${BASE_URL}/adminCustomerServlet`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            })
+            .then(response => {
+                console.log('Save response status:', response.status);
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Server error');
+                }
+            })
+            .then(result => {
+                console.log('Save result:', result);
+                
+                // Reload the customer list
+                loadCustomers();
+                
+                // Close modal
+                closeModal('customerEditModal');
+                
+                // Show success message
+                setTimeout(() => {
+                    openModal('updateSuccessModal');
+                }, 300);
+            })
+            .catch(error => {
+                console.error('Error updating customer:', error);
+                alert('Error updating customer: ' + error.message);
+            });
+        }
 
-    if (totalPages <= 1) return;
+        // Delete customer
+        function deleteCustomer(customerId, customerName) {
+            console.log('Deleting customer:', customerId, customerName);
+            
+            currentCustomerId = customerId;
+            currentCustomerName = customerName;
+            
+            // Update delete confirmation message
+            document.getElementById('deleteCustomerName').textContent = customerName;
+            
+            openModal('customerDeleteModal');
+        }
 
-    for (let i = 1; i <= totalPages; i++) {
-        const el = document.createElement("div");
-        el.className = "pagination-number" + (i === pageIndex ? " active" : "");
-        el.innerText = i;
-        el.onclick = () => loadServices(i, currentKeyword);
-        container.appendChild(el);
-    }
-}
+        // Confirm customer deletion
+        function confirmCustomerDelete() {
+            console.log('Confirming deletion of customer:', currentCustomerId);
+            
+            fetch(`${BASE_URL}/adminCustomerServlet?id=${currentCustomerId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                console.log('Delete response status:', response.status);
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error('Delete failed');
+                }
+            })
+            .then(result => {
+                console.log('Delete result:', result);
+                
+                if (result === '1' || result.includes('success') || result.trim() === '1') {
+                    // Reload the customer list
+                    loadCustomers();
+                    
+                    // Close modal
+                    closeModal('customerDeleteModal');
+                    
+                    // Show success message
+                    setTimeout(() => {
+                        openModal('deleteSuccessModal');
+                    }, 300);
+                } else {
+                    alert('Error deleting customer. Server returned: ' + result);
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting customer:', error);
+                alert('Error deleting customer: ' + error.message);
+            });
+        }
 
-function changePage(step) {
-    const next = pageIndex + step;
-    if (next < 1 || next > totalPages) return;
-    loadServices(next, currentKeyword);
-}
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
 
-/* ================= SEARCH ================= */
-function searchServices() {
-    const keyword = document.getElementById("searchInput").value.trim();
-    loadServices(1, keyword);
-}
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
 
-/* ================= VIEW SERVICE ================= */
-function openViewModal(id) {
-    fetch(`${BASE_URL}/adminCustomerServlet?id=${id}`)
-        .then(res => res.json())
-        .then(data => {
-            currentCustomer_ID = id;
-            viewName.innerText = data.name;
-            viewEmail.innerText = data.email;
-            viewPhone.innerText = data.phone;
-            viewPassword.innerText = data.password;
-            openModal("viewModal");
+        function switchToEditFromView() {
+            closeModal('customerViewModal');
+            editCustomer(currentCustomerId, currentCustomerName);
+        }
+
+        function switchToDeleteFromView() {
+            closeModal('customerViewModal');
+            openModal('customerDeleteModal');
+        }
+
+        // Toggle sidebar for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 1024 && 
+                !sidebar.contains(event.target) && 
+                !menuToggle.contains(event.target) && 
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
         });
-}
 
-/* ================= ADD SERVICE ================= */
-function openAddModal() {
-    openModal("addModal");
-}
+        // Search function
+        function searchCustomers() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase();
+            const rows = document.querySelectorAll('#customerTableBody tr');
+            
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                // Skip the loading/error rows
+                if (row.classList.contains('loading') || row.classList.contains('error')) {
+                    return;
+                }
+                
+                const cells = row.querySelectorAll('td');
+                let rowText = '';
+                
+                // Get text from first 3 columns (skip actions column)
+                for (let i = 0; i < Math.min(3, cells.length); i++) {
+                    rowText += cells[i].textContent.toLowerCase() + ' ';
+                }
+                
+                if (rowText.includes(searchTerm)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // If no rows visible and we have a search term
+            if (visibleCount === 0 && searchTerm.trim() !== '') {
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = '<td colspan="4" class="loading">No customers found matching your search</td>';
+                document.getElementById('customerTableBody').appendChild(noResultsRow);
+            }
+        }
 
-function submitAddService(e) {
-    e.preventDefault();
-    const data = new URLSearchParams(new FormData(e.target));
+        // Set up search input event listener
+        document.getElementById('searchInput').addEventListener('input', searchCustomers);
 
-    fetch(`${BASE_URL}/adminCustomerServlet?action=add`, {
-        method: "POST",
-        body: data
-    }).then(() => {
-        closeModal("addModal");
-        e.target.reset();
-        loadServices(pageIndex, currentKeyword);
-        openModal("successAddModal");
-    });
-}
-
-/* ================= EDIT SERVICE ================= */
-function openEditModalDirect(id) {
-    currentServiceId = id;
-
-    fetch(`${BASE_URL}/adminCustomerServlet?id=${id}`)
-        .then(res => res.json())
-        .then(data => {
-            editName.value = data.name;
-            editEmail.value = data.email;
-            editPhone.value = data.phone;
-            editPassword.value = data.password;
-            openModal("editModal");
+        // Load customers when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, loading customers...');
+            loadCustomers();
+            
+            // Set admin name from localStorage or default
+            const adminName = localStorage.getItem('adminName') || 'Admin User';
+            document.getElementById('adminName').textContent = adminName;
+            document.querySelector('.user-avatar span').textContent = adminName.charAt(0).toUpperCase();
         });
-}
-
-function openEditModalFromView() {
-    closeModal("viewModal");
-    openEditModalDirect(currentServiceId);
-}
-
-function saveEdit() {
-    const data = new URLSearchParams({
-        action: "edit",
-        id: currentCustomer_id,
-        name: editName.value,
-        email: editEmail.value,
-        phone: editPhone.value,
-        password: editPassword.value
-    });
-
-    fetch(`${BASE_URL}/adminCustomerServlet`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: data.toString()
-    }).then(() => {
-        closeModal("editModal");
-        loadServices(pageIndex, currentKeyword);
-        openModal("successEditModal");
-    });
-}
-
-/* ================= DELETE SERVICE ================= */
-function deleteCustomer(id) {
-    currentCustomer_Id = id;
-    openModal("deleteModal");
-}
-
-function confirmDelete() {
-    const data = new URLSearchParams({
-        action: "delete",
-        id: currentServiceId
-    });
-
-    fetch(`${BASE_URL}/adminCustomerServlet`, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: data.toString()
-    }).then(() => {
-        closeModal("deleteModal");
-        loadServices(pageIndex, currentKeyword);
-        openModal("successDeleteModal");
-    });
-}
-
-function openDeleteModalFromView() {
-    closeModal("viewModal");
-    openModal("deleteModal");
-}
-
-/* ================= INIT ================= */
-window.onload = () => {
-    loadServices(1);
-
-    // Sidebar active highlight
-    const pageName = window.location.pathname.split("/").pop();
-    document.querySelectorAll(".sidebar-menu a").forEach(link => {
-        link.classList.toggle("active", link.getAttribute("href") === pageName);
-    });
-};
-</script>
-  </body>
+    </script>
+</body>
 </html>
