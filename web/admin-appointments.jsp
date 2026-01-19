@@ -74,8 +74,13 @@
                     <div class="admin-user">
                         <div class="user-avatar"></div>
                         <div class="user-info">
-                            <div class="user-name">Megat Ameer</div>
+                            <div class="user-name" id="adminName"></div>
                             <div class="user-role">Admin</div>
+                        </div>
+                        <div>
+                            <a href="login.html">
+                                <img src="images/logoutIcon.png" class="user-avatar">
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -127,6 +132,14 @@
 
         <!-- ================= JS (FINAL & FIXED) ================= -->
         <script>
+            fetch(`AdminServlet`)
+            .then(res => res.text())
+            .then(name => {
+                document.getElementById("adminName").textContent = name && name.trim() !== "" ? name : "Admin";
+            })
+            .catch(() => {
+                document.getElementById("adminName").textContent = "Admin";
+            });
             // Load appointments (with optional search)
             function loadAppointments(query = '') {
                 let url = '<%= request.getContextPath()%>/AppointmentServlet';

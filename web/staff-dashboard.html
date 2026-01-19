@@ -168,6 +168,52 @@ body {
 
 /* ================= TABLE ================= */
 
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    background: #FFF;
+    border: 1px solid #F0F1F3;
+    border-bottom: none;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.services-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.search-box {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #5C59E8;
+            background: #F9F9FC;
+            min-width: 200px;
+        }
+
+.search-box svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            color: #333843;
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+        }
+
 .table-card {
     background: white;
     margin-top: 30px;
@@ -244,6 +290,20 @@ th {
     flex-direction: column;
 }
 
+.table-header {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.services-actions {
+    width: 100%;
+    flex-direction: column;
+}
+
+.search-box {
+    width: 100%;
+}
+
 }
 
 </style>
@@ -261,10 +321,15 @@ th {
 
     <!-- User Info -->
     <div class="user-info">
-        <div class="avatar"></div>
+        <div><img src="https://randomuser.me/api/portraits/women/44.jpg" class="avatar"></div>
         <div>
             <div class="user-name" id="staffName"></div>
             <div class="user-role">Staff</div>
+        </div>
+        <div>
+            <a href="login.html">
+                <img src="images/logoutIcon.png" class="avatar">
+            </a>
         </div>
     </div>
 
@@ -305,7 +370,17 @@ th {
     <!-- RECENT APPOINTMENTS -->
     <div class="table-card">
 
-        <div class="table-title">Recent Appointments</div>
+        <div class="table-header">
+            <h2 class="table-title">List of Appointments</h2>
+                <div class="services-actions">
+                    <div class="search-box">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M14.7844 16.1991C11.646 18.6416 7.10629 18.4205 4.22156 15.5358C1.09737 12.4116 1.09737 7.34625 4.22156 4.22205C7.34576 1.09786 12.4111 1.09786 15.5353 4.22205C18.42 7.10677 18.6411 11.6464 16.1986 14.7849L20.4851 19.0713C20.8756 19.4618 20.8756 20.095 20.4851 20.4855C20.0945 20.876 19.4614 20.876 19.0708 20.4855L14.7844 16.1991ZM5.63578 14.1215C7.97892 16.4647 11.7779 16.4647 14.1211 14.1215C16.4642 11.7784 16.4642 7.97941 14.1211 5.63627C11.7779 3.29312 7.97892 3.29312 5.63578 5.63627C3.29263 7.97941 3.29263 11.7784 5.63578 14.1215Z" fill="#667085"/>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search appointment..." onkeyup="handleSearch()">
+                    </div>
+                </div>
+        </div>
 
         <table>
 
@@ -341,19 +416,6 @@ th {
             document.getElementById('staffName').textContent = "";
             document.getElementById('welcomeName').textContent = "";
         });
-        
-fetch('AppointmentServlet')
-    .then(response => response.text())
-    .then(html => {
-        const tbody = document.querySelector('table tbody');
-        tbody.innerHTML = html;
-
-        // Remove last column (buttons) from each row
-        tbody.querySelectorAll('tr').forEach(tr => {
-            tr.removeChild(tr.lastElementChild);
-        });
-    })
-    .catch(err => console.error(err));
     
     function loadAppointments() {
     fetch('AppointmentServlet')
@@ -374,7 +436,24 @@ fetch('AppointmentServlet')
         .catch(err => console.error(err));
 }
 
-// Call on page load
+function handleSearch() {
+    const input = document.getElementById("searchInput");
+    const filter = input.value.toLowerCase();
+    const table = document.querySelector("table");
+    const rows = table.getElementsByTagName("tr");
+
+    // Loop through all table rows (skip header row)
+    for (let i = 1; i < rows.length; i++) {
+        let rowText = rows[i].textContent.toLowerCase();
+
+        if (rowText.includes(filter)) {
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+
 loadAppointments();
 </script>
 
