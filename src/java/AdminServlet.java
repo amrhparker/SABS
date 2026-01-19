@@ -11,13 +11,14 @@ public class AdminServlet extends HttpServlet {
             throws ServletException, IOException {
 
         response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession(false);
+
         if (session != null && session.getAttribute("adminName") != null) {
-            String adminName = (String) session.getAttribute("adminName");
-            response.getWriter().write(adminName); // return only the name
+            response.getWriter().write(session.getAttribute("adminName").toString());
         } else {
-            response.getWriter().write(""); // no admin logged in
+            response.getWriter().write("Admin");
         }
     }
 }
