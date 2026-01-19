@@ -111,11 +111,7 @@
                         <a class="nav-link inactive" onclick="location.href='booking.jsp'">Book Appointment</a>
                         <a class="nav-link" style="color: #000;" onclick="location.href='cancel.jsp'">List of Appointments</a>
                         <a class="nav-link inactive" onclick="location.href='customer-services.html'">Service</a>
-<<<<<<< HEAD
                         <a class="nav-link inactive" onclick="location.href='ourStory.html'">Our story</a>
-=======
-                        <a class="nav-link inactive" onclick="location.href='tory.html'">Our story</a>
->>>>>>> 5903e85d2128dadac8d4fbcc0cd9b6f1a61399d3
                     </div>
 
                     <div class="nav-buttons">
@@ -323,11 +319,8 @@
 
 
                             <h2>YOUR APPOINTMENT HAS BEEN CANCELED</h2>
-<<<<<<< HEAD
                             <button onclick="location.href = 'customer-dashboard.html'"
-=======
                             <button onclick="location.href = 'cancel.jsp'"
->>>>>>> 5903e85d2128dadac8d4fbcc0cd9b6f1a61399d3
                                     style="margin-top:2rem;padding:1rem 2.5rem;background:#000;color:#FFF;border:none;border-radius:8px;">
                                 HOME
                             </button>
