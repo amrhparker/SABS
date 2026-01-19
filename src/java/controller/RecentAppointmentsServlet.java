@@ -57,23 +57,9 @@ public class RecentAppointmentsServlet extends HttpServlet {
             sb.append("<td><span class='status-badge ").append(statusClass).append("'>")
               .append(status).append("</span></td>");
             
-            // Action buttons based on status
-            sb.append("<td><div class='action-buttons'>");
             
-            if ("COMING SOON".equalsIgnoreCase(status)) {
-                sb.append("<button class='action-btn accept' onclick=\"acceptAppointment('")
-                  .append(appointmentId).append("')\">Accept</button>");
-                sb.append("<button class='action-btn complete' disabled>Complete</button>");
-            } else if ("ONGOING".equalsIgnoreCase(status)) {
-                sb.append("<button class='action-btn accept' disabled>Accept</button>");
-                sb.append("<button class='action-btn complete' onclick=\"completeAppointment('")
-                  .append(appointmentId).append("')\">Complete</button>");
-            } else {
-                sb.append("<button class='action-btn accept' disabled>Accept</button>");
-                sb.append("<button class='action-btn complete' disabled>Complete</button>");
-            }
             
-            sb.append("</div></td>");
+            sb.append("</td>");
             sb.append("</tr>");
         }
         response.getWriter().print(sb.toString());
