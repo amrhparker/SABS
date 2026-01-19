@@ -679,7 +679,7 @@
 </head>
 <body>
     <!-- Home Page -->
-    <div id="homePage">
+    <div>
         <!-- Hero Section -->
         <div class="hero-section">
             <div class="hero-overlay"></div>
@@ -697,7 +697,7 @@
                     </div>
                     
                     <div class="nav-buttons">
-                        <button class="nav-btn home" onclick="showPage('homePage')">H O M E</button>
+                        <button class="nav-btn home" onclick="window.location.href='customer-dashboard.html'">H O M E</button>
                         <button class="nav-btn logout" onclick="window.location.href='login.html'">LOG OUT</button>
                     </div>
                 </div>
@@ -825,9 +825,9 @@
             <div class="footer-content">
                 <img src="https://api.builder.io/api/v1/image/assets/TEMP/66f64fa4e40cc7a57c1939f7f444c578ae8d0a99?width=440" alt="SALONIX Logo" class="footer-logo">
                 <div class="footer-links">
-                    <a class="footer-link" onclick="showPage('homePage')">Home</a>
-                    <a class="footer-link" onclick="">Book Appointment</a>
-                    <a class="footer-link" onclick="">Cancel Appointment</a>
+                    <a class="footer-link" onclick="window.location.href='customer-dashboard.html'">Home</a>
+                    <a class="footer-link" onclick="window.location.href='booking.jsp'">Book Appointment</a>
+                    <a class="footer-link" onclick="window.location.href='cancel.jsp'">List of Appointments</a>
                     <a class="footer-link" onclick="window.location.href='customer-services.html'">Service</a>
                     <a class="footer-link" onclick="window.location.href='ourStory.html'">Our story</a>
                 </div>
@@ -837,47 +837,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Page navigation
-        function showPage(pageId) {
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            const targetPage = document.getElementById(pageId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            }
-            window.scrollTo(0, 0);
-        }
-        
-        // Modal functions
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        // Click outside modal to close
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
-                }
-            });
-        });
-
-        // Close time dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('bookingTimeDropdown');
-            const selector = event.target.closest('[onclick="toggleBookingTimeDropdown()"]');
-            if (!selector && dropdown && dropdown.style.display === 'block') {
-                dropdown.style.display = 'none';
-            }
-        });
-    </script>
 </body>
 </html>
